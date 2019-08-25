@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DocumentationFile>bin\Debug\ProjectManagementSystem.WebApi.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DocumentationFile>bin\Release\ProjectManagementSystem.WebApi.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.0-preview4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0-preview8.19405.11" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.0-preview8" />
+        <PackageReference Include="Serilog" Version="2.9.0-dev-01119" />
+        <PackageReference Include="Serilog.AspNetCore" Version="3.0.0-dev-00088" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.0-dev-10240" />
+        <PackageReference Include="Serilog.Filters.Expressions" Version="2.0.1-dev-00046" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.1-dev-00209" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.2-dev-00823" />
+        <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.2-dev-00020" />
+        <PackageReference Include="Serilog.Sinks.File" Version="4.1.0-dev-00847" />
+        <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.1-dev-00771" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.0.0-rc2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ProjectManagementSystem.Domain\ProjectManagementSystem.Public.Domain.csproj" />
+        <ProjectReference Include="..\ProjectManagementSystem.Infrastructure\ProjectManagementSystem.Public.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>
