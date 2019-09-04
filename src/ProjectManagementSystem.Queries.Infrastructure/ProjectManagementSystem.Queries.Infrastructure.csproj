@@ -5,14 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ProjectManagementSystem.Domain\ProjectManagementSystem.Domain.csproj" />
+      <ProjectReference Include="..\ProjectManagementSystem.Queries\ProjectManagementSystem.Queries.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
+      <PackageReference Include="EventFlow" Version="0.74.3948" />
     </ItemGroup>
 
 </Project>
