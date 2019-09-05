@@ -11,7 +11,8 @@ using ProjectManagementSystem.WebApi.Models.Admin.Users;
 
 namespace ProjectManagementSystem.WebApi.Controllers.Admin
 {
-    public class UsersController : ControllerBase
+    [ApiController]
+    public sealed class UsersController : ControllerBase
     {
         /// <summary>
         /// Create user

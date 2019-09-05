@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace ProjectManagementSystem.WebApi.Extensions
 {
-    internal static class EmployeesExtensions
+    internal static class UserExtensions
     {
         public static Guid GetId(this ClaimsPrincipal claimsPrincipal)
         {
