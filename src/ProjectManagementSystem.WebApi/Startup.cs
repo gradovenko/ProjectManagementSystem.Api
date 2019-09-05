@@ -11,6 +11,7 @@ using EventFlow.Autofac.Extensions;
 using EventFlow.Extensions;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ using ProjectManagementSystem.Infrastructure.Authentication;
 using ProjectManagementSystem.Infrastructure.PasswordHasher;
 using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
 using ProjectManagementSystem.Queries;
+using ProjectManagementSystem.WebApi.Authorization;
 using ProjectManagementSystem.WebApi.Filters;
 using ProjectManagementSystem.WebApi.Middlewares;
 using Swashbuckle.AspNetCore.Swagger;
@@ -51,10 +53,7 @@ namespace ProjectManagementSystem.WebApi
             services.AddMemoryCache();
 
             services
-                .AddMvc(options =>
-                {
-                    options.Filters.Add(typeof(ErrorHandlingFilter));
-                })
+                .AddMvc(options => { options.Filters.Add(typeof(ErrorHandlingFilter)); })
                 .AddFluentValidation(configuration =>
                 {
                     configuration.RegisterValidatorsFromAssemblyContaining<Startup>();
@@ -100,6 +99,14 @@ namespace ProjectManagementSystem.WebApi
                 };
             });
 
+//            services.AddAuthorization(options =>
+//            {
+//                var authorizationPolicyBuilder = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+//                    .RequireAuthenticatedUser().RequireRole(Role.Admin, Role.User);
+//
+//                options.DefaultPolicy = authorizationPolicyBuilder.Build();
+//            });
+
             services.Configure<JwtOptions>(Configuration.GetSection("Authentication:Jwt"));
 
             services.AddDbContext<AuthenticationDbContext>(options =>
@@ -126,12 +133,12 @@ namespace ProjectManagementSystem.WebApi
             #endregion
 
             #endregion
-            
+
             #region Queries
-            
+
             services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            
+
             var containerBuilder = new ContainerBuilder();
 
             var container = EventFlowOptions.New
@@ -140,11 +147,11 @@ namespace ProjectManagementSystem.WebApi
                     Queries.Admin.Users.ShortUserView>()
                 .AddQueryHandler<Queries.Infrastructure.Admin.Users.UsersQueryHandler, Queries.Admin.Users.UsersQuery,
                     Page<Queries.Admin.Users.FullUserView>>();
-            
+
             containerBuilder.Populate(services);
 
             return new AutofacServiceProvider(containerBuilder.Build());
-            
+
             #endregion
         }
 
@@ -179,7 +186,7 @@ namespace ProjectManagementSystem.WebApi
 
             options.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
             {
-                { "Bearer", new string[] { } }
+                {"Bearer", new string[] { }}
             });
 
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
@@ -187,7 +194,7 @@ namespace ProjectManagementSystem.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
