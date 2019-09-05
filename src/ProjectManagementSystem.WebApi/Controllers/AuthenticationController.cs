@@ -10,7 +10,6 @@ using ProjectManagementSystem.WebApi.Models;
 namespace ProjectManagementSystem.WebApi.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
     public class AuthenticationController : ControllerBase
     {
         /// <summary>
