@@ -28,7 +28,6 @@ using ProjectManagementSystem.Infrastructure.Authentication;
 using ProjectManagementSystem.Infrastructure.PasswordHasher;
 using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
 using ProjectManagementSystem.Queries;
-using ProjectManagementSystem.WebApi.Authorization;
 using ProjectManagementSystem.WebApi.Filters;
 using ProjectManagementSystem.WebApi.Middlewares;
 using Swashbuckle.AspNetCore.Swagger;
@@ -98,14 +97,6 @@ namespace ProjectManagementSystem.WebApi
                     ValidateIssuerSigningKey = true,
                 };
             });
-
-//            services.AddAuthorization(options =>
-//            {
-//                var authorizationPolicyBuilder = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-//                    .RequireAuthenticatedUser().RequireRole(Role.Admin, Role.User);
-//
-//                options.DefaultPolicy = authorizationPolicyBuilder.Build();
-//            });
 
             services.Configure<JwtOptions>(Configuration.GetSection("Authentication:Jwt"));
 
