@@ -6,17 +6,15 @@ namespace ProjectManagementSystem.Infrastructure.Admin.Users
 {
     public sealed class UserDbContext : DbContext
     {
-        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
-        {
-        }
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
-        internal DbSet<User> Users { get; set; }
+        internal DbSet<Domain.Admin.CreateUsers.User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>(builder =>
+            modelBuilder.Entity<Domain.Admin.CreateUsers.User>(builder =>
             {
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);
@@ -49,8 +47,6 @@ namespace ProjectManagementSystem.Infrastructure.Admin.Users
                 builder.Property(u => u.CreateDate)
                     .HasColumnName("CreateDate")
                     .IsRequired();
-                builder.Property(u => u.UpdateDate)
-                    .HasColumnName("UpdateDate");
                 builder.Property(u => u.Status)
                     .HasColumnName("Status")
                     .HasConversion(

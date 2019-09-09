@@ -8,11 +8,11 @@ namespace ProjectManagementSystem.Infrastructure.Authentication
     {
         public AuthenticationDbContext(DbContextOptions<AuthenticationDbContext> options) : base(options) { }
 
-        internal DbSet<User> Users { get; set; }
+        internal DbSet<Domain.Authentication.User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(builder =>
+            modelBuilder.Entity<Domain.Authentication.User>(builder =>
             {
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);

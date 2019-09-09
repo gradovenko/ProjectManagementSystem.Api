@@ -52,7 +52,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
 
             var passwordHash = passwordHasher.HashPassword(binding.Password);
 
-            user = new User(binding.Id, binding.UserName, binding.Email, passwordHash, binding.FirstName, binding.LastName, Enum.Parse<Domain.Admin.CreateUsers.UserRole>(binding.Role.ToString()));
+            user = new Domain.Admin.CreateUsers.User(binding.Id, binding.UserName, binding.Email, passwordHash, binding.FirstName, binding.LastName, Enum.Parse<Domain.Admin.CreateUsers.UserRole>(binding.Role.ToString()));
 
             await userRepository.Save(user);
 

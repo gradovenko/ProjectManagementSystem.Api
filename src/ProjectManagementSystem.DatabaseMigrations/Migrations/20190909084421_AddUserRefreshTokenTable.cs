@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 {
-    public partial class AddUserRefreshTokenTables : Migration
+    public partial class AddUserRefreshTokenTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,7 +27,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: false),
                     Email = table.Column<string>(maxLength: 256, nullable: false),
-                    PasswordHash = table.Column<string>(maxLength: 1024, nullable: true),
+                    PasswordHash = table.Column<string>(maxLength: 1024, nullable: false),
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
                     Role = table.Column<string>(nullable: false),
@@ -44,7 +44,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "Id", "ConcurrencyStamp", "CreateDate", "Email", "FirstName", "LastName", "PasswordHash", "Role", "Status", "UpdateDate", "UserName" },
-                values: new object[] { new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"), new Guid("8ffe879c-8f6c-42e8-853e-65a393a91d9b"), new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin@projectms.local", "Admin", "Admin", "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==", "Admin", "Active", null, "Admin" });
+                values: new object[] { new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"), new Guid("e1ceae0a-2628-4306-af94-dbbff26aa26c"), new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin@projectms.local", "Admin", "Admin", "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==", "Admin", "Active", null, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",

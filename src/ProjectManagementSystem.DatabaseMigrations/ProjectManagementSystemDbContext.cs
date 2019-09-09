@@ -30,7 +30,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .IsRequired();
                 builder.Property(u => u.PasswordHash)
                     .HasColumnName("PasswordHash")
-                    .HasMaxLength(1024);
+                    .HasMaxLength(1024)
+                    .IsRequired();
                 builder.Property(u => u.FirstName)
                     .HasColumnName("FirstName")
                     .IsRequired();
