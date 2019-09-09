@@ -23,12 +23,14 @@ namespace ProjectManagementSystem.Infrastructure.User.Accounts
         public async Task<Domain.User.Accounts.User> FindByUserName(string userName, CancellationToken cancellationToken)
         {
             return await _context.Users
+                .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.UserName == userName, cancellationToken);
         }
 
         public async Task<Domain.User.Accounts.User> FindByEmail(string email, CancellationToken cancellationToken)
         {
             return await _context.Users
+                .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
 
