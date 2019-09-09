@@ -61,6 +61,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnName("LastName");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnName("PasswordHash")
                         .HasMaxLength(1024);
 
@@ -96,7 +97,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         new
                         {
                             Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("8ffe879c-8f6c-42e8-853e-65a393a91d9b"),
+                            ConcurrencyStamp = new Guid("e1ceae0a-2628-4306-af94-dbbff26aa26c"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",

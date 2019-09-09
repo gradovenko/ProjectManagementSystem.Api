@@ -112,6 +112,20 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region User
+
+            #region Accounts
+
+            services.AddDbContext<Infrastructure.User.Accounts.UserDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddScoped<Domain.User.Accounts.IUserRepository, Infrastructure.User.Accounts.UserRepository>();
+            services.AddScoped<Domain.User.Accounts.IPasswordHasher, PasswordHasher>();
+            services.AddScoped<Domain.User.Accounts.UserUpdateService>();
+
+            #endregion
+
+            #endregion
+
             #region Admin
 
             #region Users
@@ -129,6 +143,8 @@ namespace ProjectManagementSystem.WebApi
 
             services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
             var containerBuilder = new ContainerBuilder();
 
@@ -137,8 +153,10 @@ namespace ProjectManagementSystem.WebApi
                 .AddQueryHandler<Queries.Infrastructure.Admin.Users.UserQueryHandler, Queries.Admin.Users.UserQuery,
                     Queries.Admin.Users.ShortUserView>()
                 .AddQueryHandler<Queries.Infrastructure.Admin.Users.UsersQueryHandler, Queries.Admin.Users.UsersQuery,
-                    Page<Queries.Admin.Users.FullUserView>>();
-
+                    Page<Queries.Admin.Users.FullUserView>>()
+                .AddQueryHandler<Queries.Infrastructure.User.Accounts.UserQueryHandler, Queries.User.Accounts.UserQuery,
+                    Queries.User.Accounts.UserView>();
+                            
             containerBuilder.Populate(services);
 
             return new AutofacServiceProvider(containerBuilder.Build());
@@ -199,6 +217,7 @@ namespace ProjectManagementSystem.WebApi
             }
 
             //app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));

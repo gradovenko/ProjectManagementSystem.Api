@@ -20,7 +20,7 @@ namespace ProjectManagementSystem.Infrastructure.Authentication
             _jwtOptions = jwtOptions.Value;
         }
         
-        public async Task<AccessToken> Create(User user, CancellationToken cancellationToken)
+        public async Task<AccessToken> Create(Domain.Authentication.User user, CancellationToken cancellationToken)
         {
             var jwtSecurityToken = new JwtSecurityToken(
                 _jwtOptions.Issuer,

@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Identity;
-using ProjectManagementSystem.Domain.Admin.CreateUsers;
 
 namespace ProjectManagementSystem.Infrastructure.PasswordHasher
 {
-    public class PasswordHasher : Domain.Authentication.IPasswordHasher, IPasswordHasher
+    public class PasswordHasher : Domain.Authentication.IPasswordHasher, Domain.Admin.CreateUsers.IPasswordHasher, Domain.User.Accounts.IPasswordHasher
     {
         private sealed class User { }
         
