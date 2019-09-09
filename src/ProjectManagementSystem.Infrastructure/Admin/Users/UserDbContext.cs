@@ -21,8 +21,8 @@ namespace ProjectManagementSystem.Infrastructure.Admin.Users
 
                 builder.Property(u => u.Id)
                     .ValueGeneratedNever();
-                builder.Property(u => u.UserName)
-                    .HasColumnName("UserName")
+                builder.Property(u => u.Name)
+                    .HasColumnName("Name")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.Email)

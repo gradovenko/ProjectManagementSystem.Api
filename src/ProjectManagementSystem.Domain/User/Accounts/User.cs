@@ -6,7 +6,7 @@ namespace ProjectManagementSystem.Domain.User.Accounts
     {
         protected User() { }
         public Guid Id { get; private set; }
-        public string UserName { get; private set; }
+        public string Name { get; private set; }
         public string Email { get; private set; }
         public string PasswordHash { get; private set; }
         public DateTime? UpdateDate { get; private set; }
@@ -14,7 +14,7 @@ namespace ProjectManagementSystem.Domain.User.Accounts
 
         internal void UpdateName(string name)
         {
-            UserName = name;
+            Name = name;
             UpdateDate = DateTime.UtcNow;
             _concurrencyStamp = Guid.NewGuid();
         }

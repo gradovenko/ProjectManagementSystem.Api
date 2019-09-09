@@ -22,7 +22,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users
                 .Select(user => new FullUserView
                 {
                     Id = user.Id,
-                    UserName = user.UserName,
+                    Name = user.Name,
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,

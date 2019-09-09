@@ -20,11 +20,11 @@ namespace ProjectManagementSystem.Infrastructure.User.Accounts
                 .SingleOrDefaultAsync(u => u.Id == userId, cancellationToken);
         }
         
-        public async Task<Domain.User.Accounts.User> FindByUserName(string userName, CancellationToken cancellationToken)
+        public async Task<Domain.User.Accounts.User> FindByName(string name, CancellationToken cancellationToken)
         {
             return await _context.Users
                 .AsNoTracking()
-                .SingleOrDefaultAsync(u => u.UserName == userName, cancellationToken);
+                .SingleOrDefaultAsync(u => u.Name == name, cancellationToken);
         }
 
         public async Task<Domain.User.Accounts.User> FindByEmail(string email, CancellationToken cancellationToken)

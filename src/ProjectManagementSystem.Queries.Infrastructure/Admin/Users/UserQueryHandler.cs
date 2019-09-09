@@ -22,7 +22,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users
                 .Where(user => user.Id == query.Id)
                 .Select(user => new ShortUserView
                 {
-                    UserName = user.UserName,
+                    Name = user.Name,
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,

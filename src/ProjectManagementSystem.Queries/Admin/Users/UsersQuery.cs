@@ -1,5 +1,3 @@
-using EventFlow.Queries;
-
 namespace ProjectManagementSystem.Queries.Admin.Users
 {
     public class UsersQuery : PageQuery<FullUserView>

@@ -6,7 +6,7 @@ namespace ProjectManagementSystem.WebApi.Models.Admin.Users
     public class CreateUserBinding
     {
         public Guid Id { get; set; }
-        public string UserName { get; set; }
+        public string Name { get; set; }
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -20,7 +20,7 @@ namespace ProjectManagementSystem.WebApi.Models.Admin.Users
         {
             RuleFor(b => b.Id)
                 .NotEmpty();
-            RuleFor(b => b.UserName)
+            RuleFor(b => b.Name)
                 .NotEmpty();
             RuleFor(b => b.Password)
                 .NotEmpty();
