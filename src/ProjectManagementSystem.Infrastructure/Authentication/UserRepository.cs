@@ -21,11 +21,11 @@ namespace ProjectManagementSystem.Infrastructure.Authentication
                 .SingleOrDefaultAsync(u => u.Id == userId, cancellationToken);
         }
         
-        public async Task<Domain.Authentication.User> FindByUserName(string userName, CancellationToken cancellationToken)
+        public async Task<Domain.Authentication.User> FindByName(string name, CancellationToken cancellationToken)
         {
             return await _context.Users
                 .AsNoTracking()
-                .SingleOrDefaultAsync(u => u.UserName == userName, cancellationToken);
+                .SingleOrDefaultAsync(u => u.Name == name, cancellationToken);
         }
 
         public async Task<Domain.Authentication.User> FindByEmail(string email, CancellationToken cancellationToken)

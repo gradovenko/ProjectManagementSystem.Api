@@ -19,8 +19,8 @@ namespace ProjectManagementSystem.Infrastructure.Authentication
 
                 builder.Property(u => u.Id)
                     .ValueGeneratedNever();
-                builder.Property(u => u.UserName)
-                    .HasColumnName("UserName")
+                builder.Property(u => u.Name)
+                    .HasColumnName("Name")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.Email)
@@ -37,7 +37,7 @@ namespace ProjectManagementSystem.Infrastructure.Authentication
                         r => (UserRole) Enum.Parse(typeof(UserRole), r))
                     .IsRequired();
 
-                builder.HasIndex(u => u.UserName)
+                builder.HasIndex(u => u.Name)
                     .HasName("UserNameIndex")
                     .IsUnique();
                 

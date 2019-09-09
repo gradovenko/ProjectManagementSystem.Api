@@ -19,7 +19,7 @@ namespace ProjectManagementSystem.Domain.User.Accounts
         {
             var user = await _userRepository.Get(id, cancellationToken);
             
-            var existingUser = await _userRepository.FindByUserName(name, cancellationToken);
+            var existingUser = await _userRepository.FindByName(name, cancellationToken);
 
             if (existingUser != null)
                 throw new NameAlreadyExistsException();

@@ -20,8 +20,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.Property(u => u.Id)
                     .HasColumnName("Id")
                     .ValueGeneratedNever();
-                builder.Property(u => u.UserName)
-                    .HasColumnName("UserName")
+                builder.Property(u => u.Name)
+                    .HasColumnName("Name")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.Email)
@@ -59,7 +59,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
 
-                builder.HasIndex(u => u.UserName)
+                builder.HasIndex(u => u.Name)
                     .HasName("UserNameIndex")
                     .IsUnique();
                 builder.HasIndex(u => u.Email)
@@ -69,7 +69,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.HasData(new User
                 {
                     Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                    UserName = "Admin",
+                    Name = "Admin",
                     Email = "admin@projectms.local",
                     PasswordHash = "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
                     FirstName = "Admin",

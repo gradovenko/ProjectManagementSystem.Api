@@ -36,11 +36,11 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
             var user = await userRepository.Get(binding.Id, cancellationToken);
 
             if (user != null)
-                if (!user.UserName.Equals(binding.UserName) ||
+                if (!user.Name.Equals(binding.Name) ||
                     !user.Email.Equals(binding.Email))
                     throw new ApiException(HttpStatusCode.Conflict, ErrorCode.UserAlreadyExists, "User already exists with other parameters");
 
-            user = await userRepository.FindByUserName(binding.UserName, cancellationToken);
+            user = await userRepository.FindByName(binding.Name, cancellationToken);
 
             if (user != null)
                 throw new ApiException(HttpStatusCode.Conflict, ErrorCode.UsernameAlreadyExists, "Username already exists");
@@ -52,7 +52,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
 
             var passwordHash = passwordHasher.HashPassword(binding.Password);
 
-            user = new Domain.Admin.CreateUsers.User(binding.Id, binding.UserName, binding.Email, passwordHash, binding.FirstName, binding.LastName, Enum.Parse<Domain.Admin.CreateUsers.UserRole>(binding.Role.ToString()));
+            user = new Domain.Admin.CreateUsers.User(binding.Id, binding.Name, binding.Email, passwordHash, binding.FirstName, binding.LastName, Enum.Parse<Domain.Admin.CreateUsers.UserRole>(binding.Role.ToString()));
 
             await userRepository.Save(user);
 

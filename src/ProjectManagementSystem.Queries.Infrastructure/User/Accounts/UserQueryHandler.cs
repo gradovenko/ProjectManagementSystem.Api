@@ -22,7 +22,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.Accounts
                 .Where(user => user.Id == query.Id)
                 .Select(user => new UserView
                 {
-                    UserName = user.UserName,
+                    Name = user.Name,
                     Email = user.Email,
                 })
                 .SingleOrDefaultAsync(cancellationToken);

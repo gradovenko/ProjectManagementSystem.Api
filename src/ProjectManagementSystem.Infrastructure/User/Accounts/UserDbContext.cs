@@ -20,8 +20,8 @@ namespace ProjectManagementSystem.Infrastructure.User.Accounts
                 builder.Property(u => u.Id)
                     .HasColumnName("Id")
                     .ValueGeneratedNever();
-                builder.Property(u => u.UserName)
-                    .HasColumnName("UserName")
+                builder.Property(u => u.Name)
+                    .HasColumnName("Name")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.Email)
