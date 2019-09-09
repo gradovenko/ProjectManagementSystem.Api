@@ -11,5 +11,6 @@ namespace ProjectManagementSystem.WebApi.Exceptions
         public const string UserAlreadyExists = "user_already_exists";
         public const string UsernameAlreadyExists = "username_already_exists";
         public const string EmailAlreadyExists = "email_already_exists";
+        public const string InvalidPassword = "invalid_password";
     }
 }

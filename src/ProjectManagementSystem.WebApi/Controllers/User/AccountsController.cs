@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,11 +47,11 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             }
             catch (NameAlreadyExistsException)
             {
-                throw new ApiException(HttpStatusCode.Conflict, "", "");
+                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.UsernameAlreadyExists, "Name already exists");
             }
             catch (InvalidPasswordException)
             {
-                throw new ApiException(HttpStatusCode.UnprocessableEntity, "", "");
+                throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.InvalidPassword, "Invalid password");
             }
 
             return NoContent();
@@ -81,11 +80,11 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             }
             catch (EmailAlreadyExistsException)
             {
-                throw new ApiException(HttpStatusCode.Conflict, "", "");
+                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.EmailAlreadyExists, "Email already exists");
             }
             catch (InvalidPasswordException)
             {
-                throw new ApiException(HttpStatusCode.UnprocessableEntity, "", "");
+                throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.InvalidPassword, "Invalid password");
             }
 
             return NoContent();
