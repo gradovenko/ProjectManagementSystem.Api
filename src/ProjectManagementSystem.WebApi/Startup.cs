@@ -140,10 +140,10 @@ namespace ProjectManagementSystem.WebApi
             #endregion
 
             #region Queries
-
-            services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            
             services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
             var containerBuilder = new ContainerBuilder();
