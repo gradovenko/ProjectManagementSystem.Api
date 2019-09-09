@@ -7,9 +7,9 @@ namespace ProjectManagementSystem.Infrastructure.Authentication
 {
     public class UserRepository : Domain.Authentication.IUserRepository
     {
-        private readonly AuthenticationDbContext _context;
+        private readonly UserDbContext _context;
 
-        public UserRepository(AuthenticationDbContext context)
+        public UserRepository(UserDbContext context)
         {
             _context = context;
         }

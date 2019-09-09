@@ -100,7 +100,7 @@ namespace ProjectManagementSystem.WebApi
 
             services.Configure<JwtOptions>(Configuration.GetSection("Authentication:Jwt"));
 
-            services.AddDbContext<AuthenticationDbContext>(options =>
+            services.AddDbContext<UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
             services.AddScoped<Domain.Authentication.IUserRepository, Infrastructure.Authentication.UserRepository>();
             services.AddScoped<Domain.Authentication.IJwtAccessTokenFactory, JwtAccessTokenFactory>();

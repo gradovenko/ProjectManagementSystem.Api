@@ -2,7 +2,7 @@ using System;
 
 namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore
 {
-    public class RefreshToken
+    public sealed class RefreshToken
     {
         public Guid Id { get; private set; }
 
@@ -16,12 +16,12 @@ namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore
             ExpireDate = DateTime.UtcNow.Add(expiresIn);;
             UserId = userId;
         }
-
-        protected RefreshToken() { }
-
+        
         public void Terminate()
         {
             ExpireDate = DateTime.UtcNow;
         }
+        
+        private RefreshToken() { }
     }
 }

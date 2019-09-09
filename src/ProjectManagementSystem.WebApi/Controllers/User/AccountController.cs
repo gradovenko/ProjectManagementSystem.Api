@@ -14,7 +14,13 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
     [ApiController]
     public sealed class AccountsController : ControllerBase
     {
-        [HttpGet("settings/accounts", Name = "GetAccountRoute")]
+        /// <summary>
+        /// Get my name and email
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <param name="queryProcessor"></param>
+        /// <returns></returns>
+        [HttpGet("settings/account", Name = "GetAccountRoute")]
         [ProducesResponseType(typeof(UserView), 200)]
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,
@@ -26,13 +32,13 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         }
 
         /// <summary>
-        /// Update user name
+        /// Update my name
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <param name="userUpdateService"></param>
         /// <param name="binding"></param>
         /// <returns></returns>
-        [HttpPut("settings/accounts/updateName")]
+        [HttpPut("settings/account/name")]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         [ProducesResponseType(typeof(ProblemDetails), 422)]
         [ProducesResponseType(204)]
@@ -58,14 +64,14 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         }
 
         /// <summary>
-        /// Update user email
+        /// Update my email
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <param name="userUpdateService"></param>
         /// <param name="binding">Input model</param>
         /// <returns></returns>
         /// <exception cref="ApiException"></exception>
-        [HttpPut("settings/accounts/updateEmail")]
+        [HttpPut("settings/account/email")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         [ProducesResponseType(typeof(ProblemDetails), 422)]

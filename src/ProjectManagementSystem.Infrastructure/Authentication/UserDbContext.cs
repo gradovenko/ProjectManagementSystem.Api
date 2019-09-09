@@ -4,9 +4,9 @@ using ProjectManagementSystem.Domain.Authentication;
 
 namespace ProjectManagementSystem.Infrastructure.Authentication
 {
-    public sealed class AuthenticationDbContext : DbContext
+    public sealed class UserDbContext : DbContext
     {
-        public AuthenticationDbContext(DbContextOptions<AuthenticationDbContext> options) : base(options) { }
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
         internal DbSet<Domain.Authentication.User> Users { get; set; }
 
