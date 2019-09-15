@@ -2,6 +2,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using EventFlow.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.WebApi.Extensions;
 using ProjectManagementSystem.Domain.User.Accounts;
@@ -11,8 +12,9 @@ using ProjectManagementSystem.WebApi.Models.User.Accounts;
 
 namespace ProjectManagementSystem.WebApi.Controllers.User
 {
+    [Authorize]
     [ApiController]
-    public sealed class AccountsController : ControllerBase
+    public sealed class AccountController : ControllerBase
     {
         /// <summary>
         /// Get my name and email

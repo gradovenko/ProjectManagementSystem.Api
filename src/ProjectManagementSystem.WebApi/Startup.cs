@@ -28,6 +28,7 @@ using ProjectManagementSystem.Infrastructure.Authentication;
 using ProjectManagementSystem.Infrastructure.PasswordHasher;
 using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
 using ProjectManagementSystem.Queries;
+using ProjectManagementSystem.WebApi.Authorization;
 using ProjectManagementSystem.WebApi.Filters;
 using ProjectManagementSystem.WebApi.Middlewares;
 using Swashbuckle.AspNetCore.Swagger;
@@ -112,6 +113,20 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region Authorization
+
+            services.AddAuthorization(options =>
+            {
+                var authorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+                        JwtBearerDefaults.AuthenticationScheme
+                    ).RequireAuthenticatedUser()
+                    .RequireRole(UserRole.Admin, UserRole.User);
+
+                options.DefaultPolicy = authorizationPolicyBuilder.Build();
+            });
+
+            #endregion
+
             #region User
 
             #region Accounts
@@ -141,13 +156,13 @@ namespace ProjectManagementSystem.WebApi
 
             #region Queries
             
-            services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-
             var containerBuilder = new ContainerBuilder();
 
+            services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            
             var container = EventFlowOptions.New
                 .UseAutofacContainerBuilder(containerBuilder)
                 .AddQueryHandler<Queries.Infrastructure.Admin.Users.UserQueryHandler, Queries.Admin.Users.UserQuery,
@@ -156,7 +171,7 @@ namespace ProjectManagementSystem.WebApi
                     Page<Queries.Admin.Users.FullUserView>>()
                 .AddQueryHandler<Queries.Infrastructure.User.Accounts.UserQueryHandler, Queries.User.Accounts.UserQuery,
                     Queries.User.Accounts.UserView>();
-                            
+
             containerBuilder.Populate(services);
 
             return new AutofacServiceProvider(containerBuilder.Build());
