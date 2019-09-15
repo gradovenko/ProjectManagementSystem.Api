@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using EventFlow.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Domain.Admin.CreateUsers;
 using ProjectManagementSystem.Queries.Admin.Users;
@@ -11,6 +12,7 @@ using ProjectManagementSystem.WebApi.Models.Admin.Users;
 
 namespace ProjectManagementSystem.WebApi.Controllers.Admin
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public sealed class UsersController : ControllerBase
     {
