@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Domain.Authentication;
 using ProjectManagementSystem.WebApi.Exceptions;
 using ProjectManagementSystem.WebApi.Models;
+using ProjectManagementSystem.WebApi.Models.Authentication;
 
 namespace ProjectManagementSystem.WebApi.Controllers
 {
