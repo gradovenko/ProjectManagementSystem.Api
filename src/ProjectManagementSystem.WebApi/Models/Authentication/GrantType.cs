@@ -1,4 +1,4 @@
-namespace ProjectManagementSystem.WebApi.Models
+namespace ProjectManagementSystem.WebApi.Models.Authentication
 {
     public enum GrantType
     {

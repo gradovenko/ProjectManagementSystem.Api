@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace ProjectManagementSystem.WebApi.Models
+namespace ProjectManagementSystem.WebApi.Models.Authentication
 {
     public class TokenView
     {

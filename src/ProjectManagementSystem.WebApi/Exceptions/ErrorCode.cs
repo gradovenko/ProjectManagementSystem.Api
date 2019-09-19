@@ -5,6 +5,11 @@ namespace ProjectManagementSystem.WebApi.Exceptions
         public const string InternalServerError = "internal_server_error";
         public const string BadRequest = "bad_request";
         public const string InvalidCredentials = "invalid_credentials";
+        public const string GrantTypeIsEmpty = "grant_type_is_empty";
+        public const string LoginIsEmpty = "login_is_empty";
+        public const string PasswordIsEmpty = "password_is_empty";
+        public const string RefreshTokenIsEmpty = "refresh_token_is_empty";
+        public const string InvalidRefreshToken = "invalid_refresh_token";
         public const string UnsupportedGrantType = "unsupported_grant_type";
         public const string Forbidden = "forbidden";
         public const string UserNotFound = "user_not_found";

@@ -1,7 +1,7 @@
 using System;
 using FluentValidation;
 
-namespace ProjectManagementSystem.WebApi.Models
+namespace ProjectManagementSystem.WebApi.Models.Authentication
 {
     public sealed class SignInBinding
     {
