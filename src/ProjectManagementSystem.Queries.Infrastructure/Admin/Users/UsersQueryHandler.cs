@@ -1,13 +1,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventFlow.Queries;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Queries.Admin.Users;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users
 {
-    public class UsersQueryHandler : IQueryHandler<UsersQuery, Page<FullUserView>>
+    public class UsersQueryHandler : IRequestHandler<UsersQuery, Page<FullUserView>>
     {
         private readonly UserDbContext _context;
 
@@ -16,7 +16,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users
             _context = context;
         }
         
-        public async Task<Page<FullUserView>> ExecuteQueryAsync(UsersQuery query, CancellationToken cancellationToken)
+        public async Task<Page<FullUserView>> Handle(UsersQuery query, CancellationToken cancellationToken)
         {
             var sql = _context.Users.AsNoTracking()
                 .Select(user => new FullUserView
