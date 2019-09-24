@@ -1,18 +1,24 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim AS base
 WORKDIR /app
+EXPOSE 80
+EXPOSE 443
 
-# copy csproj and restore as distinct layers
-COPY *.sln .
-COPY src/ProjectManagementSystem.WebApi/*.csproj ./ProjectManagementSystem.WebApi/
-RUN dotnet restore
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
+WORKDIR /src
+COPY ["src/ProjectManagementSystem.WebApi/ProjectManagementSystem.WebApi.csproj", "src/ProjectManagementSystem.WebApi/"]
+COPY ["src/ProjectManagementSystem.Domain/ProjectManagementSystem.Domain.csproj", "src/ProjectManagementSystem.Domain/"]
+COPY ["src/ProjectManagementSystem.Queries.Infrastructure/ProjectManagementSystem.Queries.Infrastructure.csproj", "src/ProjectManagementSystem.Queries.Infrastructure/"]
+COPY ["src/ProjectManagementSystem.Queries/ProjectManagementSystem.Queries.csproj", "src/ProjectManagementSystem.Queries/"]
+COPY ["src/ProjectManagementSystem.Infrastructure/ProjectManagementSystem.Infrastructure.csproj", "src/ProjectManagementSystem.Infrastructure/"]
+RUN dotnet restore "src/ProjectManagementSystem.WebApi/ProjectManagementSystem.WebApi.csproj"
+COPY . .
+WORKDIR "/src/src/ProjectManagementSystem.WebApi"
+RUN dotnet build "ProjectManagementSystem.WebApi.csproj" -c Release -o /app
 
-# copy everything else and build app
-COPY ProjectManagementSystem.WebApi/. ./ProjectManagementSystem.WebApi/
-WORKDIR /app/ProjectManagementSystem.WebApi
-RUN dotnet publish -c Release -o out
+FROM build AS publish
+RUN dotnet publish "ProjectManagementSystem.WebApi.csproj" -c Release -o /app
 
-
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
+FROM base AS final
 WORKDIR /app
-COPY --from=build /app/ProjectManagementSystem.WebApi/out ./
-ENTRYPOINT ["dotnet", "ProjectManagementSystem.WebApi.dll"]
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "ProjectManagementSystem.WebApi"]
