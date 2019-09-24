@@ -97,6 +97,26 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("UserId")
                     .IsRequired();
             });
+            
+            modelBuilder.Entity<IssuePriority>(builder =>
+            {
+                builder.ToTable("IssuePriority");
+                builder.HasKey(ip => ip.Id);
+
+                builder.Property(ip => ip.Id)
+                    .HasColumnName("Id")
+                    .IsRequired();
+                builder.Property(ip => ip.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(ip => ip.IsActive)
+                    .HasColumnName("IsActive")
+                    .IsRequired();
+
+                builder.HasIndex(ip => ip.Id)
+                    .HasName("IssuePriorityIndex")
+                    .IsUnique();
+            });
         }
     }
 }

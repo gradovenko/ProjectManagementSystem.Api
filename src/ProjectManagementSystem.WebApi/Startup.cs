@@ -158,20 +158,35 @@ namespace ProjectManagementSystem.WebApi
             
             var containerBuilder = new ContainerBuilder();
 
+            #region AdminContext
+
             services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddDbContext<Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            #endregion
+
+            #region UserContext
+
             services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            
+
+            #endregion
+
             var container = EventFlowOptions.New
                 .UseAutofacContainerBuilder(containerBuilder)
                 .AddQueryHandler<Queries.Infrastructure.Admin.Users.UserQueryHandler, Queries.Admin.Users.UserQuery,
                     Queries.Admin.Users.ShortUserView>()
                 .AddQueryHandler<Queries.Infrastructure.Admin.Users.UsersQueryHandler, Queries.Admin.Users.UsersQuery,
                     Page<Queries.Admin.Users.FullUserView>>()
+                .AddQueryHandler<Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityQueryHandler, Queries.Admin.IssuePriorities.IssuePriorityQuery,
+                    Queries.Admin.IssuePriorities.IssuePriorityView>()
+                .AddQueryHandler<Queries.Infrastructure.Admin.IssuePriorities.IssuePrioritiesQueryHandler, Queries.Admin.IssuePriorities.IssuePrioritiesQuery,
+                    Page<Queries.Admin.IssuePriorities.IssuePriorityView>>()
                 .AddQueryHandler<Queries.Infrastructure.User.Accounts.UserQueryHandler, Queries.User.Accounts.UserQuery,
                     Queries.User.Accounts.UserView>();
-
+            
             containerBuilder.Populate(services);
 
             return new AutofacServiceProvider(containerBuilder.Build());
