@@ -86,7 +86,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         }
 
         /// <summary>
-        /// Get users
+        /// Find users
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <param name="binding"></param>

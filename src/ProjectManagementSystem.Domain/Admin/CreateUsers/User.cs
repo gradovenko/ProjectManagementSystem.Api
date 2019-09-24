@@ -13,7 +13,7 @@ namespace ProjectManagementSystem.Domain.Admin.CreateUsers
         public UserRole Role { get; private set; }
         public UserStatus Status { get; private set; }
         public DateTime CreateDate { get; private set; }
-        public Guid ConcurrencyStamp { get; set; } = Guid.NewGuid();
+        private Guid _concurrencyStamp = Guid.NewGuid();
 
         public User(Guid id, string name, string email, string passwordHash, string firstName, string lastName, UserRole role)
         {
