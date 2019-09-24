@@ -5,7 +5,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users
 {
     public class UserDbContext : DbContext
     {
-        public UserDbContext(DbContextOptions options) : base(options) { }
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
         internal DbSet<User> Users { get; set; }
 
