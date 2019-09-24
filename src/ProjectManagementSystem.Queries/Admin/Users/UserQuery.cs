@@ -1,9 +1,9 @@
 using System;
-using EventFlow.Queries;
+using MediatR;
 
 namespace ProjectManagementSystem.Queries.Admin.Users
 {
-    public class UserQuery : IQuery<ShortUserView>
+    public class UserQuery : IRequest<ShortUserView>
     {
         public Guid Id { get; }
         
