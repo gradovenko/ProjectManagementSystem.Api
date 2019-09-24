@@ -123,6 +123,8 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region DbContexts, repositories and services
+
             #region User
 
             #region Accounts
@@ -148,6 +150,8 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #endregion
+            
             #endregion
 
             #region Queries
