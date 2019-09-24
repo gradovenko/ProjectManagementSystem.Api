@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using EventFlow;
@@ -21,18 +19,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using ProjectManagementSystem.Infrastructure.Authentication;
 using ProjectManagementSystem.Infrastructure.PasswordHasher;
 using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
 using ProjectManagementSystem.Queries;
 using ProjectManagementSystem.WebApi.Authorization;
+using ProjectManagementSystem.WebApi.Extensions;
 using ProjectManagementSystem.WebApi.Filters;
 using ProjectManagementSystem.WebApi.Middlewares;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace ProjectManagementSystem.WebApi
 {
@@ -53,28 +47,24 @@ namespace ProjectManagementSystem.WebApi
             services.AddMemoryCache();
 
             services
-                .AddMvc(options => { options.Filters.Add(typeof(ErrorHandlingFilter)); })
+                .AddMvc(options =>
+                {
+                    options.Filters.Add(typeof(ErrorHandlingFilter));
+                    options.EnableEndpointRouting = false;
+                })
                 .AddFluentValidation(configuration =>
                 {
                     configuration.RegisterValidatorsFromAssemblyContaining<Startup>();
                 })
                 .AddJsonOptions(options =>
                 {
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver
-                    {
-                        NamingStrategy = new CamelCaseNamingStrategy
-                        {
-                            ProcessDictionaryKeys = true
-                        }
-                    };
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.IgnoreNullValues = true; 
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            services.AddSwaggerGen(ConfigureSwagger);
+            services.AddSwagger();
 
             #region Authentication
 
@@ -127,6 +117,8 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region DbContexts, repositories and services
+
             #region User
 
             #region Accounts
@@ -152,6 +144,8 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #endregion
+            
             #endregion
 
             #region Queries
@@ -179,44 +173,6 @@ namespace ProjectManagementSystem.WebApi
             #endregion
         }
 
-        private void ConfigureSwagger(SwaggerGenOptions options)
-        {
-            options.SwaggerDoc("v1", new Info
-            {
-                Version = "v1",
-                Title = AppDomain.CurrentDomain.FriendlyName,
-                Description = $"Swagger for {AppDomain.CurrentDomain.FriendlyName}",
-            });
-
-            options.CustomSchemaIds(type => type.FullName);
-
-            options.MapType<Guid>(() => new Schema
-            {
-                Type = "string",
-                Format = "uuid",
-                Default = Guid.NewGuid()
-            });
-
-            options.DescribeAllEnumsAsStrings();
-
-            options.AddSecurityDefinition("Bearer", new ApiKeyScheme
-            {
-                In = "header",
-                Description =
-                    "Insert the access token with Bearer in the field",
-                Name = "Authorization",
-                Type = "apiKey",
-            });
-
-            options.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-            {
-                {"Bearer", new string[] { }}
-            });
-
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
-                $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -229,8 +185,8 @@ namespace ProjectManagementSystem.WebApi
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
-
+            } 
+            
             //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
@@ -238,7 +194,6 @@ namespace ProjectManagementSystem.WebApi
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
-
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("../v1/swagger.json", AppDomain.CurrentDomain.FriendlyName);
