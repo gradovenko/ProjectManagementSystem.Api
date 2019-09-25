@@ -5,7 +5,7 @@ namespace ProjectManagementSystem.Infrastructure.Admin.IssuePriorities
 {
     public class IssuePriorityDbContext : DbContext
     {
-        public IssuePriorityDbContext(DbContextOptions options) : base(options) { }
+        public IssuePriorityDbContext(DbContextOptions<IssuePriorityDbContext> options) : base(options) { }
         
         internal DbSet<IssuePriority> IssuePriorities { get; set; }
 
@@ -20,6 +20,7 @@ namespace ProjectManagementSystem.Infrastructure.Admin.IssuePriorities
 
                 builder.Property(ip => ip.Id)
                     .HasColumnName("Id")
+                    .ValueGeneratedNever()
                     .IsRequired();
                 builder.Property(ip => ip.Name)
                     .HasColumnName("Name")

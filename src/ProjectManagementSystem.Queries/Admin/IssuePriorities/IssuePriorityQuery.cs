@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ProjectManagementSystem.Queries.Admin.IssuePriorities
 {
-    public class IssuePriorityQuery : IRequest<IssuePriorityView>
+    public class IssuePriorityQuery : IRequest<ShortIssuePriorityView>
     {
         public Guid Id { get; }
         

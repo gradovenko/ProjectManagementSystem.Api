@@ -7,7 +7,7 @@ using ProjectManagementSystem.Queries.Admin.IssuePriorities;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssuePriorities
 {
-    public class IssuePrioritiesQueryHandler : IRequestHandler<IssuePrioritiesQuery, Page<IssuePriorityView>>
+    public class IssuePrioritiesQueryHandler : IRequestHandler<IssuePrioritiesQuery, Page<FullIssuePriorityView>>
     {
         private readonly IssuePriorityDbContext _context;
 
@@ -16,18 +16,18 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssuePriorities
             _context = context;
         }
 
-        public async Task<Page<IssuePriorityView>> Handle(IssuePrioritiesQuery query,
+        public async Task<Page<FullIssuePriorityView>> Handle(IssuePrioritiesQuery query,
             CancellationToken cancellationToken)
         {
             var sql = _context.IssuePriorities.AsNoTracking()
-                .Select(issuePriority => new IssuePriorityView
+                .Select(issuePriority => new FullIssuePriorityView
                 {
                     Id = issuePriority.Id,
                     Name = issuePriority.Name,
                     IsActive = issuePriority.IsActive
                 });
 
-            return new Page<IssuePriorityView>
+            return new Page<FullIssuePriorityView>
             {
                 Limit = query.Limit,
                 Offset = query.Offset,

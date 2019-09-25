@@ -150,20 +150,31 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region IssuePriorities
+
+            services.AddDbContext<Infrastructure.Admin.IssuePriorities.IssuePriorityDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services
+                .AddScoped<Domain.Admin.IssuePriorities.IIssuePriorityRepository,
+                    Infrastructure.Admin.IssuePriorities.IssuePriorityRepository>();
+
             #endregion
-            
+
+            #endregion
+
             #endregion
 
             #region Queries
-            
+
+            #region Admin
+
+            #region Users
+
             services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services
-                .AddScoped<IRequestHandler<Queries.Admin.Users.UserQuery, Queries.Admin.Users.ShortUserView>,
-                    Queries.Infrastructure.Admin.Users.UserQueryHandler>();
+            services.AddScoped<IRequestHandler<Queries.Admin.Users.UserQuery, Queries.Admin.Users.ShortUserView>,
+                Queries.Infrastructure.Admin.Users.UserQueryHandler>();
             services.AddMediatR(typeof(Queries.Admin.Users.UserQuery).Assembly);
 
             services
@@ -171,10 +182,44 @@ namespace ProjectManagementSystem.WebApi
                     Queries.Infrastructure.Admin.Users.UsersQueryHandler>();
             services.AddMediatR(typeof(Queries.Admin.Users.UsersQuery).Assembly);
 
+            #endregion
+
+            #region IssuePriorities
+
+            services.AddDbContext<Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.IssuePriorities.IssuePriorityQuery,
+                        Queries.Admin.IssuePriorities.ShortIssuePriorityView>,
+                    Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.IssuePriorities.IssuePriorityQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.IssuePriorities.IssuePrioritiesQuery,
+                        Page<Queries.Admin.IssuePriorities.FullIssuePriorityView>>,
+                    Queries.Infrastructure.Admin.IssuePriorities.IssuePrioritiesQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.IssuePriorities.IssuePrioritiesQuery).Assembly);
+
+            #endregion
+
+            #endregion
+
+            #region User
+
+            #region Accounts
+
+            services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
             services
                 .AddScoped<IRequestHandler<Queries.User.Accounts.UserQuery, Queries.User.Accounts.UserView>,
                     Queries.Infrastructure.User.Accounts.UserQueryHandler>();
             services.AddMediatR(typeof(Queries.User.Accounts.UserQuery).Assembly);
+
+            #endregion
+
+            #endregion
 
             #endregion
         }

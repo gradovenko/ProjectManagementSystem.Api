@@ -54,7 +54,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <param name="mediator"></param>
         /// <returns></returns>
         [HttpGet("admin/issuePriorities")]
-        [ProducesResponseType(typeof(IssuePriorityView), 200)]
+        [ProducesResponseType(typeof(ShortIssuePriorityView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
             [FromQuery] QueryIssuePriorityBinding binding,
@@ -72,7 +72,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <returns></returns>
         /// <exception cref="ApiException"></exception>
         [HttpGet("admin/issuePriorities/{id}", Name = "GetIssuePriorityAdminRoute")]
-        [ProducesResponseType(typeof(IssuePriorityView), 200)]
+        [ProducesResponseType(typeof(ShortIssuePriorityView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,
