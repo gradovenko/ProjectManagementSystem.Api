@@ -149,6 +149,16 @@ namespace ProjectManagementSystem.WebApi
                     Infrastructure.Admin.IssuePriorities.IssuePriorityRepository>();
 
             #endregion
+            
+            #region IssueStatuses
+
+            services.AddDbContext<Infrastructure.Admin.IssueStatuses.IssueStatusDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services
+                .AddScoped<Domain.Admin.IssueStatuses.IIssueStatusRepository,
+                    Infrastructure.Admin.IssueStatuses.IssueStatusRepository>();
+
+            #endregion
 
             #endregion
 
@@ -190,6 +200,25 @@ namespace ProjectManagementSystem.WebApi
                         Page<Queries.Admin.IssuePriorities.FullIssuePriorityView>>,
                     Queries.Infrastructure.Admin.IssuePriorities.IssuePrioritiesQueryHandler>();
             services.AddMediatR(typeof(Queries.Admin.IssuePriorities.IssuePrioritiesQuery).Assembly);
+
+            #endregion
+            
+            #region IssueStatuses
+
+            services.AddDbContext<Queries.Infrastructure.Admin.IssueStatuses.IssueStatusDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.IssueStatuses.IssueStatusQuery,
+                        Queries.Admin.IssueStatuses.ShortIssueStatusView>,
+                    Queries.Infrastructure.Admin.IssueStatuses.IssueStatusQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.IssueStatuses.IssueStatusQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.IssueStatuses.IssueStatusesQuery,
+                        Page<Queries.Admin.IssueStatuses.FullIssueStatusView>>,
+                    Queries.Infrastructure.Admin.IssueStatuses.IssueStatusesQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.IssueStatuses.IssueStatusesQuery).Assembly);
 
             #endregion
 
