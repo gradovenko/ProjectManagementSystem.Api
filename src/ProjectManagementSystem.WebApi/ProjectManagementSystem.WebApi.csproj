@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DocumentationFile>bin\Debug\ProjectManagementSystem.WebApi.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp3.0\ProjectManagementSystem.WebApi.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <DocumentationFile>bin\Release\ProjectManagementSystem.WebApi.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\netcoreapp3.0\ProjectManagementSystem.WebApi.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
