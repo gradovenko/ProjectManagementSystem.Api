@@ -31,6 +31,7 @@
         <PackageReference Include="System.Text.Json" Version="4.6.0" />
         <PackageReference Include="MediatR" Version="7.0.0" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ProjectManagementSystem.Domain\ProjectManagementSystem.Domain.csproj" />
