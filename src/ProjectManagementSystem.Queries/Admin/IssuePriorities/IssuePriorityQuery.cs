@@ -1,9 +1,9 @@
 using System;
-using EventFlow.Queries;
+using MediatR;
 
 namespace ProjectManagementSystem.Queries.Admin.IssuePriorities
 {
-    public class IssuePriorityQuery : IQuery<IssuePriorityView>
+    public class IssuePriorityQuery : IRequest<IssuePriorityView>
     {
         public Guid Id { get; }
         

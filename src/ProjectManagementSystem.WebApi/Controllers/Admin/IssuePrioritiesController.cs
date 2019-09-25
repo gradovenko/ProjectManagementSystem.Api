@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using EventFlow.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Domain.Admin.IssuePriorities;
@@ -51,24 +51,24 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <param name="binding"></param>
-        /// <param name="queryProcessor"></param>
+        /// <param name="mediator"></param>
         /// <returns></returns>
         [HttpGet("admin/issuePriorities")]
         [ProducesResponseType(typeof(IssuePriorityView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
             [FromQuery] QueryIssuePriorityBinding binding,
-            [FromServices] IQueryProcessor queryProcessor)
+            [FromServices] IMediator mediator)
         {
-            return Ok(await queryProcessor.ProcessAsync(new IssuePrioritiesQuery(binding.Offset, binding.Limit), cancellationToken));
+            return Ok(await mediator.Send(new IssuePrioritiesQuery(binding.Offset, binding.Limit), cancellationToken));
         }
-        
+
         /// <summary>
         /// Get issue priority
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <param name="id">User ID</param>
-        /// <param name="queryProcessor"></param>
+        /// <param name="mediator"></param>
         /// <returns></returns>
         /// <exception cref="ApiException"></exception>
         [HttpGet("admin/issuePriorities/{id}", Name = "GetIssuePriorityAdminRoute")]
@@ -77,9 +77,9 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
-            [FromServices] IQueryProcessor queryProcessor)
+            [FromServices] IMediator mediator)
         {
-            var issuePriority = await queryProcessor.ProcessAsync(new IssuePriorityQuery(id), cancellationToken);
+            var issuePriority = await mediator.Send(new IssuePriorityQuery(id), cancellationToken);
 
             if (issuePriority == null)
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssuePriorityNotFound, "Issue priority not found");
