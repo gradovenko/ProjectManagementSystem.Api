@@ -1,13 +1,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventFlow.Queries;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Queries.Admin.IssuePriorities;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssuePriorities
 {
-    public class IssuePriorityQueryHandler : IQueryHandler<IssuePriorityQuery, IssuePriorityView>
+    public class IssuePriorityQueryHandler : IRequestHandler<IssuePriorityQuery, IssuePriorityView>
     {
         private readonly IssuePriorityDbContext _context;
 
@@ -16,7 +16,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssuePriorities
             _context = context;
         }
 
-        public async Task<IssuePriorityView> ExecuteQueryAsync(IssuePriorityQuery query, CancellationToken cancellationToken)
+        public async Task<IssuePriorityView> Handle(IssuePriorityQuery query, CancellationToken cancellationToken)
         {
             return await _context.IssuePriorities.AsNoTracking()
                 .Where(issuePriority => issuePriority.Id == query.Id)
