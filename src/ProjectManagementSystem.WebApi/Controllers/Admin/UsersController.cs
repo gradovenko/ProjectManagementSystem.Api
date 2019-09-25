@@ -2,13 +2,13 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using EventFlow.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Domain.Admin.CreateUsers;
 using ProjectManagementSystem.Queries.Admin.Users;
 using ProjectManagementSystem.WebApi.Exceptions;
 using ProjectManagementSystem.WebApi.Models.Admin.Users;
+using MediatR;
 
 namespace ProjectManagementSystem.WebApi.Controllers.Admin
 {
@@ -66,7 +66,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <param name="id">User ID</param>
-        /// <param name="queryProcessor"></param>
+        /// <param name="mediator"></param>
         /// <returns></returns>
         /// <exception cref="ApiException"></exception>
         [HttpGet("admin/users/{id}", Name = "GetUserAdminRoute")]
@@ -75,9 +75,9 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
-            [FromServices] IQueryProcessor queryProcessor)
+            [FromServices] IMediator mediator)
         {
-            var user = await queryProcessor.ProcessAsync(new UserQuery(id), cancellationToken);
+            var user = await mediator.Send(new UserQuery(id), cancellationToken);
 
             if (user == null)
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.UserNotFound, "User not found");
@@ -86,20 +86,20 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         }
 
         /// <summary>
-        /// Get users
+        /// Find users
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <param name="binding"></param>
-        /// <param name="queryProcessor"></param>
+        /// <param name="mediator"></param>
         /// <returns></returns>
         [HttpGet("admin/users", Name = "FindUsersAdminRoute")]
         [ProducesResponseType(typeof(ShortUserView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
             [FromQuery] QueryUserBinding binding,
-            [FromServices] IQueryProcessor queryProcessor)
+            [FromServices] IMediator mediator)
         {
-            return Ok(await queryProcessor.ProcessAsync(new UsersQuery(binding.Offset, binding.Limit), cancellationToken));
+            return Ok(await mediator.Send(new UsersQuery(binding.Offset, binding.Limit), cancellationToken));
         }
     }
 }

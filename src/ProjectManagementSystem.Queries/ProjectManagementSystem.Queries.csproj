@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="EventFlow" Version="0.75.3970" />
+        <PackageReference Include="MediatR" Version="7.0.0" />
     </ItemGroup>
 
 </Project>

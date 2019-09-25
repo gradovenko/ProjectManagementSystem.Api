@@ -11,7 +11,7 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
-      <PackageReference Include="EventFlow" Version="0.75.3970" />
+      <PackageReference Include="MediatR" Version="7.0.0" />
     </ItemGroup>
 
 </Project>

@@ -29,12 +29,8 @@
         <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
         <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
         <PackageReference Include="System.Text.Json" Version="4.6.0" />
-        <PackageReference Include="Autofac" Version="4.9.4" />
-        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.0" />
-        <PackageReference Include="EventFlow" Version="0.75.3970" />
-        <PackageReference Include="EventFlow.AspNetCore" Version="0.75.3970" />
-        <PackageReference Include="EventFlow.Autofac" Version="0.75.3970" />
-    </ItemGroup>
+        <PackageReference Include="MediatR" Version="7.0.0" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
 
     <ItemGroup>
         <ProjectReference Include="..\ProjectManagementSystem.Domain\ProjectManagementSystem.Domain.csproj" />
