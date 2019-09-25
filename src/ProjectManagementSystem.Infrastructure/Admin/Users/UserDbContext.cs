@@ -53,7 +53,7 @@ namespace ProjectManagementSystem.Infrastructure.Admin.Users
                         s => s.ToString(),
                         s => (UserStatus) Enum.Parse(typeof(UserStatus), s))
                     .IsRequired();
-                builder.Property(u => u.ConcurrencyStamp)
+                builder.Property("_concurrencyStamp")
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
             });

@@ -1,9 +1,9 @@
 using System;
-using EventFlow.Queries;
+using MediatR;
 
 namespace ProjectManagementSystem.Queries.User.Accounts
 {
-    public class UserQuery : IQuery<UserView>
+    public class UserQuery : IRequest<UserView>
     {
         public Guid Id { get; }
         

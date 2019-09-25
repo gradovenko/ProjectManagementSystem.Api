@@ -1,7 +1,6 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using EventFlow.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.WebApi.Extensions;
@@ -9,6 +8,7 @@ using ProjectManagementSystem.Domain.User.Accounts;
 using ProjectManagementSystem.Queries.User.Accounts;
 using ProjectManagementSystem.WebApi.Exceptions;
 using ProjectManagementSystem.WebApi.Models.User.Accounts;
+using MediatR;
 
 namespace ProjectManagementSystem.WebApi.Controllers.User
 {
@@ -20,15 +20,15 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// Get my name and email
         /// </summary>
         /// <param name="cancellationToken"></param>
-        /// <param name="queryProcessor"></param>
+        /// <param name="mediator"></param>
         /// <returns></returns>
         [HttpGet("settings/account", Name = "GetAccountRoute")]
         [ProducesResponseType(typeof(UserView), 200)]
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,
-            [FromServices] IQueryProcessor queryProcessor)
+            [FromServices] IMediator mediator)
         {
-            var user = await queryProcessor.ProcessAsync(new UserQuery(User.GetId()), cancellationToken);
+            var user = await mediator.Send(new UserQuery(User.GetId()), cancellationToken);
 
             return Ok(user);
         }

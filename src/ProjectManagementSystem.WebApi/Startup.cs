@@ -4,12 +4,6 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using EventFlow;
-using EventFlow.Autofac.Extensions;
-using EventFlow.Extensions;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +18,10 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using FluentValidation.AspNetCore;
+using MediatR;
 using ProjectManagementSystem.Infrastructure.Authentication;
 using ProjectManagementSystem.Infrastructure.PasswordHasher;
 using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
@@ -31,8 +29,6 @@ using ProjectManagementSystem.Queries;
 using ProjectManagementSystem.WebApi.Authorization;
 using ProjectManagementSystem.WebApi.Filters;
 using ProjectManagementSystem.WebApi.Middlewares;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace ProjectManagementSystem.WebApi
 {
@@ -48,7 +44,7 @@ namespace ProjectManagementSystem.WebApi
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddMemoryCache();
 
@@ -127,6 +123,8 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region DbContexts, repositories and services
+
             #region User
 
             #region Accounts
@@ -153,43 +151,30 @@ namespace ProjectManagementSystem.WebApi
             #endregion
 
             #endregion
+            
+            #endregion
 
             #region Queries
             
-            var containerBuilder = new ContainerBuilder();
-
-            #region AdminContext
-
             services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            services.AddDbContext<Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-
-            #endregion
-
-            #region UserContext
-
             services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            #endregion
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Users.UserQuery, Queries.Admin.Users.ShortUserView>,
+                    Queries.Infrastructure.Admin.Users.UserQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Users.UserQuery).Assembly);
 
-            var container = EventFlowOptions.New
-                .UseAutofacContainerBuilder(containerBuilder)
-                .AddQueryHandler<Queries.Infrastructure.Admin.Users.UserQueryHandler, Queries.Admin.Users.UserQuery,
-                    Queries.Admin.Users.ShortUserView>()
-                .AddQueryHandler<Queries.Infrastructure.Admin.Users.UsersQueryHandler, Queries.Admin.Users.UsersQuery,
-                    Page<Queries.Admin.Users.FullUserView>>()
-                .AddQueryHandler<Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityQueryHandler, Queries.Admin.IssuePriorities.IssuePriorityQuery,
-                    Queries.Admin.IssuePriorities.IssuePriorityView>()
-                .AddQueryHandler<Queries.Infrastructure.Admin.IssuePriorities.IssuePrioritiesQueryHandler, Queries.Admin.IssuePriorities.IssuePrioritiesQuery,
-                    Page<Queries.Admin.IssuePriorities.IssuePriorityView>>()
-                .AddQueryHandler<Queries.Infrastructure.User.Accounts.UserQueryHandler, Queries.User.Accounts.UserQuery,
-                    Queries.User.Accounts.UserView>();
-            
-            containerBuilder.Populate(services);
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Users.UsersQuery, Page<Queries.Admin.Users.FullUserView>>,
+                    Queries.Infrastructure.Admin.Users.UsersQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Users.UsersQuery).Assembly);
 
-            return new AutofacServiceProvider(containerBuilder.Build());
+            services
+                .AddScoped<IRequestHandler<Queries.User.Accounts.UserQuery, Queries.User.Accounts.UserView>,
+                    Queries.Infrastructure.User.Accounts.UserQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.Accounts.UserQuery).Assembly);
 
             #endregion
         }
