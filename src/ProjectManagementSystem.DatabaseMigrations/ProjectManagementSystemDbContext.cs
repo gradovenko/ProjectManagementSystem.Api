@@ -19,7 +19,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
 
                 builder.Property(u => u.Id)
                     .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .IsRequired();
                 builder.Property(u => u.Name)
                     .HasColumnName("Name")
                     .HasMaxLength(256)
@@ -85,16 +86,34 @@ namespace ProjectManagementSystem.DatabaseMigrations
             modelBuilder.Entity<RefreshToken>(builder =>
             {
                 builder.ToTable("RefreshToken");
-                builder.HasKey(ut => ut.Id);
+                builder.HasKey(rt => rt.Id);
 
-                builder.Property(u => u.Id)
+                builder.Property(rt => rt.Id)
                     .HasColumnName("Id")
-                    .ValueGeneratedNever();
-                builder.Property(ut => ut.ExpireDate)
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(rt => rt.ExpireDate)
                     .HasColumnName("ExpireDate")
                     .IsRequired();
-                builder.Property(ut => ut.UserId)
+                builder.Property(rt => rt.UserId)
                     .HasColumnName("UserId")
+                    .IsRequired();
+            });
+            
+            modelBuilder.Entity<IssuePriority>(builder =>
+            {
+                builder.ToTable("IssuePriority");
+                builder.HasKey(ip => ip.Id);
+
+                builder.Property(ip => ip.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(ip => ip.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(ip => ip.IsActive)
+                    .HasColumnName("IsActive")
                     .IsRequired();
             });
         }
