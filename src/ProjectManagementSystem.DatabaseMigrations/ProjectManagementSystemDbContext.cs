@@ -116,6 +116,23 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("IsActive")
                     .IsRequired();
             });
+            
+            modelBuilder.Entity<IssueStatus>(builder =>
+            {
+                builder.ToTable("IssueStatus");
+                builder.HasKey(@is => @is.Id);
+
+                builder.Property(@is => @is.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(@is => @is.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(@is => @is.IsActive)
+                    .HasColumnName("IsActive")
+                    .IsRequired();
+            });
         }
     }
 }
