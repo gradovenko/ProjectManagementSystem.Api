@@ -21,5 +21,7 @@ namespace ProjectManagementSystem.WebApi.Exceptions
         public const string IssuePriorityAlreadyExists = "issue_priority_already_exists";
         public const string IssueStatusNotFound = "issue_status_not_found";
         public const string IssueStatusAlreadyExists = "issue_status_already_exists";
+        public const string ProjectNotFound = "project_not_found";
+        public const string ProjectAlreadyExists = "project_already_exists";
     }
 }
