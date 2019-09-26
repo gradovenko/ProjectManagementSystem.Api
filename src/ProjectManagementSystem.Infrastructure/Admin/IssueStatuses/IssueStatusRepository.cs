@@ -1,20 +1,33 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Domain.Admin.IssueStatuses;
 
 namespace ProjectManagementSystem.Infrastructure.Admin.IssueStatuses
 {
     public class IssueStatusRepository : IIssueStatusRepository
     {
-        public Task<IssueStatus> Get(Guid id, CancellationToken cancellationToken)
+        private readonly IssueStatusDbContext _context;
+
+        public IssueStatusRepository(IssueStatusDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        
+        public async Task<IssueStatus> Get(Guid id, CancellationToken cancellationToken)
+        {
+            return await _context.IssueStatuses
+                .AsNoTracking()
+                .SingleOrDefaultAsync(ip => ip.Id == id, cancellationToken);
         }
 
-        public Task Save(IssueStatus issuePriority)
+        public async Task Save(IssueStatus issueStatus)
         {
-            throw new NotImplementedException();
+            if (_context.Entry(issueStatus).State == EntityState.Detached)
+                await _context.IssueStatuses.AddAsync(issueStatus);
+
+            await _context.SaveChangesAsync();  
         }
     }
 }
