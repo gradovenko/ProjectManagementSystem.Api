@@ -1,27 +1,33 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Domain.Admin.CreateTrackers;
 
 namespace ProjectManagementSystem.Infrastructure.Admin.CreateTrackers
 {
     public class TrackerRepository : ITrackerRepository
     {
-        private readonly TrackerDbContext _dbContext;
+        private readonly TrackerDbContext _context;
 
-        public TrackerRepository(TrackerDbContext dbContext)
+        public TrackerRepository(TrackerDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
         public async Task<Tracker> Get(Guid id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await _context.Trackers
+                .AsNoTracking()
+                .SingleOrDefaultAsync(ip => ip.Id == id, cancellationToken);
         }
 
         public async Task Save(Tracker tracker)
         {
-            throw new NotImplementedException();
+            if (_context.Entry(tracker).State == EntityState.Detached)
+                await _context.Trackers.AddAsync(tracker);
+
+            await _context.SaveChangesAsync();  
         }
     }
 }
