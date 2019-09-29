@@ -171,6 +171,16 @@ namespace ProjectManagementSystem.WebApi
                     ProjectRepository>();
 
             #endregion
+            
+            #region Trackers
+
+            services.AddDbContext<Infrastructure.Admin.CreateTrackers.TrackerDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services
+                .AddScoped<Domain.Admin.CreateTrackers.ITrackerRepository,
+                    Infrastructure.Admin.CreateTrackers.TrackerRepository>();
+
+            #endregion
 
             #endregion
 
@@ -250,6 +260,25 @@ namespace ProjectManagementSystem.WebApi
                         Page<Queries.Admin.Projects.FullProjectView>>,
                     Queries.Infrastructure.Admin.Projects.ProjectsQueryHandler>();
             services.AddMediatR(typeof(Queries.Admin.Projects.ProjectsQuery).Assembly);
+
+            #endregion
+            
+            #region Trackers
+
+            services.AddDbContext<Queries.Infrastructure.Admin.Trackers.TrackerDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Trackers.TrackerQuery,
+                        Queries.Admin.Trackers.ShortTrackerView>,
+                    Queries.Infrastructure.Admin.Trackers.TrackerQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Trackers.TrackerQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Trackers.TrackersQuery,
+                        Page<Queries.Admin.Trackers.FullTrackerView>>,
+                    Queries.Infrastructure.Admin.Trackers.TrackersQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Trackers.TrackersQuery).Assembly);
 
             #endregion
 
