@@ -1,7 +1,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using ProjectManagementSystem.Domain.Admin.CreateProjects;
 
-namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
+namespace ProjectManagementSystem.Infrastructure.Admin.CreateProjects
 {
     public sealed class ProjectDbContext : DbContext
     {
@@ -40,6 +41,9 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
                 builder.Property(p => p.CreateDate)
                     .HasColumnName("CreateDate")
                     .IsRequired();
+                builder.Property("_concurrencyStamp")
+                    .HasColumnName("ConcurrencyStamp")
+                    .IsConcurrencyToken();
             });
         }
     }

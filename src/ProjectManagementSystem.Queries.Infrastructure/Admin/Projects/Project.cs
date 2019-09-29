@@ -8,7 +8,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsPublic { get; set; }
+        public ProjectStatus Status { get; }
         public DateTime CreateDate { get; set; }
-        public DateTime? UpdateDate { get; set; }
     }
 }

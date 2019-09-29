@@ -59,6 +59,45 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                     b.ToTable("IssueStatus");
                 });
 
+            modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.Project", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnName("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnName("ConcurrencyStamp")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnName("CreateDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnName("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnName("IsPublic")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnName("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnName("Status")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Project");
+                });
+
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -151,7 +190,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         new
                         {
                             Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("ee7f7f3f-8b37-423e-b348-1ebbccdb6e57"),
+                            ConcurrencyStamp = new Guid("4a21ef73-d50a-4d8c-99b5-d8f2bb98626b"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",

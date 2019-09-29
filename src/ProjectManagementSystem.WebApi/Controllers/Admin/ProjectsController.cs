@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProjectManagementSystem.Domain.Admin.Projects;
+using ProjectManagementSystem.Domain.Admin.CreateProjects;
 using ProjectManagementSystem.Queries.Admin.Projects;
 using ProjectManagementSystem.WebApi.Exceptions;
 using ProjectManagementSystem.WebApi.Models.Admin.Projects;
@@ -59,7 +59,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         [ProducesResponseType(typeof(ShortProjectView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
-            [FromBody] QueryProjectBindModel model,
+            [FromQuery] QueryProjectBindModel model,
             [FromServices] IMediator mediator)
         {
             return Ok(await mediator.Send(new ProjectsQuery(model.Offset, model.Limit), cancellationToken));

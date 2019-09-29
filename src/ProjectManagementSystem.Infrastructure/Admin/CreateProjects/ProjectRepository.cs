@@ -2,9 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Domain.Admin.Projects;
+using ProjectManagementSystem.Domain.Admin.CreateProjects;
 
-namespace ProjectManagementSystem.Infrastructure.Admin.Projects
+namespace ProjectManagementSystem.Infrastructure.Admin.CreateProjects
 {
     public class ProjectRepository : IProjectRepository
     {

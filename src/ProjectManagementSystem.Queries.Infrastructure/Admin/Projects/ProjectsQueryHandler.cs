@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Queries.Admin.Projects;
+using ProjectManagementSystem.Queries.Infrastructure.Extensions;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
 {
@@ -21,7 +22,11 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
             var sql = _context.Projects.AsNoTracking()
                 .Select(project => new FullProjectView
                 {
-
+                    Id = project.Id,
+                    Name = project.Name,
+                    Description = project.Description,
+                    IsPublic = project.IsPublic,
+                    CreateDate = project.CreateDate
                 });
 
             return new Page<FullProjectView>
