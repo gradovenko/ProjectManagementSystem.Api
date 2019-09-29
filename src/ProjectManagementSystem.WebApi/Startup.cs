@@ -15,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation.AspNetCore;
 using MediatR;
+using ProjectManagementSystem.Domain.Admin.CreateProjects;
+using ProjectManagementSystem.Infrastructure.Admin.CreateProjects;
 using ProjectManagementSystem.Infrastructure.Authentication;
 using ProjectManagementSystem.Infrastructure.PasswordHasher;
 using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
@@ -55,7 +57,7 @@ namespace ProjectManagementSystem.WebApi
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                    options.JsonSerializerOptions.IgnoreNullValues = true; 
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
                     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
@@ -149,7 +151,7 @@ namespace ProjectManagementSystem.WebApi
                     Infrastructure.Admin.IssuePriorities.IssuePriorityRepository>();
 
             #endregion
-            
+
             #region IssueStatuses
 
             services.AddDbContext<Infrastructure.Admin.IssueStatuses.IssueStatusDbContext>(options =>
@@ -157,6 +159,16 @@ namespace ProjectManagementSystem.WebApi
             services
                 .AddScoped<Domain.Admin.IssueStatuses.IIssueStatusRepository,
                     Infrastructure.Admin.IssueStatuses.IssueStatusRepository>();
+
+            #endregion
+
+            #region Projects
+
+            services.AddDbContext<ProjectDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services
+                .AddScoped<IProjectRepository,
+                    ProjectRepository>();
 
             #endregion
 
@@ -202,7 +214,7 @@ namespace ProjectManagementSystem.WebApi
             services.AddMediatR(typeof(Queries.Admin.IssuePriorities.IssuePrioritiesQuery).Assembly);
 
             #endregion
-            
+
             #region IssueStatuses
 
             services.AddDbContext<Queries.Infrastructure.Admin.IssueStatuses.IssueStatusDbContext>(options =>
@@ -219,6 +231,25 @@ namespace ProjectManagementSystem.WebApi
                         Page<Queries.Admin.IssueStatuses.FullIssueStatusView>>,
                     Queries.Infrastructure.Admin.IssueStatuses.IssueStatusesQueryHandler>();
             services.AddMediatR(typeof(Queries.Admin.IssueStatuses.IssueStatusesQuery).Assembly);
+
+            #endregion
+
+            #region Projects
+
+            services.AddDbContext<Queries.Infrastructure.Admin.Projects.ProjectDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Projects.ProjectQuery,
+                        Queries.Admin.Projects.ShortProjectView>,
+                    Queries.Infrastructure.Admin.Projects.ProjectQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Projects.ProjectQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Projects.ProjectsQuery,
+                        Page<Queries.Admin.Projects.FullProjectView>>,
+                    Queries.Infrastructure.Admin.Projects.ProjectsQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Projects.ProjectsQuery).Assembly);
 
             #endregion
 
@@ -255,8 +286,8 @@ namespace ProjectManagementSystem.WebApi
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            } 
-            
+            }
+
             //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();

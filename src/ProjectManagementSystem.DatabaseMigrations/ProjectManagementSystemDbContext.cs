@@ -133,6 +133,38 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("IsActive")
                     .IsRequired();
             });
+            
+            modelBuilder.Entity<Project>(builder =>
+            {
+                builder.ToTable("Project");
+                builder.HasKey(p => p.Id);
+
+                builder.Property(p => p.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(p => p.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(p => p.Description)
+                    .HasColumnName("Description")
+                    .IsRequired();
+                builder.Property(p => p.IsPublic)
+                    .HasColumnName("IsPublic")
+                    .IsRequired();
+                builder.Property(p => p.Status)
+                    .HasColumnName("Status")
+                    .HasConversion(
+                        ps => ps.ToString(),
+                        ps => (ProjectStatus) Enum.Parse(typeof(ProjectStatus), ps))
+                    .IsRequired();
+                builder.Property(p => p.CreateDate)
+                    .HasColumnName("CreateDate")
+                    .IsRequired();
+                builder.Property(u => u.ConcurrencyStamp)
+                    .HasColumnName("ConcurrencyStamp")
+                    .IsConcurrencyToken();
+            });
         }
     }
 }

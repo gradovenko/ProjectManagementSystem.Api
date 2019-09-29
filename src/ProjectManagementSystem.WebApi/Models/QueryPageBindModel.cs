@@ -1,6 +1,6 @@
 namespace ProjectManagementSystem.WebApi.Models
 {
-    public class QueryPageBinding
+    public class QueryPageBindModel
     {
         public int Offset { get; set; } = 0;
         
