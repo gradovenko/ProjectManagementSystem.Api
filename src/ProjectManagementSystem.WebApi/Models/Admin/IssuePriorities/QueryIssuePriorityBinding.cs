@@ -1,6 +1,6 @@
 namespace ProjectManagementSystem.WebApi.Models.Admin.IssuePriorities
 {
-    public class QueryIssuePriorityBinding : PageQueryBinding
+    public class QueryIssuePriorityBinding : QueryPageBindModel
     {
         
     }
