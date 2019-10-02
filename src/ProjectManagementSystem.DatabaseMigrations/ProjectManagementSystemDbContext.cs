@@ -165,6 +165,23 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
             });
+            
+            modelBuilder.Entity<Tracker>(builder =>
+            {
+                builder.ToTable("Tracker");
+                builder.HasKey(t => t.Id);
+
+                builder.Property(t => t.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(t => t.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(t => t.ConcurrencyStamp)
+                    .HasColumnName("ConcurrencyStamp")
+                    .IsConcurrencyToken();
+            });
         }
     }
 }

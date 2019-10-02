@@ -23,5 +23,7 @@ namespace ProjectManagementSystem.WebApi.Exceptions
         public const string IssueStatusAlreadyExists = "issue_status_already_exists";
         public const string ProjectNotFound = "project_not_found";
         public const string ProjectAlreadyExists = "project_already_exists";
+        public const string TrackerNotFound = "tracker_not_found";
+        public const string TrackerAlreadyExists = "tracker_already_exists";
     }
 }

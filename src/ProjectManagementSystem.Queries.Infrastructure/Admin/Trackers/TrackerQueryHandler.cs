@@ -1,0 +1,30 @@
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using ProjectManagementSystem.Queries.Admin.Trackers;
+
+namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Trackers
+{
+    public class TrackerQueryHandler : IRequestHandler<TrackerQuery, ShortTrackerView>
+    {
+        private readonly TrackerDbContext _context;
+
+        public TrackerQueryHandler(TrackerDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<ShortTrackerView> Handle(TrackerQuery query, CancellationToken cancellationToken)
+        {
+            return await _context.Trackers.AsNoTracking()
+                .Where(project => project.Id == query.Id)
+                .Select(project => new ShortTrackerView
+                {
+                    Name = project.Name,
+                })
+                .SingleOrDefaultAsync(cancellationToken);
+        }
+    }
+}
