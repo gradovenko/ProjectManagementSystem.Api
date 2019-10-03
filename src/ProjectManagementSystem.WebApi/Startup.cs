@@ -15,8 +15,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation.AspNetCore;
 using MediatR;
-using ProjectManagementSystem.Domain.Admin.CreateProjects;
-using ProjectManagementSystem.Infrastructure.Admin.CreateProjects;
 using ProjectManagementSystem.Infrastructure.Authentication;
 using ProjectManagementSystem.Infrastructure.PasswordHasher;
 using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
@@ -164,11 +162,14 @@ namespace ProjectManagementSystem.WebApi
 
             #region Projects
 
-            services.AddDbContext<ProjectDbContext>(options =>
+            services.AddDbContext<Infrastructure.Admin.CreateProjects.ProjectDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
             services
-                .AddScoped<IProjectRepository,
-                    ProjectRepository>();
+                .AddScoped<Domain.Admin.CreateProjects.IProjectRepository,
+                    Infrastructure.Admin.CreateProjects.ProjectRepository>();
+            services
+                .AddScoped<Domain.Admin.CreateProjects.ITrackerRepository,
+                    Infrastructure.Admin.CreateProjects.TrackerRepository>();
 
             #endregion
             

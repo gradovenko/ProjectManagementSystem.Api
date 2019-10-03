@@ -1,6 +1,6 @@
 using System;
 
-namespace ProjectManagementSystem.Domain.Admin.CreateProjectTrackers
+namespace ProjectManagementSystem.Domain.Admin.CreateProjects
 {
     public sealed class Tracker
     {

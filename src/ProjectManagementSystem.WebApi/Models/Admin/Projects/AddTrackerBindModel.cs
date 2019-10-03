@@ -1,6 +1,6 @@
 using System;
 
-namespace ProjectManagementSystem.WebApi.Models.Admin.ProjectTrackers
+namespace ProjectManagementSystem.WebApi.Models.Admin.Projects
 {
     public class AddTrackerBindModel
     {
