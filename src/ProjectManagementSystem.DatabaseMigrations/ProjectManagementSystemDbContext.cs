@@ -6,7 +6,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
 {
     public sealed class ProjectManagementSystemDbContext : DbContext
     { 
-        public ProjectManagementSystemDbContext(DbContextOptions options) : base(options) { }
+        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
