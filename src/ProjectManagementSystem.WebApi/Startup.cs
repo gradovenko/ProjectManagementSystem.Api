@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation.AspNetCore;
 using MediatR;
+using ProjectManagementSystem.DatabaseMigrations;
 using ProjectManagementSystem.Domain.Admin.CreateProjects;
 using ProjectManagementSystem.Infrastructure.Admin.CreateProjects;
 using ProjectManagementSystem.Infrastructure.Authentication;
@@ -30,12 +31,10 @@ namespace ProjectManagementSystem.WebApi
 {
     public class Startup
     {
-        private readonly ILogger<Startup> _logger;
         public IConfiguration Configuration { get; }
 
-        public Startup(ILogger<Startup> logger, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
-            _logger = logger;
             Configuration = configuration;
         }
 
@@ -116,6 +115,13 @@ namespace ProjectManagementSystem.WebApi
             #endregion
 
             #region DbContexts, repositories and services
+
+            #region DatabaseMigrationsContext
+            
+            services.AddDbContext<ProjectManagementSystemDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            #endregion
 
             #region User
 

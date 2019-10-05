@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace ProjectManagementSystem.WebApi
@@ -8,15 +8,18 @@ namespace ProjectManagementSystem.WebApi
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().RunDatabaseMigrations().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseSerilog((webHostBuilderContext, loggerConfiguration) =>
-                    loggerConfiguration.ReadFrom.Configuration(webHostBuilderContext.Configuration)
-                        .Enrich.FromLogContext()
-                );
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webHostBuilder =>
+                {
+                    webHostBuilder
+                        .UseStartup<Startup>()
+                        .UseSerilog((webHostBuilderContext, loggerConfiguration) =>
+                            loggerConfiguration.ReadFrom.Configuration(webHostBuilderContext.Configuration)
+                                .Enrich.FromLogContext());
+                });
     }
 }
