@@ -1,15 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Text;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using EventFlow;
-using EventFlow.Autofac.Extensions;
-using EventFlow.Extensions;
-using FluentValidation.AspNetCore;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -21,18 +13,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
+using FluentValidation.AspNetCore;
+using MediatR;
+using ProjectManagementSystem.Domain.Admin.CreateProjects;
+using ProjectManagementSystem.Infrastructure.Admin.CreateProjects;
 using ProjectManagementSystem.Infrastructure.Authentication;
 using ProjectManagementSystem.Infrastructure.PasswordHasher;
 using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
 using ProjectManagementSystem.Queries;
 using ProjectManagementSystem.WebApi.Authorization;
+using ProjectManagementSystem.WebApi.Extensions;
 using ProjectManagementSystem.WebApi.Filters;
 using ProjectManagementSystem.WebApi.Middlewares;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace ProjectManagementSystem.WebApi
 {
@@ -48,33 +40,29 @@ namespace ProjectManagementSystem.WebApi
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddMemoryCache();
 
             services
-                .AddMvc(options => { options.Filters.Add(typeof(ErrorHandlingFilter)); })
+                .AddMvc(options =>
+                {
+                    options.Filters.Add(typeof(ErrorHandlingFilter));
+                    options.EnableEndpointRouting = false;
+                })
                 .AddFluentValidation(configuration =>
                 {
                     configuration.RegisterValidatorsFromAssemblyContaining<Startup>();
                 })
                 .AddJsonOptions(options =>
                 {
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver
-                    {
-                        NamingStrategy = new CamelCaseNamingStrategy
-                        {
-                            ProcessDictionaryKeys = true
-                        }
-                    };
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            services.AddSwaggerGen(ConfigureSwagger);
+            services.AddSwagger();
 
             #region Authentication
 
@@ -127,6 +115,8 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region DbContexts, repositories and services
+
             #region User
 
             #region Accounts
@@ -152,69 +142,178 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region IssuePriorities
+
+            services.AddDbContext<Infrastructure.Admin.IssuePriorities.IssuePriorityDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services
+                .AddScoped<Domain.Admin.IssuePriorities.IIssuePriorityRepository,
+                    Infrastructure.Admin.IssuePriorities.IssuePriorityRepository>();
+
+            #endregion
+
+            #region IssueStatuses
+
+            services.AddDbContext<Infrastructure.Admin.IssueStatuses.IssueStatusDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services
+                .AddScoped<Domain.Admin.IssueStatuses.IIssueStatusRepository,
+                    Infrastructure.Admin.IssueStatuses.IssueStatusRepository>();
+
+            #endregion
+
+            #region Projects
+
+            services.AddDbContext<ProjectDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services
+                .AddScoped<IProjectRepository,
+                    ProjectRepository>();
+
+            #endregion
+
+            #region Trackers
+
+            services.AddDbContext<Infrastructure.Admin.CreateTrackers.TrackerDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services
+                .AddScoped<Domain.Admin.CreateTrackers.ITrackerRepository,
+                    Infrastructure.Admin.CreateTrackers.TrackerRepository>();
+
+            #endregion
+
+            #endregion
+
             #endregion
 
             #region Queries
-            
-            var containerBuilder = new ContainerBuilder();
+
+            #region Admin
+
+            #region Users
 
             services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            
-            var container = EventFlowOptions.New
-                .UseAutofacContainerBuilder(containerBuilder)
-                .AddQueryHandler<Queries.Infrastructure.Admin.Users.UserQueryHandler, Queries.Admin.Users.UserQuery,
-                    Queries.Admin.Users.ShortUserView>()
-                .AddQueryHandler<Queries.Infrastructure.Admin.Users.UsersQueryHandler, Queries.Admin.Users.UsersQuery,
-                    Page<Queries.Admin.Users.FullUserView>>()
-                .AddQueryHandler<Queries.Infrastructure.User.Accounts.UserQueryHandler, Queries.User.Accounts.UserQuery,
-                    Queries.User.Accounts.UserView>();
 
-            containerBuilder.Populate(services);
+            services.AddScoped<IRequestHandler<Queries.Admin.Users.UserQuery, Queries.Admin.Users.ShortUserView>,
+                Queries.Infrastructure.Admin.Users.UserQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Users.UserQuery).Assembly);
 
-            return new AutofacServiceProvider(containerBuilder.Build());
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Users.UsersQuery, Page<Queries.Admin.Users.FullUserView>>,
+                    Queries.Infrastructure.Admin.Users.UsersQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Users.UsersQuery).Assembly);
 
             #endregion
-        }
 
-        private void ConfigureSwagger(SwaggerGenOptions options)
-        {
-            options.SwaggerDoc("v1", new Info
-            {
-                Version = "v1",
-                Title = AppDomain.CurrentDomain.FriendlyName,
-                Description = $"Swagger for {AppDomain.CurrentDomain.FriendlyName}",
-            });
+            #region IssuePriorities
 
-            options.CustomSchemaIds(type => type.FullName);
+            services.AddDbContext<Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            options.MapType<Guid>(() => new Schema
-            {
-                Type = "string",
-                Format = "uuid",
-                Default = Guid.NewGuid()
-            });
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.IssuePriorities.IssuePriorityQuery,
+                        Queries.Admin.IssuePriorities.ShortIssuePriorityView>,
+                    Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.IssuePriorities.IssuePriorityQuery).Assembly);
 
-            options.DescribeAllEnumsAsStrings();
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.IssuePriorities.IssuePrioritiesQuery,
+                        Page<Queries.Admin.IssuePriorities.FullIssuePriorityView>>,
+                    Queries.Infrastructure.Admin.IssuePriorities.IssuePrioritiesQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.IssuePriorities.IssuePrioritiesQuery).Assembly);
 
-            options.AddSecurityDefinition("Bearer", new ApiKeyScheme
-            {
-                In = "header",
-                Description =
-                    "Insert the access token with Bearer in the field",
-                Name = "Authorization",
-                Type = "apiKey",
-            });
+            #endregion
 
-            options.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-            {
-                {"Bearer", new string[] { }}
-            });
+            #region IssueStatuses
 
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
-                $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+            services.AddDbContext<Queries.Infrastructure.Admin.IssueStatuses.IssueStatusDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.IssueStatuses.IssueStatusQuery,
+                        Queries.Admin.IssueStatuses.ShortIssueStatusView>,
+                    Queries.Infrastructure.Admin.IssueStatuses.IssueStatusQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.IssueStatuses.IssueStatusQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.IssueStatuses.IssueStatusesQuery,
+                        Page<Queries.Admin.IssueStatuses.FullIssueStatusView>>,
+                    Queries.Infrastructure.Admin.IssueStatuses.IssueStatusesQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.IssueStatuses.IssueStatusesQuery).Assembly);
+
+            #endregion
+
+            #region Projects
+
+            services.AddDbContext<Queries.Infrastructure.Admin.Projects.ProjectDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Projects.ProjectQuery,
+                        Queries.Admin.Projects.ShortProjectView>,
+                    Queries.Infrastructure.Admin.Projects.ProjectQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Projects.ProjectQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Projects.ProjectsQuery,
+                        Page<Queries.Admin.Projects.FullProjectView>>,
+                    Queries.Infrastructure.Admin.Projects.ProjectsQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Projects.ProjectsQuery).Assembly);
+
+            #endregion
+
+            #region Trackers
+
+            services.AddDbContext<Queries.Infrastructure.Admin.Trackers.TrackerDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Trackers.TrackerQuery,
+                        Queries.Admin.Trackers.ShortTrackerView>,
+                    Queries.Infrastructure.Admin.Trackers.TrackerQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Trackers.TrackerQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.Trackers.TrackersQuery,
+                        Page<Queries.Admin.Trackers.FullTrackerView>>,
+                    Queries.Infrastructure.Admin.Trackers.TrackersQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.Trackers.TrackersQuery).Assembly);
+
+            #endregion
+
+            #endregion
+
+            #region User
+
+            #region Accounts
+
+            services.AddDbContext<Queries.Infrastructure.User.Accounts.UserDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.Accounts.UserQuery, Queries.User.Accounts.UserView>,
+                    Queries.Infrastructure.User.Accounts.UserQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.Accounts.UserQuery).Assembly);
+
+            #endregion
+
+            #region Projects
+
+            services.AddDbContext<Queries.Infrastructure.User.Projects.ProjectDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.Projects.ProjectsQuery,
+                        Page<Queries.User.Projects.ProjectsView>>,
+                    Queries.Infrastructure.User.Projects.ProjectsQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.Projects.ProjectsQuery).Assembly);
+
+            #endregion
+
+            #endregion
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -238,7 +337,6 @@ namespace ProjectManagementSystem.WebApi
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
-
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("../v1/swagger.json", AppDomain.CurrentDomain.FriendlyName);

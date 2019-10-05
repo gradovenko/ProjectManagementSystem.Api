@@ -19,7 +19,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
 
                 builder.Property(u => u.Id)
                     .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedNever()
+                    .IsRequired();
                 builder.Property(u => u.Name)
                     .HasColumnName("Name")
                     .HasMaxLength(256)
@@ -85,17 +86,101 @@ namespace ProjectManagementSystem.DatabaseMigrations
             modelBuilder.Entity<RefreshToken>(builder =>
             {
                 builder.ToTable("RefreshToken");
-                builder.HasKey(ut => ut.Id);
+                builder.HasKey(rt => rt.Id);
 
-                builder.Property(u => u.Id)
+                builder.Property(rt => rt.Id)
                     .HasColumnName("Id")
-                    .ValueGeneratedNever();
-                builder.Property(ut => ut.ExpireDate)
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(rt => rt.ExpireDate)
                     .HasColumnName("ExpireDate")
                     .IsRequired();
-                builder.Property(ut => ut.UserId)
+                builder.Property(rt => rt.UserId)
                     .HasColumnName("UserId")
                     .IsRequired();
+            });
+            
+            modelBuilder.Entity<IssuePriority>(builder =>
+            {
+                builder.ToTable("IssuePriority");
+                builder.HasKey(ip => ip.Id);
+
+                builder.Property(ip => ip.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(ip => ip.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(ip => ip.IsActive)
+                    .HasColumnName("IsActive")
+                    .IsRequired();
+            });
+            
+            modelBuilder.Entity<IssueStatus>(builder =>
+            {
+                builder.ToTable("IssueStatus");
+                builder.HasKey(@is => @is.Id);
+
+                builder.Property(@is => @is.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(@is => @is.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(@is => @is.IsActive)
+                    .HasColumnName("IsActive")
+                    .IsRequired();
+            });
+            
+            modelBuilder.Entity<Project>(builder =>
+            {
+                builder.ToTable("Project");
+                builder.HasKey(p => p.Id);
+
+                builder.Property(p => p.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(p => p.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(p => p.Description)
+                    .HasColumnName("Description")
+                    .IsRequired();
+                builder.Property(p => p.IsPrivate)
+                    .HasColumnName("IsPrivate")
+                    .IsRequired();
+                builder.Property(p => p.Status)
+                    .HasColumnName("Status")
+                    .HasConversion(
+                        ps => ps.ToString(),
+                        ps => (ProjectStatus) Enum.Parse(typeof(ProjectStatus), ps))
+                    .IsRequired();
+                builder.Property(p => p.CreateDate)
+                    .HasColumnName("CreateDate")
+                    .IsRequired();
+                builder.Property(u => u.ConcurrencyStamp)
+                    .HasColumnName("ConcurrencyStamp")
+                    .IsConcurrencyToken();
+            });
+            
+            modelBuilder.Entity<Tracker>(builder =>
+            {
+                builder.ToTable("Tracker");
+                builder.HasKey(t => t.Id);
+
+                builder.Property(t => t.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever()
+                    .IsRequired();
+                builder.Property(t => t.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(t => t.ConcurrencyStamp)
+                    .HasColumnName("ConcurrencyStamp")
+                    .IsConcurrencyToken();
             });
         }
     }

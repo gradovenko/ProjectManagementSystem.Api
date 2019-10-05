@@ -1,13 +1,13 @@
-using EventFlow.Queries;
+using MediatR;
 
 namespace ProjectManagementSystem.Queries
 {
-    public abstract class PageQuery<T> : IQuery<Page<T>> where T : class
+    public abstract class PageQuery<T> : IRequest<Page<T>> where T : class
     {
-        protected PageQuery(int offset, int limit)
+        protected PageQuery(int limit, int offset)
         {
-            Offset = offset;
             Limit = limit;
+            Offset = offset;
         }
 
         public int Limit { get; }
