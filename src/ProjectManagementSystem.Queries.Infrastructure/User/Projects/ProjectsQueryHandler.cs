@@ -21,6 +21,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.Projects
             var sql = _context.Projects.AsNoTracking()
                 .Select(project => new ProjectsView
                 {
+                    Id = project.Id,
                     Name = project.Name,
                     Description = project.Description,
                     IsPrivate = project.IsPrivate,
