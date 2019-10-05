@@ -41,7 +41,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
                     throw new ApiException(HttpStatusCode.Conflict, ErrorCode.ProjectAlreadyExists,
                         "Project already exists with other parameters");
 
-            project = new Project(model.Id, model.Name, model.Description, model.IsPublic);
+            project = new Project(model.Id, model.Name, model.Description, model.IsPrivate);
 
             await projectRepository.Save(project);
 

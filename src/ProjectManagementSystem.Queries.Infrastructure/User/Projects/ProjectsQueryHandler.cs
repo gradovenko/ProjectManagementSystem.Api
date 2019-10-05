@@ -3,12 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Queries.Admin.Projects;
-using ProjectManagementSystem.Queries.Infrastructure.Extensions;
+using ProjectManagementSystem.Queries.User.Projects;
 
-namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
+namespace ProjectManagementSystem.Queries.Infrastructure.User.Projects
 {
-    public class ProjectsQueryHandler : IRequestHandler<ProjectsQuery, Page<FullProjectView>>
+    public sealed class ProjectsQueryHandler : IRequestHandler<ProjectsQuery, Page<ProjectsView>>
     {
         private readonly ProjectDbContext _context;
 
@@ -17,19 +16,18 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
             _context = context;
         }
         
-        public async Task<Page<FullProjectView>> Handle(ProjectsQuery query, CancellationToken cancellationToken)
+        public async Task<Page<ProjectsView>> Handle(ProjectsQuery query, CancellationToken cancellationToken)
         {
             var sql = _context.Projects.AsNoTracking()
-                .Select(project => new FullProjectView
+                .Select(project => new ProjectsView
                 {
                     Id = project.Id,
                     Name = project.Name,
                     Description = project.Description,
                     IsPrivate = project.IsPrivate,
-                    CreateDate = project.CreateDate
                 });
 
-            return new Page<FullProjectView>
+            return new Page<ProjectsView>
             {
                 Limit = query.Limit,
                 Offset = query.Offset,
