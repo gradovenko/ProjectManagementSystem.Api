@@ -330,22 +330,23 @@ namespace ProjectManagementSystem.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+//            else
+//            {
+//                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+//                app.UseHsts();
+//            }
 
             //app.UseHttpsRedirection();
-            app.UseAuthentication();
-            app.UseMvc();
-
+            
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
+            app.UseAuthentication();
+            app.UseMvc();
+            
             app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("../v1/swagger.json", AppDomain.CurrentDomain.FriendlyName);
+                options.SwaggerEndpoint("v1/swagger.json", AppDomain.CurrentDomain.FriendlyName);
             });
 
             app.UseRewriter(new RewriteOptions().AddRedirect(@"^$", "swagger", (int) HttpStatusCode.Redirect));
