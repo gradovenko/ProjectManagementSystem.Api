@@ -5,8 +5,11 @@ using ProjectManagementSystem.DatabaseMigrations.Entities;
 namespace ProjectManagementSystem.DatabaseMigrations
 {
     public sealed class ProjectManagementSystemDbContext : DbContext
-    { 
-        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) : base(options) { }
+    {
+        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) :
+            base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,13 +69,14 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.HasIndex(u => u.Email)
                     .HasName("EmailIndex")
                     .IsUnique();
-                
+
                 builder.HasData(new User
                 {
                     Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
                     Name = "Admin",
                     Email = "admin@projectms.local",
-                    PasswordHash = "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
+                    PasswordHash =
+                        "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
                     FirstName = "Admin",
                     LastName = "Admin",
                     Role = UserRole.Admin,
@@ -80,9 +84,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     Status = UserStatus.Active,
                     ConcurrencyStamp = Guid.NewGuid()
                 });
-
             });
-            
+
             modelBuilder.Entity<RefreshToken>(builder =>
             {
                 builder.ToTable("RefreshToken");
@@ -99,7 +102,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("UserId")
                     .IsRequired();
             });
-            
+
             modelBuilder.Entity<IssuePriority>(builder =>
             {
                 builder.ToTable("IssuePriority");
@@ -116,7 +119,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("IsActive")
                     .IsRequired();
             });
-            
+
             modelBuilder.Entity<IssueStatus>(builder =>
             {
                 builder.ToTable("IssueStatus");
@@ -133,7 +136,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("IsActive")
                     .IsRequired();
             });
-            
+
             modelBuilder.Entity<Project>(builder =>
             {
                 builder.ToTable("Project");
@@ -165,7 +168,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
             });
-            
+
             modelBuilder.Entity<Tracker>(builder =>
             {
                 builder.ToTable("Tracker");
@@ -182,11 +185,11 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
             });
-            
+
             modelBuilder.Entity<ProjectTracker>(builder =>
             {
                 builder.ToTable("ProjectTracker");
-                builder.HasKey(pt => new { pt.ProjectId, pt.TrackerId });
+                builder.HasKey(pt => new {pt.ProjectId, pt.TrackerId});
 
                 builder.HasOne(pt => pt.Project)
                     .WithMany()
@@ -196,6 +199,17 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .WithMany()
                     .HasForeignKey(pt => pt.TrackerId)
                     .HasPrincipalKey(t => t.Id);
+            });
+
+            modelBuilder.Entity<Permission>(builder =>
+            {
+                builder.ToTable("Permission");
+                builder.HasKey(p => p.Id);
+
+                builder.Property(t => t.Id)
+                    .ValueGeneratedNever();
+                builder.Property(t => t.Name)
+                    .IsRequired();
             });
         }
     }
