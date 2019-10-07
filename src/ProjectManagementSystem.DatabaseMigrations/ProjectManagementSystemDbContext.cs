@@ -6,7 +6,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
 {
     public sealed class ProjectManagementSystemDbContext : DbContext
     { 
-        public ProjectManagementSystemDbContext(DbContextOptions options) : base(options) { }
+        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -149,8 +149,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.Property(p => p.Description)
                     .HasColumnName("Description")
                     .IsRequired();
-                builder.Property(p => p.IsPublic)
-                    .HasColumnName("IsPublic")
+                builder.Property(p => p.IsPrivate)
+                    .HasColumnName("IsPrivate")
                     .IsRequired();
                 builder.Property(p => p.Status)
                     .HasColumnName("Status")

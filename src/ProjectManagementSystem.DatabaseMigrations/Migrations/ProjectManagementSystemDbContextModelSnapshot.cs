@@ -79,8 +79,8 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnName("Description")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnName("IsPublic")
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnName("IsPrivate")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -92,6 +92,9 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .IsRequired()
                         .HasColumnName("Status")
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -226,7 +229,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         new
                         {
                             Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("41951d66-5d68-4295-8912-c7c6152252de"),
+                            ConcurrencyStamp = new Guid("3b11ed20-a513-4012-ac74-bbb934a47fdd"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",

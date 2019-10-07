@@ -28,8 +28,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
                 builder.Property(p => p.Description)
                     .HasColumnName("Description")
                     .IsRequired();
-                builder.Property(p => p.IsPublic)
-                    .HasColumnName("IsPublic")
+                builder.Property(p => p.IsPrivate)
+                    .HasColumnName("IsPrivate")
                     .IsRequired();
                 builder.Property(p => p.Status)
                     .HasColumnName("Status")

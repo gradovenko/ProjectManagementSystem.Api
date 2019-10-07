@@ -26,7 +26,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
                 {
                     Name = project.Name,
                     Description = project.Description,
-                    IsPublic = project.IsPublic,
+                    IsPrivate = project.IsPrivate,
                     Status = project.Status.ConvertTo<Queries.Admin.Projects.ProjectStatus>(),
                     CreateDate = project.CreateDate
                 })

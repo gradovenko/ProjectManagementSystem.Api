@@ -15,6 +15,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation.AspNetCore;
 using MediatR;
+using ProjectManagementSystem.DatabaseMigrations;
+using ProjectManagementSystem.Domain.Admin.CreateProjects;
+using ProjectManagementSystem.Infrastructure.Admin.CreateProjects;
 using ProjectManagementSystem.Infrastructure.Authentication;
 using ProjectManagementSystem.Infrastructure.PasswordHasher;
 using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
@@ -28,12 +31,10 @@ namespace ProjectManagementSystem.WebApi
 {
     public class Startup
     {
-        private readonly ILogger<Startup> _logger;
         public IConfiguration Configuration { get; }
 
-        public Startup(ILogger<Startup> logger, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
-            _logger = logger;
             Configuration = configuration;
         }
 
@@ -115,6 +116,13 @@ namespace ProjectManagementSystem.WebApi
 
             #region DbContexts, repositories and services
 
+            #region DatabaseMigrationsContext
+            
+            services.AddDbContext<ProjectManagementSystemDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            #endregion
+
             #region User
 
             #region Accounts
@@ -172,7 +180,7 @@ namespace ProjectManagementSystem.WebApi
                     Infrastructure.Admin.CreateProjects.TrackerRepository>();
 
             #endregion
-            
+
             #region Trackers
 
             services.AddDbContext<Infrastructure.Admin.CreateTrackers.TrackerDbContext>(options =>
@@ -263,7 +271,7 @@ namespace ProjectManagementSystem.WebApi
             services.AddMediatR(typeof(Queries.Admin.Projects.ProjectsQuery).Assembly);
 
             #endregion
-            
+
             #region Trackers
 
             services.AddDbContext<Queries.Infrastructure.Admin.Trackers.TrackerDbContext>(options =>
@@ -299,6 +307,19 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region Projects
+
+            services.AddDbContext<Queries.Infrastructure.User.Projects.ProjectDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.Projects.ProjectsQuery,
+                        Page<Queries.User.Projects.ProjectsView>>,
+                    Queries.Infrastructure.User.Projects.ProjectsQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.Projects.ProjectsQuery).Assembly);
+
+            #endregion
+
             #endregion
 
             #endregion
@@ -312,18 +333,19 @@ namespace ProjectManagementSystem.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+//            else
+//            {
+//                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+//                app.UseHsts();
+//            }
 
             //app.UseHttpsRedirection();
-            app.UseAuthentication();
-            app.UseMvc();
-
+            
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
+            app.UseAuthentication();
+            app.UseMvc();
+            
             app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
             app.UseSwaggerUI(options =>
             {

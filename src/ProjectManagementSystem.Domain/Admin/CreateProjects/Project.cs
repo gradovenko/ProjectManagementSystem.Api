@@ -8,7 +8,7 @@ namespace ProjectManagementSystem.Domain.Admin.CreateProjects
         public Guid Id { get; }
         public string Name { get; }
         public string Description { get; }
-        public bool IsPublic { get; }
+        public bool IsPrivate { get; }
         public ProjectStatus Status { get; }
         public DateTime CreateDate { get; }
         
@@ -17,12 +17,12 @@ namespace ProjectManagementSystem.Domain.Admin.CreateProjects
         
         private Guid _concurrencyStamp = Guid.NewGuid();
 
-        public Project(Guid id, string name, string description, bool isPublic)
+        public Project(Guid id, string name, string description, bool isPrivate)
         {
             Id = id;
             Name = name;
             Description = description;
-            IsPublic = isPublic;
+            IsPrivate = isPrivate;
             Status = ProjectStatus.Active;
             CreateDate = DateTime.UtcNow;
         }
