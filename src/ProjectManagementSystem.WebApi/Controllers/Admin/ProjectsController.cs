@@ -20,8 +20,9 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// Create project
         /// </summary>
         /// <param name="cancellationToken"></param>
-        /// <param name="model"></param>
+        /// <param name="model">Input bind model</param>
         /// <param name="projectRepository"></param>
+        /// <param name="trackerRepository"></param>
         /// <returns></returns>
         /// <exception cref="ApiException"></exception>
         [HttpPost("admin/projects")]
@@ -31,7 +32,8 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         public async Task<IActionResult> Create(
             CancellationToken cancellationToken,
             [FromBody] CreateProjectBindModel model,
-            [FromServices] IProjectRepository projectRepository)
+            [FromServices] IProjectRepository projectRepository,
+            [FromServices] ITrackerRepository trackerRepository)
         {
             var project = await projectRepository.Get(model.Id, cancellationToken);
 
@@ -42,6 +44,18 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
                         "Project already exists with other parameters");
 
             project = new Project(model.Id, model.Name, model.Description, model.IsPrivate);
+            
+            foreach (var trackerModel in model.Trackers)
+            {
+                var tracker = await trackerRepository.Get(trackerModel.Id, cancellationToken);
+                
+                if (tracker == null)
+                    throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Tracker not found");
+                
+                var projectTracker = new ProjectTracker(model.Id, tracker.Id);
+                
+                project.AddProjectTracker(projectTracker);
+            }
 
             await projectRepository.Save(project);
 
@@ -52,7 +66,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// Find projects
         /// </summary>
         /// <param name="cancellationToken"></param>
-        /// <param name="model"></param>
+        /// <param name="model">Input query model</param>
         /// <param name="mediator"></param>
         /// <returns></returns>
         [HttpGet("admin/projects", Name = "GetProjectsAdminRoute")]
@@ -69,7 +83,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// Get a project
         /// </summary>
         /// <param name="cancellationToken"></param>
-        /// <param name="id"></param>
+        /// <param name="id">Project id</param>
         /// <param name="mediator"></param>
         /// <returns></returns>
         /// <exception cref="ApiException"></exception>

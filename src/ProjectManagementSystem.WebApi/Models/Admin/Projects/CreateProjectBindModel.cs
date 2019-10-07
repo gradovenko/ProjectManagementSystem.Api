@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FluentValidation;
 
 namespace ProjectManagementSystem.WebApi.Models.Admin.Projects
@@ -9,6 +10,8 @@ namespace ProjectManagementSystem.WebApi.Models.Admin.Projects
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsPrivate { get; set; }
+        
+        public IEnumerable<AddTrackerBindModel> Trackers { get; set; }
     }
     
     public class CreateProjectBindModelValidator : AbstractValidator<CreateProjectBindModel>

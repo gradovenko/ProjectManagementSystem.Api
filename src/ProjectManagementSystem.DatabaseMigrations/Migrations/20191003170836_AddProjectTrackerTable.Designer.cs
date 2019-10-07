@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProjectManagementSystem.DatabaseMigrations;
@@ -9,9 +10,10 @@ using ProjectManagementSystem.DatabaseMigrations;
 namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 {
     [DbContext(typeof(ProjectManagementSystemDbContext))]
-    partial class ProjectManagementSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191003170836_AddProjectTrackerTable")]
+    partial class AddProjectTrackerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,8 +81,8 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnName("Description")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsPrivate")
-                        .HasColumnName("IsPrivate")
+                    b.Property<bool>("IsPublic")
+                        .HasColumnName("IsPublic")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -92,9 +94,6 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .IsRequired()
                         .HasColumnName("Status")
                         .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -229,7 +228,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         new
                         {
                             Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("3b11ed20-a513-4012-ac74-bbb934a47fdd"),
+                            ConcurrencyStamp = new Guid("41951d66-5d68-4295-8912-c7c6152252de"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",

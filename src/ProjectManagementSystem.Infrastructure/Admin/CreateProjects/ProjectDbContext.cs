@@ -9,6 +9,7 @@ namespace ProjectManagementSystem.Infrastructure.Admin.CreateProjects
         public ProjectDbContext(DbContextOptions<ProjectDbContext> options) : base(options) { }
         
         internal DbSet<Project> Projects { get; set; }
+        internal DbSet<Tracker> Trackers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +45,27 @@ namespace ProjectManagementSystem.Infrastructure.Admin.CreateProjects
                 builder.Property("_concurrencyStamp")
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
+                
+                builder.HasMany(p => p.ProjectTrackers)
+                    .WithOne()
+                    .HasForeignKey(pt => pt.ProjectId)
+                    .HasPrincipalKey(p => p.Id);
+            });
+            
+            modelBuilder.Entity<Tracker>(builder =>
+            {
+                builder.ToTable("Tracker");
+                builder.HasKey(t => t.Id);
+
+                builder.Property(t => t.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever();
+            });
+            
+            modelBuilder.Entity<ProjectTracker>(builder =>
+            {
+                builder.ToTable("ProjectTracker");
+                builder.HasKey(pt => new { pt.ProjectId, pt.TrackerId });
             });
         }
     }

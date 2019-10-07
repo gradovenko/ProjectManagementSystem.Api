@@ -182,6 +182,21 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
             });
+            
+            modelBuilder.Entity<ProjectTracker>(builder =>
+            {
+                builder.ToTable("ProjectTracker");
+                builder.HasKey(pt => new { pt.ProjectId, pt.TrackerId });
+
+                builder.HasOne(pt => pt.Project)
+                    .WithMany()
+                    .HasForeignKey(pt => pt.ProjectId)
+                    .HasPrincipalKey(p => p.Id);
+                builder.HasOne(pt => pt.Tracker)
+                    .WithMany()
+                    .HasForeignKey(pt => pt.TrackerId)
+                    .HasPrincipalKey(t => t.Id);
+            });
         }
     }
 }

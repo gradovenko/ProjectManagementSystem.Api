@@ -170,11 +170,14 @@ namespace ProjectManagementSystem.WebApi
 
             #region Projects
 
-            services.AddDbContext<ProjectDbContext>(options =>
+            services.AddDbContext<Infrastructure.Admin.CreateProjects.ProjectDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
             services
-                .AddScoped<IProjectRepository,
-                    ProjectRepository>();
+                .AddScoped<Domain.Admin.CreateProjects.IProjectRepository,
+                    Infrastructure.Admin.CreateProjects.ProjectRepository>();
+            services
+                .AddScoped<Domain.Admin.CreateProjects.ITrackerRepository,
+                    Infrastructure.Admin.CreateProjects.TrackerRepository>();
 
             #endregion
 
