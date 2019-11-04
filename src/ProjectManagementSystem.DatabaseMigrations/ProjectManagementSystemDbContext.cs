@@ -197,6 +197,60 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasForeignKey(pt => pt.TrackerId)
                     .HasPrincipalKey(t => t.Id);
             });
+            
+            modelBuilder.Entity<Issue>(builder =>
+            {
+                builder.ToTable("Issue");
+                builder.HasKey(i => i.Id);
+                builder.Property(i => i.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever();
+                builder.Property(i => i.Index)
+                    .HasColumnName("Index")
+                    .ValueGeneratedOnAdd();
+                builder.Property(i => i.Title)
+                    .HasColumnName("Title")
+                    .IsRequired();
+                builder.Property(i => i.Description)
+                    .HasColumnName("Description")
+                    .IsRequired();
+                builder.Property(i => i.CreateDate)
+                    .HasColumnName("CreateDate")
+                    .IsRequired();
+                builder.Property(i => i.UpdateDate)
+                    .HasColumnName("UpdateDate");
+                builder.Property(i => i.StartDate)
+                    .HasColumnName("StartDate");
+                builder.Property(i => i.EndDate)
+                    .HasColumnName("EndDate");
+                builder.Property(i => i.ConcurrencyStamp)
+                    .HasColumnName("ConcurrencyStamp")
+                    .IsConcurrencyToken();
+                builder.HasOne(i => i.Project)
+                    .WithMany()
+                    .HasForeignKey(i => i.ProjectId)
+                    .HasPrincipalKey(p => p.Id);
+                builder.HasOne(i => i.Tracker)
+                    .WithMany()
+                    .HasForeignKey(i => i.TrackerId)
+                    .HasPrincipalKey(t => t.Id);
+                builder.HasOne(i => i.Status)
+                    .WithMany()
+                    .HasForeignKey(i => i.StatusId)
+                    .HasPrincipalKey(@is => @is.Id);
+                builder.HasOne(i => i.Priority)
+                    .WithMany()
+                    .HasForeignKey(i => i.PriorityId)
+                    .HasPrincipalKey(ip => ip.Id);
+                builder.HasOne(i => i.Author)
+                    .WithMany()
+                    .HasForeignKey(i => i.AuthorId)
+                    .HasPrincipalKey(a => a.Id);
+                builder.HasOne(i => i.Performer)
+                    .WithMany()
+                    .HasForeignKey(i => i.PerformerId)
+                    .HasPrincipalKey(p => p.Id);
+            });
         }
     }
 }

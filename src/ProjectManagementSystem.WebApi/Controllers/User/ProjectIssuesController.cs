@@ -10,6 +10,7 @@ using ProjectManagementSystem.Queries.Admin.Projects;
 using ProjectManagementSystem.Queries.User.ProjectIssues;
 using ProjectManagementSystem.Queries.User.Projects;
 using ProjectManagementSystem.WebApi.Exceptions;
+using ProjectManagementSystem.WebApi.Extensions;
 using ProjectManagementSystem.WebApi.Models.User.Issues;
 using ProjectManagementSystem.WebApi.Models.User.Projects;
 
@@ -32,33 +33,39 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
             [FromBody] CreateIssueBindModel model,
-            [FromServices] IProjectRepository projectRepository,
-            [FromServices] ITrackerRepository trackerRepository,
-            [FromServices] IIssueRepository issueRepository)
+            [FromServices] IssueCreationService issueCreationService)
         {
-            var project = await projectRepository.Get(id, cancellationToken);
-
-            if (project == null)
+            try
+            {
+                await issueCreationService.CreateIssue(model.Id, model.Title, model.Description, model.StartDate,
+                    model.EndDate, model.TrackerId, model.StatusId, model.PriorityId, User.GetId(), model.PerformerId, cancellationToken);
+            }
+            catch (ProjectNotFoundException)
+            {
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.ProjectNotFound, "Project not found");
-
-            var tracker = await trackerRepository.Get(model.TrackerId, cancellationToken);
-
-            if (tracker == null)
+            }
+            catch (TrackerNotFoundException)
+            {
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Tracker not found");
+            }
+            catch (IssueStatusNotFoundException)
+            {
+                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueStatusNotFound, "Issue status not found");
+            }
+            catch (IssuePriorityNotFoundException)
+            {
+                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Issue priority not found");
+            }
+            catch (PerformerNotFoundException)
+            {
+                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.PerformerNotFound, "Performer not found");
+            }
+            catch (IssueAlreadyExistsException)
+            {
+                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists, "Issue already exists with other parameters");
+            }
 
-            var issue = await issueRepository.Get(model.Id, cancellationToken);
-
-            if (issue != null)
-                if (issue.Title != model.Title)
-                    throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists, "Issue already exists with other parameters");
-
-            issue = new Issue(model.Id, model.Title, model.Description, model.TrackerId);
-
-            project.AddIssue(issue);
-
-            await projectRepository.Save(project);
-
-            return CreatedAtRoute("GetProjectIssue", new { id = issue.Id }, null);
+            return CreatedAtRoute("GetProjectIssue", new {id = model.Id}, null);
         }
 
         /// <summary>
@@ -66,7 +73,6 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// </summary>
         /// <param name="id">Project identifier</param>
         /// <param name="model">Input query bind model</param>
-        /// <returns></returns>
         [HttpGet("projects/{id}/issues", Name = "GetProjectIssuesRoute")]
         [ProducesResponseType(typeof(ProjectsView), 200)]
         public async Task<IActionResult> FindIssues(
@@ -90,8 +96,6 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// </summary>
         /// <param name="projectId">Project identifier</param>
         /// <param name="issueId"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
         [HttpGet("projects/{projectId}/issues/{issueId}", Name = "GetProjectIssueRoute")]
         [ProducesResponseType(typeof(FullProjectView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

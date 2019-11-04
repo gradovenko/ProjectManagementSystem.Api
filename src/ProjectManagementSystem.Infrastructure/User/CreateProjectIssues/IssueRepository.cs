@@ -1,7 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Domain.User.CreateProjectIssues;
+using IssueStatus = ProjectManagementSystem.Domain.Admin.IssueStatuses.IssueStatus;
 
 namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
 {
@@ -14,9 +16,11 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
             _context = context;
         }
 
-        public Task<Issue> Get(Guid id, CancellationToken cancellationToken)
+        public async Task<Issue> Get(Guid id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await _context.Issues
+                .AsNoTracking()
+                .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
         }
     }
 }

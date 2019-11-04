@@ -9,6 +9,9 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
 
         internal DbSet<Project> Projects { get; set; }
         internal DbSet<Tracker> Trackers { get; set; }
+        internal DbSet<IssueStatus> IssueStatuses { get; set; }
+        internal DbSet<IssuePriority> IssuePriorities { get; set; }
+        internal DbSet<Domain.User.CreateProjectIssues.User> Users { get; set; }
         internal DbSet<Issue> Issues { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,6 +28,21 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
                 builder.ToTable("Tracker");
             });
 
+            modelBuilder.Entity<IssueStatus>(builder =>
+            {
+                builder.ToTable("IssueStatus");
+            });
+            
+            modelBuilder.Entity<IssuePriority>(builder =>
+            {
+                builder.ToTable("IssuePriority");
+            });
+            
+            modelBuilder.Entity<Domain.User.CreateProjectIssues.User>(builder =>
+            {
+                builder.ToTable("User");
+            });
+            
             modelBuilder.Entity<Issue>(builder =>
             {
                 builder.ToTable("Issue");

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace ProjectManagementSystem.Domain.User.CreateProjectIssues
 {
-    public interface ITrackerRepository
+    public interface IIssueStatusRepository
     {
-        Task<Tracker> Get(Guid id, CancellationToken cancellationToken);
+        Task<IssueStatus> Get(Guid id, CancellationToken cancellationToken);
     }
 }
