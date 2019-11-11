@@ -11,8 +11,7 @@ using ProjectManagementSystem.Queries.User.ProjectIssues;
 using ProjectManagementSystem.Queries.User.Projects;
 using ProjectManagementSystem.WebApi.Exceptions;
 using ProjectManagementSystem.WebApi.Extensions;
-using ProjectManagementSystem.WebApi.Models.User.Issues;
-using ProjectManagementSystem.WebApi.Models.User.Projects;
+using ProjectManagementSystem.WebApi.Models.User.ProjectIssues;
 
 namespace ProjectManagementSystem.WebApi.Controllers.User
 {
@@ -24,7 +23,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// Create issue
         /// </summary>
         /// <param name="id">Project identifier</param>
-        /// <param name="model">Input issue bind model</param>
+        /// <param name="model">Input create bind model</param>
         [HttpPost("projects/{id}/issues")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -37,8 +36,9 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         {
             try
             {
-                await issueCreationService.CreateIssue(model.Id, model.Title, model.Description, model.StartDate,
-                    model.EndDate, model.TrackerId, model.StatusId, model.PriorityId, User.GetId(), model.PerformerId, cancellationToken);
+                await issueCreationService.CreateIssue(id, model.Id, model.Title, model.Description, model.StartDate,
+                    model.EndDate, model.TrackerId, model.StatusId, model.PriorityId, User.GetId(), model.PerformerId,
+                    cancellationToken);
             }
             catch (ProjectNotFoundException)
             {
@@ -50,7 +50,8 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             }
             catch (IssueStatusNotFoundException)
             {
-                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueStatusNotFound, "Issue status not found");
+                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueStatusNotFound,
+                    "Issue status not found");
             }
             catch (IssuePriorityNotFoundException)
             {
@@ -62,7 +63,8 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             }
             catch (IssueAlreadyExistsException)
             {
-                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists, "Issue already exists with other parameters");
+                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists,
+                    "Issue already exists with other parameters");
             }
 
             return CreatedAtRoute("GetProjectIssue", new {id = model.Id}, null);
@@ -78,7 +80,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         public async Task<IActionResult> FindIssues(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
-            [FromQuery] QueryProjectBindModel model,
+            [FromQuery] QueryIssueBindModel model,
             [FromServices] IProjectRepository projectRepository,
             [FromServices] IMediator mediator)
         {
@@ -95,7 +97,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// Get a issue
         /// </summary>
         /// <param name="projectId">Project identifier</param>
-        /// <param name="issueId"></param>
+        /// <param name="issueId">Issue identifier</param>
         [HttpGet("projects/{projectId}/issues/{issueId}", Name = "GetProjectIssueRoute")]
         [ProducesResponseType(typeof(FullProjectView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

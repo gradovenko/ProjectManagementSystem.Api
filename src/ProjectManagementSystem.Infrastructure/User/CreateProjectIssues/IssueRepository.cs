@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Domain.User.CreateProjectIssues;
-using IssueStatus = ProjectManagementSystem.Domain.Admin.IssueStatuses.IssueStatus;
 
 namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
 {

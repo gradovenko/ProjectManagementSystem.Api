@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProjectManagementSystem.DatabaseMigrations;
@@ -9,9 +10,10 @@ using ProjectManagementSystem.DatabaseMigrations;
 namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 {
     [DbContext(typeof(ProjectManagementSystemDbContext))]
-    partial class ProjectManagementSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191111172140_AddIssueTable")]
+    partial class AddIssueTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

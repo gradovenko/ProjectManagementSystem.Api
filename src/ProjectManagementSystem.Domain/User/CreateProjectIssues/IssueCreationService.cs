@@ -25,11 +25,11 @@ namespace ProjectManagementSystem.Domain.User.CreateProjectIssues
             _issueRepository = issueRepository;
         }
 
-        public async Task CreateIssue(Guid id, string title, string description, DateTime? startDate, DateTime? endDate,
+        public async Task CreateIssue(Guid projectId, Guid issueId, string title, string description, DateTime? startDate, DateTime? endDate,
             Guid trackerId, Guid statusId, Guid priorityId, Guid authorId, Guid performerId,
             CancellationToken cancellationToken)
         {
-            var project = await _projectRepository.Get(id, cancellationToken);
+            var project = await _projectRepository.Get(projectId, cancellationToken);
 
             if (project == null)
                 throw new ProjectNotFoundException();
@@ -54,13 +54,13 @@ namespace ProjectManagementSystem.Domain.User.CreateProjectIssues
             if (performer == null)
                 throw new PerformerNotFoundException();
 
-            var issue = await _issueRepository.Get(id, cancellationToken);
+            var issue = await _issueRepository.Get(issueId, cancellationToken);
 
             if (issue != null)
                 if (issue.Title != title)
                     throw new IssueAlreadyExistsException();
 
-            issue = new Issue(id, title, description, startDate, endDate, trackerId, statusId, priorityId, authorId, performerId);
+            issue = new Issue(issueId, title, description, startDate, endDate, trackerId, statusId, priorityId, authorId, performerId);
 
             project.AddIssue(issue);
 
