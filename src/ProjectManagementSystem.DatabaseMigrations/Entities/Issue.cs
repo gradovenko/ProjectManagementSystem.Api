@@ -22,7 +22,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Entities
         public IssuePriority Priority { get; set; }
         public Guid AuthorId { get; set; }
         public User Author { get; set; }
-        public Guid PerformerId { get; set; }
+        public Guid? PerformerId { get; set; }
         public User Performer { get; set; }
         public Guid ConcurrencyStamp { get; set; }
     }

@@ -107,15 +107,15 @@ namespace ProjectManagementSystem.WebApi
             });
 
             #endregion
-
-            #region DbContexts, repositories and services
-
-            #region DatabaseMigrationsContext
             
+            #region DatabaseMigrationsContext
+
             services.AddDbContext<ProjectManagementSystemDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
             #endregion
+
+            #region DbContextsRepositoriesServices
 
             #region Admin
 
@@ -172,7 +172,7 @@ namespace ProjectManagementSystem.WebApi
             #endregion
 
             #endregion
-            
+
             #region User
 
             #region Accounts
@@ -184,7 +184,7 @@ namespace ProjectManagementSystem.WebApi
             services.AddScoped<Domain.User.Accounts.UserUpdateService>();
 
             #endregion
-            
+
             #region ProjectIssues
 
             services.AddDbContext<Infrastructure.User.CreateProjectIssues.ProjectDbContext>(options =>
@@ -327,6 +327,25 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region ProjectIssues
+
+            services.AddDbContext<Queries.Infrastructure.User.ProjectIssues.ProjectDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.ProjectIssues.IssueListQuery,
+                        Page<Queries.User.ProjectIssues.IssueListView>>,
+                    Queries.Infrastructure.User.ProjectIssues.IssueListQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.ProjectIssues.IssueListQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.ProjectIssues.IssueQuery,
+                        Queries.User.ProjectIssues.IssueView>,
+                    Queries.Infrastructure.User.ProjectIssues.IssueQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.ProjectIssues.IssueQuery).Assembly);
+
+            #endregion
+
             #endregion
 
             #endregion
@@ -347,12 +366,12 @@ namespace ProjectManagementSystem.WebApi
 //            }
 
             //app.UseHttpsRedirection();
-            
+
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseAuthentication();
             app.UseMvc();
-            
+
             app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
             app.UseSwaggerUI(options =>
             {

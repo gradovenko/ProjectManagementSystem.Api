@@ -12,6 +12,6 @@ namespace ProjectManagementSystem.WebApi.Models.User.ProjectIssues
         public Guid TrackerId { get; set; }
         public Guid StatusId { get; set; }
         public Guid PriorityId { get; set; }
-        public Guid PerformerId { get; set; }
+        public Guid? PerformerId { get; set; }
     }
 }

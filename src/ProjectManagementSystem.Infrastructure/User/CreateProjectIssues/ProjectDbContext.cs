@@ -96,8 +96,7 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
                     .HasColumnName("AuthorId")
                     .IsRequired();
                 builder.Property(i => i.PerformerId)
-                    .HasColumnName("PerformerId")
-                    .IsRequired();
+                    .HasColumnName("PerformerId");
                 builder.Property("_concurrencyStamp")
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
