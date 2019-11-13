@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Domain.User.CreateProjectIssues;
 
-namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
+namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
 {
     public sealed class ProjectDbContext : DbContext
     {
@@ -11,7 +10,7 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
         internal DbSet<Tracker> Trackers { get; set; }
         internal DbSet<IssueStatus> IssueStatuses { get; set; }
         internal DbSet<IssuePriority> IssuePriorities { get; set; }
-        internal DbSet<Domain.User.CreateProjectIssues.User> Users { get; set; }
+        internal DbSet<User> Users { get; set; }
         internal DbSet<Issue> Issues { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -54,7 +53,7 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
                     .ValueGeneratedNever();
             });
             
-            modelBuilder.Entity<Domain.User.CreateProjectIssues.User>(builder =>
+            modelBuilder.Entity<User>(builder =>
             {
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);
