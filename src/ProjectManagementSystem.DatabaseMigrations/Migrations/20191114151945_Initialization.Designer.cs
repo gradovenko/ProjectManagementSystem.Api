@@ -10,8 +10,8 @@ using ProjectManagementSystem.DatabaseMigrations;
 namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 {
     [DbContext(typeof(ProjectManagementSystemDbContext))]
-    [Migration("20190929144355_AddProjectTable")]
-    partial class AddProjectTable
+    [Migration("20191114151945_Initialization")]
+    partial class Initialization
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,89 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.Issue", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnName("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnName("AuthorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnName("ConcurrencyStamp")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnName("CreateDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnName("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnName("EndDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long>("Index")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Index")
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<Guid?>("PerformerId")
+                        .HasColumnName("PerformerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PriorityId")
+                        .HasColumnName("PriorityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnName("StartDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("StatusId")
+                        .HasColumnName("StatusId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnName("Title")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TrackerId")
+                        .HasColumnName("TrackerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnName("UpdateDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("PerformerId");
+
+                    b.HasIndex("PriorityId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("TrackerId");
+
+                    b.ToTable("Issue");
+                });
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.IssuePriority", b =>
                 {
@@ -81,8 +164,8 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnName("Description")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnName("IsPublic")
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnName("IsPrivate")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -95,9 +178,27 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnName("Status")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.HasKey("Id");
 
                     b.ToTable("Project");
+                });
+
+            modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.ProjectTracker", b =>
+                {
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TrackerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ProjectId", "TrackerId");
+
+                    b.HasIndex("TrackerId");
+
+                    b.ToTable("ProjectTracker");
                 });
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.RefreshToken", b =>
@@ -117,6 +218,27 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RefreshToken");
+                });
+
+            modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.Tracker", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnName("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnName("ConcurrencyStamp")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnName("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tracker");
                 });
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.User", b =>
@@ -192,7 +314,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         new
                         {
                             Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("4a21ef73-d50a-4d8c-99b5-d8f2bb98626b"),
+                            ConcurrencyStamp = new Guid("005b5246-2274-48f4-b7df-56e4b46c58a7"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",
@@ -202,6 +324,58 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                             Role = "Admin",
                             Status = "Active"
                         });
+                });
+
+            modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.Issue", b =>
+                {
+                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.User", "Performer")
+                        .WithMany()
+                        .HasForeignKey("PerformerId");
+
+                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.IssuePriority", "Priority")
+                        .WithMany()
+                        .HasForeignKey("PriorityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.IssueStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.Tracker", "Tracker")
+                        .WithMany()
+                        .HasForeignKey("TrackerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.ProjectTracker", b =>
+                {
+                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.Tracker", "Tracker")
+                        .WithMany()
+                        .HasForeignKey("TrackerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
