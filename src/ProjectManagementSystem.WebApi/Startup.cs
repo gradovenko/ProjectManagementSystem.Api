@@ -82,7 +82,7 @@ namespace ProjectManagementSystem.WebApi
 
             services.Configure<Infrastructure.Authentication.JwtOptions>(Configuration.GetSection("Authentication:Jwt"));
 
-            services.AddDbContext<Infrastructure.Admin.Users.UserDbContext>(options =>
+            services.AddDbContext<Infrastructure.Authentication.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
             services.AddScoped<Domain.Authentication.IUserRepository, Infrastructure.Authentication.UserRepository>();
             services.AddScoped<Domain.Authentication.IJwtAccessTokenFactory, Infrastructure.Authentication.JwtAccessTokenFactory>();
@@ -194,6 +194,7 @@ namespace ProjectManagementSystem.WebApi
             services.AddScoped<Domain.User.CreateProjectIssues.IIssueStatusRepository, Infrastructure.User.CreateProjectIssues.IssueStatusRepository>();
             services.AddScoped<Domain.User.CreateProjectIssues.IIssuePriorityRepository, Infrastructure.User.CreateProjectIssues.IssuePriorityRepository>();
             services.AddScoped<Domain.User.CreateProjectIssues.IUserRepository, Infrastructure.User.CreateProjectIssues.UserRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IIssueRepository, Infrastructure.User.CreateProjectIssues.IssueRepository>();
             services.AddScoped<Domain.User.CreateProjectIssues.IssueCreationService>();
 
             #endregion
@@ -329,7 +330,7 @@ namespace ProjectManagementSystem.WebApi
 
             #region ProjectIssues
 
-            services.AddDbContext<Queries.Infrastructure.User.ProjectIssues.ProjectDbContext>(options =>
+            services.AddDbContext<Queries.Infrastructure.User.ProjectIssues.IssueDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
             services

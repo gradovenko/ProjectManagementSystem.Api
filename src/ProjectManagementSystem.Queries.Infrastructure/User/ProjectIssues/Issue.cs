@@ -5,11 +5,15 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
     internal sealed class Issue
     {
         public Guid Id { get; private set; }
+        public long Index { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
         public DateTime CreateDate { get; private set; }
+        public DateTime? UpdateDate { get; private set; }
         public DateTime? StartDate { get; private set; }
         public DateTime? EndDate { get; private set; }
+        public Guid ProjectId { get; private set; }
+        public Project Project { get; private set; }
         public Guid TrackerId { get; private set; }
         public Tracker Tracker { get; private set; }
         public Guid StatusId { get; private set; }

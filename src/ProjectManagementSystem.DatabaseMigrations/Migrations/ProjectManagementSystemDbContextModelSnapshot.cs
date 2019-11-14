@@ -26,6 +26,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("AuthorId")
+                        .HasColumnName("AuthorId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ConcurrencyStamp")
@@ -53,9 +54,11 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<Guid?>("PerformerId")
+                        .HasColumnName("PerformerId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("PriorityId")
+                        .HasColumnName("PriorityId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProjectId")
@@ -66,6 +69,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("StatusId")
+                        .HasColumnName("StatusId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Title")
@@ -74,6 +78,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid>("TrackerId")
+                        .HasColumnName("TrackerId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdateDate")
@@ -307,7 +312,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         new
                         {
                             Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("48515d83-90b4-4592-b0af-a6093a770997"),
+                            ConcurrencyStamp = new Guid("875c06a6-d743-42ec-9bd9-1ad6ef504fd7"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",

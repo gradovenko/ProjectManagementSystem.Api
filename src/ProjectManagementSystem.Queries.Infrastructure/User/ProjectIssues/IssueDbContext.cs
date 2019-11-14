@@ -2,15 +2,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
 {
-    public sealed class ProjectDbContext : DbContext
+    public sealed class IssueDbContext : DbContext
     {
-        public ProjectDbContext(DbContextOptions<ProjectDbContext> options) : base(options) { }
+        public IssueDbContext(DbContextOptions<IssueDbContext> options) : base(options) { }
 
-        internal DbSet<Project> Projects { get; set; }
-        internal DbSet<Tracker> Trackers { get; set; }
-        internal DbSet<IssueStatus> IssueStatuses { get; set; }
-        internal DbSet<IssuePriority> IssuePriorities { get; set; }
-        internal DbSet<User> Users { get; set; }
         internal DbSet<Issue> Issues { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,8 +17,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.ToTable("Project");
                 builder.HasKey(p => p.Id);
                 builder.Property(p => p.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("Id");
             });
 
             modelBuilder.Entity<Tracker>(builder =>
@@ -31,8 +25,9 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.ToTable("Tracker");
                 builder.HasKey(t => t.Id);
                 builder.Property(t => t.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("Id");
+                builder.Property(t => t.Name)
+                    .HasColumnName("Name");
             });
 
             modelBuilder.Entity<IssueStatus>(builder =>
@@ -40,66 +35,63 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.ToTable("IssueStatus");
                 builder.HasKey(@is => @is.Id);
                 builder.Property(@is => @is.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("Id");
+                builder.Property(@is => @is.Name)
+                    .HasColumnName("Name");
             });
-            
+
             modelBuilder.Entity<IssuePriority>(builder =>
             {
                 builder.ToTable("IssuePriority");
                 builder.HasKey(ip => ip.Id);
                 builder.Property(ip => ip.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("Id");
+                builder.Property(ip => ip.Name)
+                    .HasColumnName("Name");
             });
-            
+
             modelBuilder.Entity<User>(builder =>
             {
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);
                 builder.Property(u => u.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("Id");
+                builder.Property(u => u.Name)
+                    .HasColumnName("Name");
             });
-            
+
             modelBuilder.Entity<Issue>(builder =>
             {
                 builder.ToTable("Issue");
                 builder.HasKey(i => i.Id);
                 builder.Property(i => i.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("Id");
+                builder.Property(i => i.Index)
+                    .HasColumnName("Index");
                 builder.Property(i => i.Title)
-                    .HasColumnName("Title")
-                    .IsRequired();
+                    .HasColumnName("Title");
                 builder.Property(i => i.Description)
-                    .HasColumnName("Description")
-                    .IsRequired();
+                    .HasColumnName("Description");
                 builder.Property(i => i.CreateDate)
-                    .HasColumnName("CreateDate")
-                    .IsRequired();
+                    .HasColumnName("CreateDate");
                 builder.Property(i => i.StartDate)
                     .HasColumnName("StartDate");
                 builder.Property(i => i.EndDate)
                     .HasColumnName("EndDate");
                 builder.Property(i => i.TrackerId)
-                    .HasColumnName("TrackerId")
-                    .IsRequired();
+                    .HasColumnName("TrackerId");
                 builder.Property(i => i.StatusId)
-                    .HasColumnName("StatusId")
-                    .IsRequired();
+                    .HasColumnName("StatusId");
                 builder.Property(i => i.PriorityId)
-                    .HasColumnName("PriorityId")
-                    .IsRequired();
+                    .HasColumnName("PriorityId");
                 builder.Property(i => i.AuthorId)
-                    .HasColumnName("AuthorId")
-                    .IsRequired();
+                    .HasColumnName("AuthorId");
                 builder.Property(i => i.PerformerId)
-                    .HasColumnName("PerformerId")
-                    .IsRequired();
-                builder.Property("_concurrencyStamp")
-                    .HasColumnName("ConcurrencyStamp")
-                    .IsConcurrencyToken();
+                    .HasColumnName("PerformerId");
+                builder.HasOne(i => i.Project)
+                    .WithMany()
+                    .HasForeignKey(i => i.ProjectId)
+                    .HasPrincipalKey(p => p.Id);
                 builder.HasOne(i => i.Tracker)
                     .WithMany()
                     .HasForeignKey(i => i.TrackerId)
