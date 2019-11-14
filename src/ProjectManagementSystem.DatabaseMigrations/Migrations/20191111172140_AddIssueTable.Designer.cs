@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProjectManagementSystem.DatabaseMigrations;
@@ -9,9 +10,10 @@ using ProjectManagementSystem.DatabaseMigrations;
 namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 {
     [DbContext(typeof(ProjectManagementSystemDbContext))]
-    partial class ProjectManagementSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191111172140_AddIssueTable")]
+    partial class AddIssueTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +54,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<Guid?>("PerformerId")
+                    b.Property<Guid>("PerformerId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("PriorityId")
@@ -307,7 +309,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         new
                         {
                             Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("48515d83-90b4-4592-b0af-a6093a770997"),
+                            ConcurrencyStamp = new Guid("1e7f3345-0841-441f-bcdb-1ab41d4453c7"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",
@@ -329,7 +331,9 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 
                     b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.User", "Performer")
                         .WithMany()
-                        .HasForeignKey("PerformerId");
+                        .HasForeignKey("PerformerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.IssuePriority", "Priority")
                         .WithMany()
