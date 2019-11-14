@@ -18,12 +18,12 @@ namespace ProjectManagementSystem.Domain.User.CreateProjectIssues
         public IssuePriority Priority { get; private set; }
         public Guid AuthorId { get; private set; }
         public User Author { get; private set; }
-        public Guid PerformerId { get; private set; }
+        public Guid? PerformerId { get; private set; }
         public User Performer { get; private set; }
         private Guid _concurrencyStamp = Guid.NewGuid();
 
         public Issue(Guid id, string title, string description, DateTime? startDate,
-            DateTime? endDate, Guid trackerId, Guid statusId, Guid priorityId, Guid authorId, Guid performerId)
+            DateTime? endDate, Guid trackerId, Guid statusId, Guid priorityId, Guid authorId, Guid? performerId)
         {
             Id = id;
             Title = title;

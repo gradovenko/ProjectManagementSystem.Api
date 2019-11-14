@@ -67,7 +67,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
                     "Issue already exists with other parameters");
             }
 
-            return CreatedAtRoute("GetProjectIssue", new {id = model.Id}, null);
+            return CreatedAtRoute("GetProjectIssueRoute", new {id = model.Id}, null);
         }
 
         /// <summary>

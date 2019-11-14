@@ -223,6 +223,20 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("StartDate");
                 builder.Property(i => i.EndDate)
                     .HasColumnName("EndDate");
+                builder.Property(i => i.TrackerId)
+                    .HasColumnName("TrackerId")
+                    .IsRequired();
+                builder.Property(i => i.StatusId)
+                    .HasColumnName("StatusId")
+                    .IsRequired();
+                builder.Property(i => i.PriorityId)
+                    .HasColumnName("PriorityId")
+                    .IsRequired();
+                builder.Property(i => i.AuthorId)
+                    .HasColumnName("AuthorId")
+                    .IsRequired();
+                builder.Property(i => i.PerformerId)
+                    .HasColumnName("PerformerId");
                 builder.Property(i => i.ConcurrencyStamp)
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
