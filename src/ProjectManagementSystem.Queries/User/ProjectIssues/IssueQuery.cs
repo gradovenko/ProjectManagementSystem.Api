@@ -5,11 +5,14 @@ namespace ProjectManagementSystem.Queries.User.ProjectIssues
 {
     public sealed class IssueQuery : IRequest<IssueView>
     {
-        public Guid Id { get; }
-        
-        public IssueQuery(Guid id)
+        public Guid ProjectId { get; }
+
+        public Guid IssueId { get; }
+
+        public IssueQuery(Guid projectId, Guid issueId)
         {
-            Id = id;
+            ProjectId = projectId;
+            IssueId = issueId;
         }
     }
 }

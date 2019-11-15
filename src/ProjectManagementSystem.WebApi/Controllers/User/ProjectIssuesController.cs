@@ -67,7 +67,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
                     "Issue already exists with other parameters");
             }
 
-            return CreatedAtRoute("GetProjectIssueRoute", new {id = model.Id}, null);
+            return CreatedAtRoute("GetProjectIssueRoute", new {projectId = id, issueId = model.Id}, null);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             if (project == null)
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.ProjectNotFound, "Project not found");
 
-            return Ok(await mediator.Send(new IssueListQuery(model.Limit, model.Offset), cancellationToken));
+            return Ok(await mediator.Send(new IssueListQuery(id, model.Limit, model.Offset), cancellationToken));
         }
 
 
@@ -113,12 +113,12 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             if (project == null)
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.ProjectNotFound, "Project not found");
 
-            var issue = await mediator.Send(new IssueQuery(issueId), cancellationToken);
+            var issue = await mediator.Send(new IssueQuery(projectId, issueId), cancellationToken);
 
             if (issue == null)
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueNotFound, "Issue not found");
 
-            return Ok(project);
+            return Ok(issue);
         }
     }
 }

@@ -59,7 +59,7 @@ namespace ProjectManagementSystem.Domain.User.CreateProjectIssues
 
             var issue = await _issueRepository.Get(issueId, cancellationToken);
 
-            if (issue != null)
+            if (issue != null) 
                 throw new IssueAlreadyExistsException();
 
             issue = new Issue(issueId, title, description, startDate, endDate, trackerId, statusId, priorityId, authorId, performerId);

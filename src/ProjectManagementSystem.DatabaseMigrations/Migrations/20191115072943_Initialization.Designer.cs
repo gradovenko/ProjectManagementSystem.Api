@@ -10,7 +10,7 @@ using ProjectManagementSystem.DatabaseMigrations;
 namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 {
     [DbContext(typeof(ProjectManagementSystemDbContext))]
-    [Migration("20191114151945_Initialization")]
+    [Migration("20191115072943_Initialization")]
     partial class Initialization
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -314,7 +314,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         new
                         {
                             Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("005b5246-2274-48f4-b7df-56e4b46c58a7"),
+                            ConcurrencyStamp = new Guid("5bf26c1d-478b-4be8-9aed-505181121932"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",

@@ -80,21 +80,16 @@ namespace ProjectManagementSystem.WebApi
                 };
             });
 
-            services.Configure<Infrastructure.Authentication.JwtOptions>(
-                Configuration.GetSection("Authentication:Jwt"));
+            services.Configure<Infrastructure.Authentication.JwtOptions>(Configuration.GetSection("Authentication:Jwt"));
 
             services.AddDbContext<Infrastructure.Authentication.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
             services.AddScoped<Domain.Authentication.IUserRepository, Infrastructure.Authentication.UserRepository>();
-            services
-                .AddScoped<Domain.Authentication.IJwtAccessTokenFactory,
-                    Infrastructure.Authentication.JwtAccessTokenFactory>();
+            services.AddScoped<Domain.Authentication.IJwtAccessTokenFactory, Infrastructure.Authentication.JwtAccessTokenFactory>();
             services.AddScoped<Domain.Authentication.IPasswordHasher, Infrastructure.PasswordHasher.PasswordHasher>();
             services.AddDbContext<Infrastructure.RefreshTokenStore.RefreshTokenDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            services
-                .AddScoped<Domain.Authentication.IRefreshTokenStore, Infrastructure.RefreshTokenStore.RefreshTokenStore
-                >();
+            services.AddScoped<Domain.Authentication.IRefreshTokenStore, Infrastructure.RefreshTokenStore.RefreshTokenStore>();
             services.AddScoped<Domain.Authentication.UserAuthenticationService>();
 
             #endregion
@@ -112,7 +107,7 @@ namespace ProjectManagementSystem.WebApi
             });
 
             #endregion
-
+            
             #region DatabaseMigrationsContext
 
             services.AddDbContext<ProjectManagementSystemDbContext>(options =>
@@ -194,24 +189,12 @@ namespace ProjectManagementSystem.WebApi
 
             services.AddDbContext<Infrastructure.User.CreateProjectIssues.ProjectDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            services
-                .AddScoped<Domain.User.CreateProjectIssues.IProjectRepository,
-                    Infrastructure.User.CreateProjectIssues.ProjectRepository>();
-            services
-                .AddScoped<Domain.User.CreateProjectIssues.ITrackerRepository,
-                    Infrastructure.User.CreateProjectIssues.TrackerRepository>();
-            services
-                .AddScoped<Domain.User.CreateProjectIssues.IIssueStatusRepository,
-                    Infrastructure.User.CreateProjectIssues.IssueStatusRepository>();
-            services
-                .AddScoped<Domain.User.CreateProjectIssues.IIssuePriorityRepository,
-                    Infrastructure.User.CreateProjectIssues.IssuePriorityRepository>();
-            services
-                .AddScoped<Domain.User.CreateProjectIssues.IUserRepository,
-                    Infrastructure.User.CreateProjectIssues.UserRepository>();
-            services
-                .AddScoped<Domain.User.CreateProjectIssues.IIssueRepository,
-                    Infrastructure.User.CreateProjectIssues.IssueRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IProjectRepository, Infrastructure.User.CreateProjectIssues.ProjectRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.ITrackerRepository, Infrastructure.User.CreateProjectIssues.TrackerRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IIssueStatusRepository, Infrastructure.User.CreateProjectIssues.IssueStatusRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IIssuePriorityRepository, Infrastructure.User.CreateProjectIssues.IssuePriorityRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IUserRepository, Infrastructure.User.CreateProjectIssues.UserRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IIssueRepository, Infrastructure.User.CreateProjectIssues.IssueRepository>();
             services.AddScoped<Domain.User.CreateProjectIssues.IssueCreationService>();
 
             #endregion
@@ -347,7 +330,7 @@ namespace ProjectManagementSystem.WebApi
 
             #region ProjectIssues
 
-            services.AddDbContext<Queries.Infrastructure.User.ProjectIssues.ProjectDbContext>(options =>
+            services.AddDbContext<Queries.Infrastructure.User.ProjectIssues.IssueDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
             services
