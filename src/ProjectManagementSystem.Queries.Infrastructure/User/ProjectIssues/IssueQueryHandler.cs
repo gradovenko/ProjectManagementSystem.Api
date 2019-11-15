@@ -18,7 +18,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
 
         public async Task<IssueView> Handle(IssueQuery query, CancellationToken cancellationToken)
         {
-            var issue = await _context.Issues
+            return await _context.Issues
                 .Include(i => i.Project)
                 .Include(i => i.Tracker)
                 .Include(i => i.Status)
@@ -27,24 +27,23 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 .Include(i => i.Performer)
                 .AsNoTracking()
                 .Where(i => i.ProjectId == query.ProjectId && i.Id == query.IssueId)
+                .Select(i => new IssueView
+                {
+                    Id = i.Id,
+                    Index = i.Index,
+                    Title = i.Title,
+                    Description = i.Description,
+                    CreateDate = i.CreateDate,
+                    UpdateDate = i.UpdateDate,
+                    StartDate = i.StartDate,
+                    EndDate = i.EndDate,
+                    TrackerName = i.Tracker.Name,
+                    StatusName = i.Status.Name,
+                    PriorityName = i.Priority.Name,
+                    AuthorName = i.Author.Name,
+                    PerformerName = i.Performer.Name
+                })
                 .SingleOrDefaultAsync(cancellationToken);
-
-            return new IssueView
-            {
-                Id = issue.Id,
-                Index = issue.Index,
-                Title = issue.Title,
-                Description = issue.Description,
-                CreateDate = issue.CreateDate,
-                UpdateDate = issue.UpdateDate,
-                StartDate = issue.StartDate,
-                EndDate = issue.EndDate,
-                TrackerName = issue.Tracker.Name,
-                StatusName = issue.Status.Name,
-                PriorityName = issue.Priority.Name,
-                AuthorName = issue.Author.Name,
-                PerformerName = issue.Performer.Name
-            };
         }
     }
 }
