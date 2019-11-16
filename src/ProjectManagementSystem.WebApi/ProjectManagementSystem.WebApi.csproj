@@ -41,4 +41,8 @@
         <ProjectReference Include="..\ProjectManagementSystem.Queries\ProjectManagementSystem.Queries.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\User\TimeEntries" />
+    </ItemGroup>
+
 </Project>
