@@ -13,6 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="8.5.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
         <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
@@ -39,10 +40,6 @@
         <ProjectReference Include="..\ProjectManagementSystem.Infrastructure\ProjectManagementSystem.Infrastructure.csproj" />
         <ProjectReference Include="..\ProjectManagementSystem.Queries.Infrastructure\ProjectManagementSystem.Queries.Infrastructure.csproj" />
         <ProjectReference Include="..\ProjectManagementSystem.Queries\ProjectManagementSystem.Queries.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Models\User\TimeEntries" />
     </ItemGroup>
 
 </Project>

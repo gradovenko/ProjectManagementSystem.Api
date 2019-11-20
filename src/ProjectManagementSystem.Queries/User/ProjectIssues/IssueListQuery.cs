@@ -6,7 +6,7 @@ namespace ProjectManagementSystem.Queries.User.ProjectIssues
     {
         public Guid ProjectId { get; set; }
 
-        public IssueListQuery(Guid projectId, int limit, int offset) : base(limit, offset)
+        public IssueListQuery(Guid projectId, int offset, int limit) : base(offset, limit)
         {
             ProjectId = projectId;
         }

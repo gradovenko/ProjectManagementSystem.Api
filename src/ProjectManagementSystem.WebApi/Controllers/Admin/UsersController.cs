@@ -99,7 +99,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
             [FromQuery] QueryUserBinding binding,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new UsersQuery(binding.Limit, binding.Offset), cancellationToken));
+            return Ok(await mediator.Send(new UsersQuery(binding.Offset, binding.Limit), cancellationToken));
         }
     }
 }

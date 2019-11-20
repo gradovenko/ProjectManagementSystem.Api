@@ -4,14 +4,14 @@ namespace ProjectManagementSystem.Queries
 {
     public abstract class PageQuery<T> : IRequest<Page<T>> where T : class
     {
-        protected PageQuery(int limit, int offset)
+        protected PageQuery(int offset, int limit)
         {
-            Limit = limit;
             Offset = offset;
+            Limit = limit;
         }
-
-        public int Limit { get; }
-
+        
         public int Offset { get; }
+        
+        public int Limit { get; }
     }
 }

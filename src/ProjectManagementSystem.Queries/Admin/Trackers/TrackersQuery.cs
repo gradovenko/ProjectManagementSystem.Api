@@ -2,6 +2,6 @@ namespace ProjectManagementSystem.Queries.Admin.Trackers
 {
     public class TrackersQuery : PageQuery<FullTrackerView>
     {
-        public TrackersQuery(int limit, int offset) : base(limit, offset) { }
+        public TrackersQuery(int offset, int limit) : base(offset, limit) { }
     }
 }

@@ -76,7 +76,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
             [FromQuery] QueryProjectBindModel model,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new ProjectsQuery(model.Limit, model.Offset), cancellationToken));
+            return Ok(await mediator.Send(new ProjectsQuery(model.Offset, model.Limit), cancellationToken));
         }
 
         /// <summary>

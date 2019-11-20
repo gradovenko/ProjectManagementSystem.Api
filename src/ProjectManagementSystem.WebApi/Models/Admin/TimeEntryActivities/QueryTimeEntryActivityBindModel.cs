@@ -1,6 +1,6 @@
 namespace ProjectManagementSystem.WebApi.Models.Admin.TimeEntryActivities
 {
-    public sealed class FindTimeEntryActivityListBindModel
+    public sealed class QueryTimeEntryActivityBindModel : QueryPageBindModel
     {
         
     }

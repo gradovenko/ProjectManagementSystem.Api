@@ -51,7 +51,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         [ProducesResponseType(typeof(TimeEntryActivityListViewModel), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
-            [FromQuery] FindTimeEntryActivityListBindModel model,
+            [FromQuery] QueryTimeEntryActivityBindModel model,
             [FromServices] IMediator mediator)
         {
             return Ok(await mediator.Send(new TimeEntryActivityListQuery(model.Limit, model.Offset), cancellationToken));

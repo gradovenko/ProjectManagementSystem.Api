@@ -17,18 +17,9 @@ namespace ProjectManagementSystem.Infrastructure.Admin.TimeEntryActivities
             {
                 builder.ToTable("TimeEntryActivity");
                 builder.HasKey(tea => tea.Id);
-                builder.Property(tea => tea.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
-                builder.Property(tea => tea.Name)
-                    .HasColumnName("Name")
-                    .IsRequired();
-                builder.Property(tea => tea.IsActive)
-                    .HasColumnName("IsActive")
-                    .IsRequired();
-                builder.Property("_concurrencyStamp")
-                    .HasColumnName("ConcurrencyStamp")
-                    .IsConcurrencyToken();
+                builder.Property(tea => tea.Id);
+                builder.Property(tea => tea.Name);
+                builder.Property(tea => tea.IsActive);
             });
         }
     }
