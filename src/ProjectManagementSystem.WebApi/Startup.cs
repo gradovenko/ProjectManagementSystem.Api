@@ -298,6 +298,25 @@ namespace ProjectManagementSystem.WebApi
             services.AddMediatR(typeof(Queries.Admin.Trackers.TrackersQuery).Assembly);
 
             #endregion
+            
+            #region TimeEntryActivity
+
+            services.AddDbContext<Queries.Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.TimeEntryActivities.TimeEntryActivityQuery,
+                        Queries.Admin.TimeEntryActivities.TimeEntryActivityViewModel>,
+                    Queries.Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.TimeEntryActivities.TimeEntryActivityQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.TimeEntryActivities.TimeEntryActivityListQuery,
+                        Page<Queries.Admin.TimeEntryActivities.TimeEntryActivityListViewModel>>,
+                    Queries.Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityListQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.TimeEntryActivities.TimeEntryActivityListQuery).Assembly);
+
+            #endregion
 
             #endregion
 

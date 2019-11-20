@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace ProjectManagementSystem.Domain.User.TimeEntries
 {
-    public interface ITimeEntryRepository
-    {
-        Task<TimeEntry> Get(Guid id, CancellationToken cancellationToken);
+    public interface IUserRepository
+    { 
+        Task<User> Get(Guid id, CancellationToken cancellationToken);
     }
 }

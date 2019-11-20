@@ -5,21 +5,16 @@ using ProjectManagementSystem.Domain.User.TimeEntries;
 
 namespace ProjectManagementSystem.Infrastructure.User.TimeEntries
 {
-    public sealed class TimeEntryRepository : ITimeEntryRepository
+    public class TimeEntryActivityRepository : ITimeEntryActivityRepository
     {
         private readonly TimeEntryDbContext _context;
 
-        public TimeEntryRepository(TimeEntryDbContext context)
+        public TimeEntryActivityRepository(TimeEntryDbContext context)
         {
             _context = context;
         }
         
-        public Task<TimeEntry> Get(Guid id, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Save(TimeEntry timeEntry)
+        public Task<TimeEntryActivity> Get(Guid id, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

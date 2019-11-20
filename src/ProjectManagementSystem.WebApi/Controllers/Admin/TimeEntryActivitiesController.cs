@@ -73,7 +73,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
 
             if (timeEntryActivity == null)
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TimeEntryActivityNotFound,
-                    "Issue status not found");
+                    "Time entry activity not found");
 
             return Ok(timeEntryActivity);
         }
