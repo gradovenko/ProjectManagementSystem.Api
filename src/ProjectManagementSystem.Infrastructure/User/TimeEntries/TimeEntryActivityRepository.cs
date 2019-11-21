@@ -1,22 +1,25 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Domain.User.TimeEntries;
 
 namespace ProjectManagementSystem.Infrastructure.User.TimeEntries
 {
     public class TimeEntryActivityRepository : ITimeEntryActivityRepository
     {
-        private readonly TimeEntryDbContext _context;
+        private readonly IssueDbContext _context;
 
-        public TimeEntryActivityRepository(TimeEntryDbContext context)
+        public TimeEntryActivityRepository(IssueDbContext context)
         {
             _context = context;
         }
         
-        public Task<TimeEntryActivity> Get(Guid id, CancellationToken cancellationToken)
+        public async Task<TimeEntryActivity> Get(Guid id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await _context.TimeEntryActivities
+                .AsNoTracking()
+                .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
         }
     }
 }

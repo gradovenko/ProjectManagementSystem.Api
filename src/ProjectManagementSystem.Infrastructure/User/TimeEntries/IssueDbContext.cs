@@ -3,9 +3,9 @@ using ProjectManagementSystem.Domain.User.TimeEntries;
 
 namespace ProjectManagementSystem.Infrastructure.User.TimeEntries
 {
-    public sealed class TimeEntryDbContext : DbContext
+    public sealed class IssueDbContext : DbContext
     {
-        public TimeEntryDbContext(DbContextOptions<TimeEntryDbContext> options) : base(options) { }
+        public IssueDbContext(DbContextOptions<IssueDbContext> options) : base(options) { }
 
         internal DbSet<Project> Projects { get; set; }
         internal DbSet<Issue> Issues { get; set; }

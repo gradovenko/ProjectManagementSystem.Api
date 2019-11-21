@@ -54,7 +54,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
             [FromQuery] QueryTimeEntryActivityBindModel model,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new TimeEntryActivityListQuery(model.Limit, model.Offset), cancellationToken));
+            return Ok(await mediator.Send(new TimeEntryActivityListQuery(model.Offset, model.Limit), cancellationToken));
         }
 
         /// <summary>

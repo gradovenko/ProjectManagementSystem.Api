@@ -1,27 +1,33 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Domain.User.TimeEntries;
 
 namespace ProjectManagementSystem.Infrastructure.User.TimeEntries
 {
     public sealed class IssueRepository : IIssueRepository
     {
-        private readonly TimeEntryDbContext _context;
+        private readonly IssueDbContext _context;
 
-        public IssueRepository(TimeEntryDbContext context)
+        public IssueRepository(IssueDbContext context)
         {
             _context = context;
         }
         
-        public Task<Issue> Get(Guid id, CancellationToken cancellationToken)
+        public async Task<Issue> Get(Guid id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await _context.Issues
+                .AsNoTracking()
+                .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
         }
 
-        public Task Save(Issue project)
+        public async Task Save(Issue issue)
         {
-            throw new NotImplementedException();
+            if (_context.Entry(issue).State == EntityState.Detached)
+                _context.Issues.Add(issue);
+
+            await _context.SaveChangesAsync();         
         }
     }
 }
