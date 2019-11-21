@@ -1,6 +1,6 @@
 using System;
 
-namespace ProjectManagementSystem.Queries.User.TimeEntries
+namespace ProjectManagementSystem.Queries.User.ProjectTimeEntries
 {
     public sealed class TimeEntryViewModel
     {
@@ -10,7 +10,6 @@ namespace ProjectManagementSystem.Queries.User.TimeEntries
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime DueDate { get; set; }
-        public string ProjectName { get; set; }
         public long IssueNumber { get; set; }
         public string UserName { get; set; }
         public string ActivityName { get; set; }

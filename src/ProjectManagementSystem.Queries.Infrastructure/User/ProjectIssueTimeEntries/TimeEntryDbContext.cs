@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Queries.Infrastructure.Admin.TimeEntryActivities;
 
-namespace ProjectManagementSystem.Queries.Infrastructure.User.TimeEntries
+namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssueTimeEntries
 {
     public sealed class TimeEntryDbContext : DbContext
     {

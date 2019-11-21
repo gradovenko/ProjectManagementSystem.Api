@@ -18,7 +18,6 @@ namespace ProjectManagementSystem.Infrastructure.User.TimeEntries
         public async Task<Issue> Get(Guid id, CancellationToken cancellationToken)
         {
             return await _context.Issues
-                .AsNoTracking()
                 .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
         }
 

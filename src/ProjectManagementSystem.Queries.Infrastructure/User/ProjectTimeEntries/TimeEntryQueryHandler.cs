@@ -3,9 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Queries.User.TimeEntries;
+using ProjectManagementSystem.Queries.User.ProjectTimeEntries;
 
-namespace ProjectManagementSystem.Queries.Infrastructure.User.TimeEntries
+namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectTimeEntries
 {
     public sealed class TimeEntryQueryHandler : IRequestHandler<TimeEntryQuery, TimeEntryViewModel>
     {
@@ -24,7 +24,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.TimeEntries
                 .Include(i => i.User)
                 .Include(i => i.Activity)
                 .AsNoTracking()
-                .Where(te => te.ProjectId == query.ProjectId && te.IssueId == query.IssueId && te.Id == query.TimeEntryId)
+                .Where(te => te.ProjectId == query.ProjectId && te.Id == query.TimeEntryId)
                 .Select(te => new TimeEntryViewModel
                 {
                     Id = te.Id,
@@ -33,7 +33,6 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.TimeEntries
                     CreateDate = te.CreateDate,
                     UpdateDate = te.UpdateDate,
                     DueDate = te.DueDate,
-                    ProjectName = te.Project.Name,
                     IssueNumber = te.Issue.Index,
                     UserName = te.User.Name,
                     ActivityName = te.Activity.Name

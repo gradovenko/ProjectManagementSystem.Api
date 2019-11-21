@@ -46,7 +46,7 @@ namespace ProjectManagementSystem.Domain.User.TimeEntries
             if (activity == null)
                 throw new TimeEntryActivityNotFoundException();
             
-            var timeEntry = await _timeEntryRepository.Get(issueId, cancellationToken);
+            var timeEntry = await _timeEntryRepository.Get(timeEntryId, cancellationToken);
 
             if (timeEntry != null)
                 throw new TimeEntryAlreadyExistsException();

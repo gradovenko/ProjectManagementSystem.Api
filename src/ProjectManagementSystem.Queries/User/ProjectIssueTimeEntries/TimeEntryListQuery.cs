@@ -1,6 +1,6 @@
 using System;
 
-namespace ProjectManagementSystem.Queries.User.TimeEntries
+namespace ProjectManagementSystem.Queries.User.ProjectIssueTimeEntries
 {
     public class TimeEntryListQuery : PageQuery<TimeEntryListViewModel>
     {

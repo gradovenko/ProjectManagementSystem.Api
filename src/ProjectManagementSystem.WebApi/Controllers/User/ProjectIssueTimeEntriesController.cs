@@ -6,8 +6,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Domain.User.TimeEntries;
-using ProjectManagementSystem.Queries.User.TimeEntries;
+using ProjectManagementSystem.Queries.User.ProjectIssueTimeEntries;
 using ProjectManagementSystem.WebApi.Exceptions;
+using ProjectManagementSystem.WebApi.Extensions;
 using ProjectManagementSystem.WebApi.Models;
 using ProjectManagementSystem.WebApi.Models.User.TimeEntries;
 
@@ -32,7 +33,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             try
             {
                 await timeEntryCreationService.CreateTimeEntry(projectId, issueId, model.Id, model.Hours,
-                    model.Description, model.DueDate, model.UserId, model.ActivityId, cancellationToken);
+                    model.Description, model.DueDate, User.GetId(), model.ActivityId, cancellationToken);
             }
             catch (ProjectNotFoundException)
             {

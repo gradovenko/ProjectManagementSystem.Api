@@ -23,12 +23,7 @@ namespace ProjectManagementSystem.WebApi.Models.User.TimeEntries
         /// 
         /// </summary>
         public DateTime DueDate { get; set; }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public Guid UserId { get; set; }
-        
+
         /// <summary>
         /// 
         /// </summary>
