@@ -11,16 +11,10 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation.AspNetCore;
 using MediatR;
 using ProjectManagementSystem.DatabaseMigrations;
-using ProjectManagementSystem.Domain.Admin.CreateProjects;
-using ProjectManagementSystem.Infrastructure.Admin.CreateProjects;
-using ProjectManagementSystem.Infrastructure.Authentication;
-using ProjectManagementSystem.Infrastructure.PasswordHasher;
-using ProjectManagementSystem.Infrastructure.RefreshTokenStore;
 using ProjectManagementSystem.Queries;
 using ProjectManagementSystem.WebApi.Authorization;
 using ProjectManagementSystem.WebApi.Extensions;
@@ -86,16 +80,16 @@ namespace ProjectManagementSystem.WebApi
                 };
             });
 
-            services.Configure<JwtOptions>(Configuration.GetSection("Authentication:Jwt"));
+            services.Configure<Infrastructure.Authentication.JwtOptions>(Configuration.GetSection("Authentication:Jwt"));
 
-            services.AddDbContext<UserDbContext>(options =>
+            services.AddDbContext<Infrastructure.Authentication.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
             services.AddScoped<Domain.Authentication.IUserRepository, Infrastructure.Authentication.UserRepository>();
-            services.AddScoped<Domain.Authentication.IJwtAccessTokenFactory, JwtAccessTokenFactory>();
-            services.AddScoped<Domain.Authentication.IPasswordHasher, PasswordHasher>();
-            services.AddDbContext<RefreshTokenDbContext>(options =>
+            services.AddScoped<Domain.Authentication.IJwtAccessTokenFactory, Infrastructure.Authentication.JwtAccessTokenFactory>();
+            services.AddScoped<Domain.Authentication.IPasswordHasher, Infrastructure.PasswordHasher.PasswordHasher>();
+            services.AddDbContext<Infrastructure.RefreshTokenStore.RefreshTokenDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            services.AddScoped<Domain.Authentication.IRefreshTokenStore, RefreshTokenStore>();
+            services.AddScoped<Domain.Authentication.IRefreshTokenStore, Infrastructure.RefreshTokenStore.RefreshTokenStore>();
             services.AddScoped<Domain.Authentication.UserAuthenticationService>();
 
             #endregion
@@ -113,29 +107,15 @@ namespace ProjectManagementSystem.WebApi
             });
 
             #endregion
-
-            #region DbContexts, repositories and services
-
-            #region DatabaseMigrationsContext
             
+            #region DatabaseMigrationsContext
+
             services.AddDbContext<ProjectManagementSystemDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
             #endregion
 
-            #region User
-
-            #region Accounts
-
-            services.AddDbContext<Infrastructure.User.Accounts.UserDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            services.AddScoped<Domain.User.Accounts.IUserRepository, Infrastructure.User.Accounts.UserRepository>();
-            services.AddScoped<Domain.User.Accounts.IPasswordHasher, PasswordHasher>();
-            services.AddScoped<Domain.User.Accounts.UserUpdateService>();
-
-            #endregion
-
-            #endregion
+            #region DbContextsRepositoriesServices
 
             #region Admin
 
@@ -144,7 +124,7 @@ namespace ProjectManagementSystem.WebApi
             services.AddDbContext<Infrastructure.Admin.Users.UserDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
             services.AddScoped<Domain.Admin.CreateUsers.IUserRepository, Infrastructure.Admin.Users.UserRepository>();
-            services.AddScoped<Domain.Admin.CreateUsers.IPasswordHasher, PasswordHasher>();
+            services.AddScoped<Domain.Admin.CreateUsers.IPasswordHasher, Infrastructure.PasswordHasher.PasswordHasher>();
 
             #endregion
 
@@ -188,6 +168,57 @@ namespace ProjectManagementSystem.WebApi
             services
                 .AddScoped<Domain.Admin.CreateTrackers.ITrackerRepository,
                     Infrastructure.Admin.CreateTrackers.TrackerRepository>();
+
+            #endregion
+            
+            #region TimeEntryActivities
+
+            services.AddDbContext<Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services
+                .AddScoped<Domain.Admin.TimeEntryActivities.ITimeEntryActivityRepository,
+                    Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityRepository>();
+
+            #endregion
+
+            #endregion
+
+            #region User
+
+            #region Accounts
+
+            services.AddDbContext<Infrastructure.User.Accounts.UserDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddScoped<Domain.User.Accounts.IUserRepository, Infrastructure.User.Accounts.UserRepository>();
+            services.AddScoped<Domain.User.Accounts.IPasswordHasher, Infrastructure.PasswordHasher.PasswordHasher>();
+            services.AddScoped<Domain.User.Accounts.UserUpdateService>();
+
+            #endregion
+
+            #region ProjectIssues
+
+            services.AddDbContext<Infrastructure.User.CreateProjectIssues.ProjectDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddScoped<Domain.User.CreateProjectIssues.IProjectRepository, Infrastructure.User.CreateProjectIssues.ProjectRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.ITrackerRepository, Infrastructure.User.CreateProjectIssues.TrackerRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IIssueStatusRepository, Infrastructure.User.CreateProjectIssues.IssueStatusRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IIssuePriorityRepository, Infrastructure.User.CreateProjectIssues.IssuePriorityRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IUserRepository, Infrastructure.User.CreateProjectIssues.UserRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IIssueRepository, Infrastructure.User.CreateProjectIssues.IssueRepository>();
+            services.AddScoped<Domain.User.CreateProjectIssues.IssueCreationService>();
+
+            #endregion
+            
+            #region TimeEntries
+
+            services.AddDbContext<Infrastructure.User.TimeEntries.IssueDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddScoped<Domain.User.TimeEntries.IProjectRepository, Infrastructure.User.TimeEntries.ProjectRepository>();
+            services.AddScoped<Domain.User.TimeEntries.IIssueRepository, Infrastructure.User.TimeEntries.IssueRepository>();
+            services.AddScoped<Domain.User.TimeEntries.IUserRepository, Infrastructure.User.TimeEntries.UserRepository>();
+            services.AddScoped<Domain.User.TimeEntries.ITimeEntryActivityRepository, Infrastructure.User.TimeEntries.TimeEntryActivityRepository>();
+            services.AddScoped<Domain.User.TimeEntries.ITimeEntryRepository, Infrastructure.User.TimeEntries.TimeEntryRepository>();
+            services.AddScoped<Domain.User.TimeEntries.TimeEntryCreationService>();
 
             #endregion
 
@@ -290,6 +321,25 @@ namespace ProjectManagementSystem.WebApi
             services.AddMediatR(typeof(Queries.Admin.Trackers.TrackersQuery).Assembly);
 
             #endregion
+            
+            #region TimeEntryActivities
+
+            services.AddDbContext<Queries.Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.TimeEntryActivities.TimeEntryActivityQuery,
+                        Queries.Admin.TimeEntryActivities.TimeEntryActivityViewModel>,
+                    Queries.Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.TimeEntryActivities.TimeEntryActivityQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.Admin.TimeEntryActivities.TimeEntryActivityListQuery,
+                        Page<Queries.Admin.TimeEntryActivities.TimeEntryActivityListViewModel>>,
+                    Queries.Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityListQueryHandler>();
+            services.AddMediatR(typeof(Queries.Admin.TimeEntryActivities.TimeEntryActivityListQuery).Assembly);
+
+            #endregion
 
             #endregion
 
@@ -320,6 +370,63 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
 
+            #region ProjectIssues
+
+            services.AddDbContext<Queries.Infrastructure.User.ProjectIssues.IssueDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.ProjectIssues.IssueListQuery,
+                        Page<Queries.User.ProjectIssues.IssueListView>>,
+                    Queries.Infrastructure.User.ProjectIssues.IssueListQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.ProjectIssues.IssueListQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.ProjectIssues.IssueQuery,
+                        Queries.User.ProjectIssues.IssueView>,
+                    Queries.Infrastructure.User.ProjectIssues.IssueQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.ProjectIssues.IssueQuery).Assembly);
+
+            #endregion
+            
+            #region ProjectIssueTimeEntries
+
+            services.AddDbContext<Queries.Infrastructure.User.ProjectIssueTimeEntries.TimeEntryDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.ProjectIssueTimeEntries.TimeEntryListQuery,
+                        Page<Queries.User.ProjectIssueTimeEntries.TimeEntryListViewModel>>,
+                    Queries.Infrastructure.User.ProjectIssueTimeEntries.TimeEntryListQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.ProjectIssueTimeEntries.TimeEntryListQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.ProjectIssueTimeEntries.TimeEntryQuery,
+                        Queries.User.ProjectIssueTimeEntries.TimeEntryViewModel>,
+                    Queries.Infrastructure.User.ProjectIssueTimeEntries.TimeEntryQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.ProjectIssueTimeEntries.TimeEntryQuery).Assembly);
+
+            #endregion
+            
+            #region ProjectTimeEntries
+
+            services.AddDbContext<Queries.Infrastructure.User.ProjectTimeEntries.TimeEntryDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.ProjectTimeEntries.TimeEntryListQuery,
+                        Page<Queries.User.ProjectTimeEntries.TimeEntryListViewModel>>,
+                    Queries.Infrastructure.User.ProjectTimeEntries.TimeEntryListQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.ProjectTimeEntries.TimeEntryListQuery).Assembly);
+
+            services
+                .AddScoped<IRequestHandler<Queries.User.ProjectTimeEntries.TimeEntryQuery,
+                        Queries.User.ProjectTimeEntries.TimeEntryViewModel>, 
+                    Queries.Infrastructure.User.ProjectTimeEntries.TimeEntryQueryHandler>();
+            services.AddMediatR(typeof(Queries.User.ProjectTimeEntries.TimeEntryQuery).Assembly);
+
+            #endregion
+
             #endregion
 
             #endregion
@@ -340,12 +447,12 @@ namespace ProjectManagementSystem.WebApi
 //            }
 
             //app.UseHttpsRedirection();
-            
+
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseAuthentication();
             app.UseMvc();
-            
+
             app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
             app.UseSwaggerUI(options =>
             {

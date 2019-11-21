@@ -5,11 +5,8 @@ using ProjectManagementSystem.DatabaseMigrations.Entities;
 namespace ProjectManagementSystem.DatabaseMigrations
 {
     public sealed class ProjectManagementSystemDbContext : DbContext
-    {
-        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) :
-            base(options)
-        {
-        }
+    { 
+        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -75,8 +72,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
                     Name = "Admin",
                     Email = "admin@projectms.local",
-                    PasswordHash =
-                        "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
+                    PasswordHash = "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
                     FirstName = "Admin",
                     LastName = "Admin",
                     Role = UserRole.Admin,
@@ -189,7 +185,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
             modelBuilder.Entity<ProjectTracker>(builder =>
             {
                 builder.ToTable("ProjectTracker");
-                builder.HasKey(pt => new {pt.ProjectId, pt.TrackerId});
+                builder.HasKey(pt => new { pt.ProjectId, pt.TrackerId });
 
                 builder.HasOne(pt => pt.Project)
                     .WithMany()
@@ -199,6 +195,146 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .WithMany()
                     .HasForeignKey(pt => pt.TrackerId)
                     .HasPrincipalKey(t => t.Id);
+            });
+            
+            modelBuilder.Entity<Issue>(builder =>
+            {
+                builder.ToTable("Issue");
+                builder.HasKey(i => i.Id);
+                builder.Property(i => i.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever();
+                builder.Property(i => i.Index)
+                    .HasColumnName("Index")
+                    .ValueGeneratedOnAdd();
+                builder.Property(i => i.Title)
+                    .HasColumnName("Title")
+                    .IsRequired();
+                builder.Property(i => i.Description)
+                    .HasColumnName("Description")
+                    .IsRequired();
+                builder.Property(i => i.CreateDate)
+                    .HasColumnName("CreateDate")
+                    .IsRequired();
+                builder.Property(i => i.UpdateDate)
+                    .HasColumnName("UpdateDate");
+                builder.Property(i => i.StartDate)
+                    .HasColumnName("StartDate");
+                builder.Property(i => i.EndDate)
+                    .HasColumnName("EndDate");
+                builder.Property(i => i.TrackerId)
+                    .HasColumnName("TrackerId")
+                    .IsRequired();
+                builder.Property(i => i.StatusId)
+                    .HasColumnName("StatusId")
+                    .IsRequired();
+                builder.Property(i => i.PriorityId)
+                    .HasColumnName("PriorityId")
+                    .IsRequired();
+                builder.Property(i => i.AuthorId)
+                    .HasColumnName("AuthorId")
+                    .IsRequired();
+                builder.Property(i => i.PerformerId)
+                    .HasColumnName("PerformerId");
+                builder.Property(i => i.ConcurrencyStamp)
+                    .HasColumnName("ConcurrencyStamp")
+                    .IsConcurrencyToken();
+                builder.HasOne(i => i.Project)
+                    .WithMany()
+                    .HasForeignKey(i => i.ProjectId)
+                    .HasPrincipalKey(p => p.Id);
+                builder.HasOne(i => i.Tracker)
+                    .WithMany()
+                    .HasForeignKey(i => i.TrackerId)
+                    .HasPrincipalKey(t => t.Id);
+                builder.HasOne(i => i.Status)
+                    .WithMany()
+                    .HasForeignKey(i => i.StatusId)
+                    .HasPrincipalKey(@is => @is.Id);
+                builder.HasOne(i => i.Priority)
+                    .WithMany()
+                    .HasForeignKey(i => i.PriorityId)
+                    .HasPrincipalKey(ip => ip.Id);
+                builder.HasOne(i => i.Author)
+                    .WithMany()
+                    .HasForeignKey(i => i.AuthorId)
+                    .HasPrincipalKey(a => a.Id);
+                builder.HasOne(i => i.Performer)
+                    .WithMany()
+                    .HasForeignKey(i => i.PerformerId)
+                    .HasPrincipalKey(p => p.Id);
+            });
+            
+            modelBuilder.Entity<TimeEntryActivity>(builder =>
+            {
+                builder.ToTable("TimeEntryActivity");
+                builder.HasKey(tea => tea.Id);
+                builder.Property(tea => tea.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever();
+                builder.Property(tea => tea.Name)
+                    .HasColumnName("Name")
+                    .IsRequired();
+                builder.Property(tea => tea.IsActive)
+                    .HasColumnName("IsActive")
+                    .IsRequired();
+                builder.Property(tea => tea.ConcurrencyStamp)
+                    .HasColumnName("ConcurrencyStamp")
+                    .IsConcurrencyToken();
+            });
+            
+            modelBuilder.Entity<TimeEntry>(builder =>
+            {
+                builder.ToTable("TimeEntry");
+                builder.HasKey(te => te.Id);
+                builder.Property(te => te.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever();
+                builder.Property(te => te.Hours)
+                    .HasColumnName("Hours")
+                    .IsRequired();
+                builder.Property(te => te.Description)
+                    .HasColumnName("Description")
+                    .IsRequired();
+                builder.Property(te => te.DueDate)
+                    .HasColumnName("DueDate")
+                    .IsRequired();
+                builder.Property(te => te.CreateDate)
+                    .HasColumnName("CreateDate")
+                    .IsRequired();
+                builder.Property(te => te.UpdateDate)
+                    .HasColumnName("UpdateDate");
+                builder.Property(te => te.ProjectId)
+                    .HasColumnName("ProjectId")
+                    .IsRequired();
+                builder.Property(te => te.IssueId)
+                    .HasColumnName("IssueId")
+                    .IsRequired();
+                builder.Property(te => te.UserId)
+                    .HasColumnName("UserId")
+                    .IsRequired();
+                builder.Property(te => te.ActivityId)
+                    .HasColumnName("ActivityId")
+                    .IsRequired();
+                builder.Property(te => te.ConcurrencyStamp)
+                    .HasColumnName("ConcurrencyStamp")
+                    .IsConcurrencyToken();
+                builder.HasOne(te => te.Project)
+                    .WithMany()
+                    .HasForeignKey(te => te.ProjectId)
+                    .HasPrincipalKey(p => p.Id);
+                builder.HasOne(te => te.Issue)
+                    .WithMany()
+                    .HasForeignKey(te => te.IssueId)
+                    .HasPrincipalKey(p => p.Id);
+                builder.HasOne(te => te.User)
+                    .WithMany()
+                    .HasForeignKey(te => te.UserId)
+                    .HasPrincipalKey(p => p.Id);
+                builder.HasOne(te => te.Activity)
+                    .WithMany()
+                    .HasForeignKey(te => te.ActivityId)
+                    .HasPrincipalKey(p => p.Id);
             });
 
             modelBuilder.Entity<Permission>(builder =>

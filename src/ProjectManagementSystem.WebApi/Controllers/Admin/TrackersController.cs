@@ -57,7 +57,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
             [FromQuery] QueryTrackerBindModel model,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new TrackersQuery(model.Limit, model.Offset), cancellationToken));
+            return Ok(await mediator.Send(new TrackersQuery(model.Offset, model.Limit), cancellationToken));
         }
 
         /// <summary>
