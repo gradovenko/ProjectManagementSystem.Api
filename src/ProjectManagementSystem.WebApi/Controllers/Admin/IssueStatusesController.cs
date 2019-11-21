@@ -60,7 +60,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
             [FromQuery] QueryIssueStatusBinding binding,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new IssueStatusesQuery(binding.Limit, binding.Offset), cancellationToken));
+            return Ok(await mediator.Send(new IssueStatusesQuery(binding.Offset, binding.Limit), cancellationToken));
         }
 
         /// <summary>

@@ -89,7 +89,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             if (project == null)
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.ProjectNotFound, "Project not found");
 
-            return Ok(await mediator.Send(new IssueListQuery(id, model.Limit, model.Offset), cancellationToken));
+            return Ok(await mediator.Send(new IssueListQuery(id, model.Offset, model.Limit), cancellationToken));
         }
 
 
