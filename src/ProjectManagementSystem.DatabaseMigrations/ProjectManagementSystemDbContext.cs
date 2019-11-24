@@ -5,8 +5,11 @@ using ProjectManagementSystem.DatabaseMigrations.Entities;
 namespace ProjectManagementSystem.DatabaseMigrations
 {
     public sealed class ProjectManagementSystemDbContext : DbContext
-    { 
-        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) : base(options) { }
+    {
+        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) :
+            base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,7 +75,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
                     Name = "Admin",
                     Email = "admin@projectms.local",
-                    PasswordHash = "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
+                    PasswordHash =
+                        "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
                     FirstName = "Admin",
                     LastName = "Admin",
                     Role = UserRole.Admin,
@@ -185,7 +189,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
             modelBuilder.Entity<ProjectTracker>(builder =>
             {
                 builder.ToTable("ProjectTracker");
-                builder.HasKey(pt => new { pt.ProjectId, pt.TrackerId });
+                builder.HasKey(pt => new {pt.ProjectId, pt.TrackerId});
 
                 builder.HasOne(pt => pt.Project)
                     .WithMany()
@@ -196,7 +200,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasForeignKey(pt => pt.TrackerId)
                     .HasPrincipalKey(t => t.Id);
             });
-            
+
             modelBuilder.Entity<Issue>(builder =>
             {
                 builder.ToTable("Issue");
@@ -264,7 +268,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasForeignKey(i => i.PerformerId)
                     .HasPrincipalKey(p => p.Id);
             });
-            
+
             modelBuilder.Entity<TimeEntryActivity>(builder =>
             {
                 builder.ToTable("TimeEntryActivity");
@@ -282,7 +286,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
             });
-            
+
             modelBuilder.Entity<TimeEntry>(builder =>
             {
                 builder.ToTable("TimeEntry");
@@ -337,15 +341,68 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasPrincipalKey(p => p.Id);
             });
 
+            modelBuilder.Entity<Role>(builder =>
+            {
+                builder.ToTable("Role");
+                builder.HasKey(r => r.Id);
+                builder.Property(r => r.Id)
+                    .ValueGeneratedNever();
+                builder.Property(r => r.Name)
+                    .IsRequired();
+            });
+
             modelBuilder.Entity<Permission>(builder =>
             {
                 builder.ToTable("Permission");
                 builder.HasKey(p => p.Id);
-
-                builder.Property(t => t.Id)
+                builder.Property(p => p.Id)
                     .ValueGeneratedNever();
-                builder.Property(t => t.Name)
+                builder.Property(p => p.Name)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<RolePermission>(builder =>
+            {
+                builder.ToTable("RolePermission");
+                builder.HasKey(rp => new {rp.RoleId, rp.PermissionId});
+                builder.HasOne(rp => rp.Role)
+                    .WithMany()
+                    .HasForeignKey(rp => rp.RoleId)
+                    .HasPrincipalKey(r => r.Id);
+                builder.HasOne(rp => rp.Permission)
+                    .WithMany()
+                    .HasForeignKey(rp => rp.PermissionId)
+                    .HasPrincipalKey(p => p.Id);
+            });
+
+            modelBuilder.Entity<Member>(builder =>
+            {
+                builder.ToTable("Member");
+                builder.HasKey(m => m.Id);
+                builder.Property(m => m.Id)
+                    .ValueGeneratedNever();
+                builder.HasOne(m => m.User)
+                    .WithMany()
+                    .HasForeignKey(m => m.UserId)
+                    .HasPrincipalKey(u => u.Id);
+                builder.HasOne(m => m.Project)
+                    .WithMany()
+                    .HasForeignKey(m => m.ProjectId)
+                    .HasPrincipalKey(p => p.Id);
+            });
+            
+            modelBuilder.Entity<MemberRole>(builder =>
+            {
+                builder.ToTable("MemberRole");
+                builder.HasKey(mr => new {mr.MemberId, mr.RoleId});
+                builder.HasOne(mr => mr.Member)
+                    .WithMany()
+                    .HasForeignKey(mr => mr.MemberId)
+                    .HasPrincipalKey(m => m.Id);
+                builder.HasOne(mr => mr.Role)
+                    .WithMany()
+                    .HasForeignKey(mr => mr.RoleId)
+                    .HasPrincipalKey(r => r.Id);
             });
         }
     }

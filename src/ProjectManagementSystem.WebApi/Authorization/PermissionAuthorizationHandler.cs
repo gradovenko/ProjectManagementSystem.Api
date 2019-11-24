@@ -8,6 +8,7 @@ namespace ProjectManagementSystem.WebApi.Authorization
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
+            //var a = context.HttpContext.Request.RouteValues.;
 
         }
     }

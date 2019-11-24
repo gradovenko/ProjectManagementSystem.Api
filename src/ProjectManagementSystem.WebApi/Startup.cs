@@ -40,6 +40,7 @@ namespace ProjectManagementSystem.WebApi
             services
                 .AddMvc(options =>
                 {
+                    options.Filters.Add(typeof(PermissionAuthorizationHandler));
                     options.Filters.Add(typeof(ErrorHandlingFilter));
                     options.EnableEndpointRouting = false;
                 })
