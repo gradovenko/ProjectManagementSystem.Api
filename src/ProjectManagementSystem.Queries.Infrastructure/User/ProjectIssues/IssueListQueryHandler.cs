@@ -29,7 +29,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                     TrackerName = i.Tracker.Name,
                     StatusName = i.Status.Name,
                     PriorityName = i.Priority.Name,
-                    PerformerName = i.Performer.Name,
+                    AssigneeName = i.Assignee.Name,
                     UpdateDate = i.UpdateDate ?? i.CreateDate,
                 })
                 .AsQueryable();

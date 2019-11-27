@@ -25,8 +25,8 @@ namespace ProjectManagementSystem.Domain.User.CreateProjectIssues
             _issueRepository = issueRepository;
         }
 
-        public async Task CreateIssue(Guid projectId, Guid issueId, string title, string description, DateTime? startDate, DateTime? endDate,
-            Guid trackerId, Guid statusId, Guid priorityId, Guid authorId, Guid? performerId,
+        public async Task CreateIssue(Guid projectId, Guid issueId, string title, string description, DateTime? startDate, DateTime? dueDate,
+            Guid trackerId, Guid statusId, Guid priorityId, Guid authorId, Guid? assigneeId,
             CancellationToken cancellationToken)
         {
             var project = await _projectRepository.Get(projectId, cancellationToken);
@@ -49,12 +49,12 @@ namespace ProjectManagementSystem.Domain.User.CreateProjectIssues
             if (issuePriority == null)
                 throw new IssuePriorityNotFoundException();
 
-            if (performerId != null)
+            if (assigneeId != null)
             {
-                var performer = await _userRepository.Get(performerId.Value, cancellationToken);
+                var assignee = await _userRepository.Get(assigneeId.Value, cancellationToken);
 
-                if (performer == null)
-                    throw new PerformerNotFoundException();
+                if (assignee == null)
+                    throw new AssigneeNotFoundException();
             }
 
             var issue = await _issueRepository.Get(issueId, cancellationToken);
@@ -62,7 +62,7 @@ namespace ProjectManagementSystem.Domain.User.CreateProjectIssues
             if (issue != null) 
                 throw new IssueAlreadyExistsException();
 
-            issue = new Issue(issueId, title, description, startDate, endDate, trackerId, statusId, priorityId, authorId, performerId);
+            issue = new Issue(issueId, title, description, startDate, dueDate, trackerId, statusId, priorityId, authorId, assigneeId);
 
             project.AddIssue(issue);
 

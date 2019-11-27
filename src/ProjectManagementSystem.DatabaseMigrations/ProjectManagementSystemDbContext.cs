@@ -221,8 +221,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasColumnName("UpdateDate");
                 builder.Property(i => i.StartDate)
                     .HasColumnName("StartDate");
-                builder.Property(i => i.EndDate)
-                    .HasColumnName("EndDate");
+                builder.Property(i => i.DueDate)
+                    .HasColumnName("DueDate");
                 builder.Property(i => i.TrackerId)
                     .HasColumnName("TrackerId")
                     .IsRequired();
@@ -235,8 +235,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.Property(i => i.AuthorId)
                     .HasColumnName("AuthorId")
                     .IsRequired();
-                builder.Property(i => i.PerformerId)
-                    .HasColumnName("PerformerId");
+                builder.Property(i => i.AssigneeId)
+                    .HasColumnName("AssigneeId");
                 builder.Property(i => i.ConcurrencyStamp)
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
@@ -260,9 +260,9 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .WithMany()
                     .HasForeignKey(i => i.AuthorId)
                     .HasPrincipalKey(a => a.Id);
-                builder.HasOne(i => i.Performer)
+                builder.HasOne(i => i.Assignee)
                     .WithMany()
-                    .HasForeignKey(i => i.PerformerId)
+                    .HasForeignKey(i => i.AssigneeId)
                     .HasPrincipalKey(p => p.Id);
             });
             

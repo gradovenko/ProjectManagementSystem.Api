@@ -30,14 +30,14 @@ namespace ProjectManagementSystem.Queries.User.ProjectIssues
         public string StatusName { get; set; }
         
         /// <summary>
-        /// Issue performer name
+        /// Issue priority name
         /// </summary>
         public string PriorityName { get; set; }
         
         /// <summary>
-        /// Issue performer name
+        /// Issue assignee name
         /// </summary>
-        public string PerformerName { get; set; }
+        public string AssigneeName { get; set; }
         
         /// <summary>
         /// Issue update date
