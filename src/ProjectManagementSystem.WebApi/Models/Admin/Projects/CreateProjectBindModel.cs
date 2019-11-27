@@ -10,7 +10,6 @@ namespace ProjectManagementSystem.WebApi.Models.Admin.Projects
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsPrivate { get; set; }
-        
         public IEnumerable<AddTrackerBindModel> Trackers { get; set; }
     }
     
@@ -23,9 +22,9 @@ namespace ProjectManagementSystem.WebApi.Models.Admin.Projects
             RuleFor(b => b.Name)
                 .NotEmpty();
             RuleFor(b => b.Description)
-                .NotEmpty();
+                .NotNull();
             RuleFor(b => b.IsPrivate)
-                .NotEmpty();
+                .NotNull();
         }
     }
 }
