@@ -14,11 +14,12 @@ namespace ProjectManagementSystem.WebApi.Models.Admin.IssueStatuses
     {
         public CreateIssueStatusBindingValidator()
         {
-            RuleFor(r => r.Id)
+            RuleFor(b => b.Id)
                 .NotEmpty();
-
-            RuleFor(r => r.Name)
+            RuleFor(b => b.Name)
                 .NotEmpty();
+            RuleFor(b => b.IsActive)
+                .NotNull();
         }
     }
 }

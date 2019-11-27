@@ -45,9 +45,9 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
 
             project = new Project(model.Id, model.Name, model.Description, model.IsPrivate);
             
-            foreach (var trackerModel in model.Trackers)
+            foreach (var trackerId in model.Trackers)
             {
-                var tracker = await trackerRepository.Get(trackerModel.Id, cancellationToken);
+                var tracker = await trackerRepository.Get(trackerId, cancellationToken);
                 
                 if (tracker == null)
                     throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Tracker not found");

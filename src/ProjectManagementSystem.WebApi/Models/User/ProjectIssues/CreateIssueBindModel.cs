@@ -1,4 +1,5 @@
 using System;
+using FluentValidation;
 
 namespace ProjectManagementSystem.WebApi.Models.User.ProjectIssues
 {
@@ -13,5 +14,33 @@ namespace ProjectManagementSystem.WebApi.Models.User.ProjectIssues
         public Guid StatusId { get; set; }
         public Guid PriorityId { get; set; }
         public Guid? AssigneeId { get; set; }
+    }
+
+    public sealed class CreateIssueBindModelValidator : AbstractValidator<CreateIssueBindModel>
+    {
+        public CreateIssueBindModelValidator()
+        {
+            RuleFor(b => b.Id)
+                .NotEmpty();
+            RuleFor(b => b.Title)
+                .NotEmpty();
+            RuleFor(b => b.Description)
+                .NotNull();
+            RuleFor(b => b.StartDate)
+                .NotEmpty()
+                .When(b => b.StartDate != null);
+            RuleFor(b => b.DueDate)
+                .NotEmpty()
+                .When(b => b.DueDate != null);
+            RuleFor(b => b.TrackerId)
+                .NotEmpty();
+            RuleFor(b => b.StatusId)
+                .NotEmpty();
+            RuleFor(b => b.PriorityId)
+                .NotEmpty();
+            RuleFor(b => b.AssigneeId)
+                .NotEmpty()
+                .When(b => b.AssigneeId != null);
+        }
     }
 }

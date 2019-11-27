@@ -1,4 +1,5 @@
 using System;
+using FluentValidation;
 
 namespace ProjectManagementSystem.WebApi.Models.User.TimeEntries
 {
@@ -28,5 +29,22 @@ namespace ProjectManagementSystem.WebApi.Models.User.TimeEntries
         /// 
         /// </summary>
         public Guid ActivityId { get; set; }
+    }
+
+    public sealed class CreateTimeEntryBindModelValidator : AbstractValidator<CreateTimeEntryBindModel>
+    {
+        public CreateTimeEntryBindModelValidator()
+        {
+            RuleFor(b => b.Id)
+                .NotEmpty();
+            RuleFor(b => b.Hours)
+                .NotEmpty();
+            RuleFor(b => b.Description)
+                .NotNull();
+            RuleFor(b => b.DueDate)
+                .NotEmpty();
+            RuleFor(b => b.ActivityId)
+                .NotEmpty();
+        }
     }
 }
