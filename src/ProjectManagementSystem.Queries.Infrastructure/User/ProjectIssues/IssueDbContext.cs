@@ -76,8 +76,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                     .HasColumnName("CreateDate");
                 builder.Property(i => i.StartDate)
                     .HasColumnName("StartDate");
-                builder.Property(i => i.EndDate)
-                    .HasColumnName("EndDate");
+                builder.Property(i => i.DueDate)
+                    .HasColumnName("DueDate");
                 builder.Property(i => i.TrackerId)
                     .HasColumnName("TrackerId");
                 builder.Property(i => i.StatusId)
@@ -86,8 +86,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                     .HasColumnName("PriorityId");
                 builder.Property(i => i.AuthorId)
                     .HasColumnName("AuthorId");
-                builder.Property(i => i.PerformerId)
-                    .HasColumnName("PerformerId");
+                builder.Property(i => i.AssigneeId)
+                    .HasColumnName("AssigneeId");
                 builder.HasOne(i => i.Project)
                     .WithMany()
                     .HasForeignKey(i => i.ProjectId)
@@ -108,9 +108,9 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                     .WithMany()
                     .HasForeignKey(i => i.AuthorId)
                     .HasPrincipalKey(a => a.Id);
-                builder.HasOne(i => i.Performer)
+                builder.HasOne(i => i.Assignee)
                     .WithMany()
-                    .HasForeignKey(i => i.PerformerId)
+                    .HasForeignKey(i => i.AssigneeId)
                     .HasPrincipalKey(p => p.Id);
             });
         }

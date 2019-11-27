@@ -27,7 +27,7 @@ namespace ProjectManagementSystem.WebApi.Exceptions
         public const string TrackerAlreadyExists = "tracker_already_exists";
         public const string IssueAlreadyExists = "issue_already_exists";
         public const string IssueNotFound = "issue_not_found";
-        public const string PerformerNotFound = "performer_not_found";
+        public const string AssigneeNotFound = "assignee_not_found";
         public const string TimeEntryActivityNotFound = "time_entry_activity_not_found";
         public const string TimeEntryActivityAlreadyExists = "time_entry_activity_already_exists";
         public const string TimeEntryNotFound = "time_entry_not_found";

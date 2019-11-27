@@ -6,9 +6,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Domain.User.CreateProjectIssues;
-using ProjectManagementSystem.Queries.Admin.Projects;
+using ProjectManagementSystem.Queries;
 using ProjectManagementSystem.Queries.User.ProjectIssues;
-using ProjectManagementSystem.Queries.User.Projects;
 using ProjectManagementSystem.WebApi.Exceptions;
 using ProjectManagementSystem.WebApi.Extensions;
 using ProjectManagementSystem.WebApi.Models.User.ProjectIssues;
@@ -37,7 +36,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             try
             {
                 await issueCreationService.CreateIssue(id, model.Id, model.Title, model.Description, model.StartDate,
-                    model.EndDate, model.TrackerId, model.StatusId, model.PriorityId, User.GetId(), model.PerformerId,
+                    model.DueDate, model.TrackerId, model.StatusId, model.PriorityId, User.GetId(), model.AssigneeId,
                     cancellationToken);
             }
             catch (ProjectNotFoundException)
@@ -57,9 +56,9 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             {
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Issue priority not found");
             }
-            catch (PerformerNotFoundException)
+            catch (AssigneeNotFoundException)
             {
-                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.PerformerNotFound, "Performer not found");
+                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.AssigneeNotFound, "Assignee not found");
             }
             catch (IssueAlreadyExistsException)
             {
@@ -76,7 +75,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// <param name="id">Project identifier</param>
         /// <param name="model">Input query bind model</param>
         [HttpGet("projects/{id}/issues", Name = "GetProjectIssuesRoute")]
-        [ProducesResponseType(typeof(ProjectsView), 200)]
+        [ProducesResponseType(typeof(Page<IssueListView>), 200)]
         public async Task<IActionResult> FindIssues(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
@@ -99,7 +98,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// <param name="projectId">Project identifier</param>
         /// <param name="issueId">Issue identifier</param>
         [HttpGet("projects/{projectId}/issues/{issueId}", Name = "GetProjectIssueRoute")]
-        [ProducesResponseType(typeof(FullProjectView), 200)]
+        [ProducesResponseType(typeof(IssueView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> GetIssue(
             CancellationToken cancellationToken,

@@ -2,5 +2,5 @@ using System;
 
 namespace ProjectManagementSystem.Domain.User.CreateProjectIssues
 {
-    public sealed class PerformerNotFoundException : Exception { }
+    public sealed class AssigneeNotFoundException : Exception { }
 }

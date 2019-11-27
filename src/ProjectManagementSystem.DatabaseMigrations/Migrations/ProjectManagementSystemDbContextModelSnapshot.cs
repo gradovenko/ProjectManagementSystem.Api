@@ -25,6 +25,10 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnName("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AssigneeId")
+                        .HasColumnName("AssigneeId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("AuthorId")
                         .HasColumnName("AuthorId")
                         .HasColumnType("uuid");
@@ -43,8 +47,8 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnName("Description")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnName("EndDate")
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnName("DueDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<long>("Index")
@@ -52,10 +56,6 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         .HasColumnName("Index")
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<Guid?>("PerformerId")
-                        .HasColumnName("PerformerId")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid>("PriorityId")
                         .HasColumnName("PriorityId")
@@ -87,9 +87,9 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AssigneeId");
 
-                    b.HasIndex("PerformerId");
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("PriorityId");
 
@@ -398,7 +398,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
                         new
                         {
                             Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("24a3ac21-18e1-468a-931c-538acb6391b4"),
+                            ConcurrencyStamp = new Guid("8d150a60-5a55-4e14-a43a-a1bd43d21ab0"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",
@@ -412,15 +412,15 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.Issue", b =>
                 {
+                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.User", "Assignee")
+                        .WithMany()
+                        .HasForeignKey("AssigneeId");
+
                     b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.User", "Performer")
-                        .WithMany()
-                        .HasForeignKey("PerformerId");
 
                     b.HasOne("ProjectManagementSystem.DatabaseMigrations.Entities.IssuePriority", "Priority")
                         .WithMany()

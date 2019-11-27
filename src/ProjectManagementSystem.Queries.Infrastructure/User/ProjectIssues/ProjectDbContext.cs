@@ -80,8 +80,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                     .IsRequired();
                 builder.Property(i => i.StartDate)
                     .HasColumnName("StartDate");
-                builder.Property(i => i.EndDate)
-                    .HasColumnName("EndDate");
+                builder.Property(i => i.DueDate)
+                    .HasColumnName("DueDate");
                 builder.Property(i => i.TrackerId)
                     .HasColumnName("TrackerId")
                     .IsRequired();
@@ -94,8 +94,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.Property(i => i.AuthorId)
                     .HasColumnName("AuthorId")
                     .IsRequired();
-                builder.Property(i => i.PerformerId)
-                    .HasColumnName("PerformerId")
+                builder.Property(i => i.AssigneeId)
+                    .HasColumnName("AssigneeId")
                     .IsRequired();
                 builder.Property("_concurrencyStamp")
                     .HasColumnName("ConcurrencyStamp")
@@ -116,9 +116,9 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                     .WithMany()
                     .HasForeignKey(i => i.AuthorId)
                     .HasPrincipalKey(a => a.Id);
-                builder.HasOne(i => i.Performer)
+                builder.HasOne(i => i.Assignee)
                     .WithMany()
-                    .HasForeignKey(i => i.PerformerId)
+                    .HasForeignKey(i => i.AssigneeId)
                     .HasPrincipalKey(p => p.Id);
             });
         }
