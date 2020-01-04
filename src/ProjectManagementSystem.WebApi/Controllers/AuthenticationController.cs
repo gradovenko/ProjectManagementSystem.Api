@@ -13,20 +13,16 @@ namespace ProjectManagementSystem.WebApi.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public sealed class AuthenticationController : ControllerBase
     {
         /// <summary>
         /// Authenticate using login and password, or refresh token
         /// </summary>
-        /// <param name="cancellationToken"></param>
         /// <param name="grantType">password or refresh_token</param>
         /// <param name="login">Email</param>
         /// <param name="password">Password</param>
         /// <param name="refreshToken">Refresh token</param>
-        /// <param name="authenticationService"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
-        [HttpPost("auth/token")]
+        [HttpPost("oauth/token")]
         [ProducesResponseType(typeof(TokenView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 401)]
         public async Task<IActionResult> Authentication(CancellationToken cancellationToken,

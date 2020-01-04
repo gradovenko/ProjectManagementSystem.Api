@@ -2,7 +2,7 @@ using System;
 
 namespace ProjectManagementSystem.Domain.Authentication
 {
-    public class RefreshToken
+    public sealed class RefreshToken
     {
         public Guid Value { get; }
 

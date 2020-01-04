@@ -6,7 +6,7 @@ using ProjectManagementSystem.Domain.Admin.CreateProjects;
 
 namespace ProjectManagementSystem.Infrastructure.Admin.CreateProjects
 {
-    public class ProjectRepository : IProjectRepository
+    public sealed class ProjectRepository : IProjectRepository
     {
         private readonly ProjectDbContext _context;
 

@@ -7,8 +7,8 @@ namespace ProjectManagementSystem.Domain.Admin.CreateUsers
     public interface IUserRepository
     {
         Task<User> Get(Guid id, CancellationToken cancellationToken);
-        Task<User> FindByName(string name, CancellationToken cancellationToken);
-        Task<User> FindByEmail(string email, CancellationToken cancellationToken);
+        Task<User> GetByName(string name, CancellationToken cancellationToken);
+        Task<User> GetByEmail(string email, CancellationToken cancellationToken);
         Task Save(User user);
     }
 }

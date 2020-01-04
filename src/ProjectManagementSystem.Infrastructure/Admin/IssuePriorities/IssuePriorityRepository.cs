@@ -6,7 +6,7 @@ using ProjectManagementSystem.Domain.Admin.IssuePriorities;
 
 namespace ProjectManagementSystem.Infrastructure.Admin.IssuePriorities
 {
-    public class IssuePriorityRepository : IIssuePriorityRepository
+    public sealed class IssuePriorityRepository : IIssuePriorityRepository
     {
         private readonly IssuePriorityDbContext _context;
 

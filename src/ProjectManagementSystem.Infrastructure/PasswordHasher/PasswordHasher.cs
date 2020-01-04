@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ProjectManagementSystem.Infrastructure.PasswordHasher
 {
-    public class PasswordHasher : Domain.Authentication.IPasswordHasher, Domain.Admin.CreateUsers.IPasswordHasher, Domain.User.Accounts.IPasswordHasher
+    public sealed class PasswordHasher :
+        Domain.Authentication.IPasswordHasher, 
+        Domain.Admin.CreateUsers.IPasswordHasher, 
+        Domain.User.Accounts.IPasswordHasher
     {
         private sealed class User { }
         

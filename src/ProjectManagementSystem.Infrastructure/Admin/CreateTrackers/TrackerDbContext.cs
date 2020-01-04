@@ -17,14 +17,11 @@ namespace ProjectManagementSystem.Infrastructure.Admin.CreateTrackers
             {
                 builder.ToTable("Tracker");
                 builder.HasKey(t => t.Id);
-
                 builder.Property(t => t.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
+                    .HasColumnName("TrackerId")
+                    .ValueGeneratedNever();
                 builder.Property(t => t.Name)
-                    .HasColumnName("Name")
-                    .IsRequired();
+                    .HasColumnName("Name");
                 builder.Property("_concurrencyStamp")
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();

@@ -23,8 +23,7 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
                 builder.ToTable("Project");
                 builder.HasKey(p => p.Id);
                 builder.Property(p => p.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("ProjectId");
             });
 
             modelBuilder.Entity<Tracker>(builder =>
@@ -32,8 +31,7 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
                 builder.ToTable("Tracker");
                 builder.HasKey(t => t.Id);
                 builder.Property(t => t.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("TrackerId");
             });
 
             modelBuilder.Entity<IssueStatus>(builder =>
@@ -41,8 +39,7 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
                 builder.ToTable("IssueStatus");
                 builder.HasKey(@is => @is.Id);
                 builder.Property(@is => @is.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("IssueStatusId");
             });
             
             modelBuilder.Entity<IssuePriority>(builder =>
@@ -50,8 +47,7 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
                 builder.ToTable("IssuePriority");
                 builder.HasKey(ip => ip.Id);
                 builder.Property(ip => ip.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("IssuePriorityId");
             });
             
             modelBuilder.Entity<Domain.User.CreateProjectIssues.User>(builder =>
@@ -59,8 +55,7 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);
                 builder.Property(u => u.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("UserId");
             });
             
             modelBuilder.Entity<Issue>(builder =>
@@ -68,35 +63,25 @@ namespace ProjectManagementSystem.Infrastructure.User.CreateProjectIssues
                 builder.ToTable("Issue");
                 builder.HasKey(i => i.Id);
                 builder.Property(i => i.Id)
-                    .HasColumnName("Id")
+                    .HasColumnName("IssueId")
                     .ValueGeneratedNever();
                 builder.Property(i => i.Title)
-                    .HasColumnName("Title")
                     .IsRequired();
                 builder.Property(i => i.Description)
-                    .HasColumnName("Description")
                     .IsRequired();
                 builder.Property(i => i.CreateDate)
-                    .HasColumnName("CreateDate")
                     .IsRequired();
-                builder.Property(i => i.StartDate)
-                    .HasColumnName("StartDate");
-                builder.Property(i => i.DueDate)
-                    .HasColumnName("DueDate");
+                builder.Property(i => i.StartDate);
+                builder.Property(i => i.DueDate);
                 builder.Property(i => i.TrackerId)
-                    .HasColumnName("TrackerId")
                     .IsRequired();
                 builder.Property(i => i.StatusId)
-                    .HasColumnName("StatusId")
                     .IsRequired();
                 builder.Property(i => i.PriorityId)
-                    .HasColumnName("PriorityId")
                     .IsRequired();
                 builder.Property(i => i.AuthorId)
-                    .HasColumnName("AuthorId")
                     .IsRequired();
-                builder.Property(i => i.AssigneeId)
-                    .HasColumnName("AssigneeId");
+                builder.Property(i => i.AssigneeId);
                 builder.Property("_concurrencyStamp")
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();

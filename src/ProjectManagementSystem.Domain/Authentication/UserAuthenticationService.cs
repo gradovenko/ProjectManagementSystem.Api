@@ -23,7 +23,7 @@ namespace ProjectManagementSystem.Domain.Authentication
         public async Task<Token> AuthenticationByPassword(string email, string password,
             CancellationToken cancellationToken)
         {
-            var user = await _userRepository.FindByEmail(email, cancellationToken);
+            var user = await _userRepository.GetByEmail(email, cancellationToken);
 
             if (user == null)
                 throw new InvalidCredentialsException();

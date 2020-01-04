@@ -8,11 +8,12 @@ namespace ProjectManagementSystem.Domain.User.TimeEntries
         public Guid Id { get; private set; }
         private List<TimeEntry> _timeEntries = new List<TimeEntry>();
         public IEnumerable<TimeEntry> TimeEntries => _timeEntries;
-        private Guid _concurrencyStamp = Guid.NewGuid();
+        private Guid _concurrencyStamp;
 
         public void AddTimeEntry(TimeEntry timeEntry)
         {
             _timeEntries.Add(timeEntry);
+            _concurrencyStamp = Guid.NewGuid();
         }
     }
 }

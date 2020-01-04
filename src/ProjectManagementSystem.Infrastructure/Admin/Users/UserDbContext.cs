@@ -18,40 +18,28 @@ namespace ProjectManagementSystem.Infrastructure.Admin.Users
             {
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);
-
                 builder.Property(u => u.Id)
+                    .HasColumnName("UserId")
                     .ValueGeneratedNever();
                 builder.Property(u => u.Name)
-                    .HasColumnName("Name")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.Email)
-                    .HasColumnName("Email")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.PasswordHash)
-                    .HasColumnName("PasswordHash")
                     .HasMaxLength(1024);
                 builder.Property(u => u.FirstName)
-                    .HasColumnName("FirstName")
                     .IsRequired();
                 builder.Property(u => u.LastName)
-                    .HasColumnName("LastName")
                     .IsRequired();
                 builder.Property(u => u.Role)
-                    .HasColumnName("Role")
-                    .HasConversion(
-                        r => r.ToString(),
-                        r => (UserRole) Enum.Parse(typeof(UserRole), r))
+                    .HasConversion<string>()
                     .IsRequired();
                 builder.Property(u => u.CreateDate)
-                    .HasColumnName("CreateDate")
                     .IsRequired();
                 builder.Property(u => u.Status)
-                    .HasColumnName("Status")
-                    .HasConversion(
-                        s => s.ToString(),
-                        s => (UserStatus) Enum.Parse(typeof(UserStatus), s))
+                    .HasConversion<string>()
                     .IsRequired();
                 builder.Property("_concurrencyStamp")
                     .HasColumnName("ConcurrencyStamp")

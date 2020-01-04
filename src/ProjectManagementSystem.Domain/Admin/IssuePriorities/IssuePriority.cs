@@ -2,11 +2,11 @@ using System;
 
 namespace ProjectManagementSystem.Domain.Admin.IssuePriorities
 {
-    public class IssuePriority
+    public sealed class IssuePriority
     {
-        public Guid Id { get; private set; }
-        public string Name { get; private set; }
-        public bool IsActive { get; private set; }
+        public Guid Id { get; }
+        public string Name { get; }
+        public bool IsActive { get; }
 
         public IssuePriority(Guid id, string name, bool isActive)
         {
@@ -14,7 +14,5 @@ namespace ProjectManagementSystem.Domain.Admin.IssuePriorities
             Name = name;
             IsActive = isActive;
         }
-
-        protected IssuePriority() { }
     }
 }

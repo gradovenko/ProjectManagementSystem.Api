@@ -6,7 +6,7 @@ using ProjectManagementSystem.Domain.Admin.CreateTrackers;
 
 namespace ProjectManagementSystem.Infrastructure.Admin.CreateTrackers
 {
-    public class TrackerRepository : ITrackerRepository
+    public sealed class TrackerRepository : ITrackerRepository
     {
         private readonly TrackerDbContext _context;
 

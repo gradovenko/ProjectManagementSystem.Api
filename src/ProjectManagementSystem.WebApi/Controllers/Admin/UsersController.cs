@@ -42,12 +42,12 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
                     !user.Email.Equals(binding.Email))
                     throw new ApiException(HttpStatusCode.Conflict, ErrorCode.UserAlreadyExists, "User already exists with other parameters");
 
-            user = await userRepository.FindByName(binding.Name, cancellationToken);
+            user = await userRepository.GetByName(binding.Name, cancellationToken);
 
             if (user != null)
                 throw new ApiException(HttpStatusCode.Conflict, ErrorCode.UsernameAlreadyExists, "Username already exists");
 
-            user = await userRepository.FindByEmail(binding.Email, cancellationToken);
+            user = await userRepository.GetByEmail(binding.Email, cancellationToken);
 
             if (user != null)
                 throw new ApiException(HttpStatusCode.Conflict, ErrorCode.EmailAlreadyExists, "Email already exists");

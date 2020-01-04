@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -108,14 +107,14 @@ namespace ProjectManagementSystem.WebApi
 
             #endregion
             
-            #region DatabaseMigrationsContext
+            #region Database Migrations Context
 
             services.AddDbContext<ProjectManagementSystemDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
             #endregion
 
-            #region DbContextsRepositoriesServices
+            #region DbContexts, Repositories, Services
 
             #region Admin
 
@@ -456,7 +455,7 @@ namespace ProjectManagementSystem.WebApi
             app.UseSwagger(options => { options.RouteTemplate = "{documentName}/swagger.json"; });
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("../v1/swagger.json", AppDomain.CurrentDomain.FriendlyName);
+                options.SwaggerEndpoint("../v1/swagger.json", "ProjectManagementSystem Api");
             });
 
             app.UseRewriter(new RewriteOptions().AddRedirect(@"^$", "swagger", (int) HttpStatusCode.Redirect));

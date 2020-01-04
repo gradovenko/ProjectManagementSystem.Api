@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManagementSystem.Infrastructure.User.Accounts
 {
-    public class UserRepository : Domain.User.Accounts.IUserRepository
+    public sealed class UserRepository : Domain.User.Accounts.IUserRepository
     {
         private readonly UserDbContext _context;
 
@@ -20,14 +20,14 @@ namespace ProjectManagementSystem.Infrastructure.User.Accounts
                 .SingleOrDefaultAsync(u => u.Id == userId, cancellationToken);
         }
         
-        public async Task<Domain.User.Accounts.User> FindByName(string name, CancellationToken cancellationToken)
+        public async Task<Domain.User.Accounts.User> GetByName(string name, CancellationToken cancellationToken)
         {
             return await _context.Users
                 .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Name == name, cancellationToken);
         }
 
-        public async Task<Domain.User.Accounts.User> FindByEmail(string email, CancellationToken cancellationToken)
+        public async Task<Domain.User.Accounts.User> GetByEmail(string email, CancellationToken cancellationToken)
         {
             return await _context.Users
                 .AsNoTracking()

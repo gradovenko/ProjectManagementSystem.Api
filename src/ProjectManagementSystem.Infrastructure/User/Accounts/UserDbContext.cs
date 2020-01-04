@@ -16,24 +16,19 @@ namespace ProjectManagementSystem.Infrastructure.User.Accounts
             {
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);
-
                 builder.Property(u => u.Id)
-                    .HasColumnName("Id")
+                    .HasColumnName("UserId")
                     .ValueGeneratedNever();
                 builder.Property(u => u.Name)
-                    .HasColumnName("Name")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.Email)
-                    .HasColumnName("Email")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.PasswordHash)
-                    .HasColumnName("PasswordHash")
                     .HasMaxLength(1024)
                     .IsRequired();
-                builder.Property(u => u.UpdateDate)
-                    .HasColumnName("UpdateDate");
+                builder.Property(u => u.UpdateDate);
                 builder.Property("_concurrencyStamp")
                     .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();

@@ -18,7 +18,7 @@ namespace ProjectManagementSystem.WebApi.Extensions
                 {
                     Version = "v1",
                     Title = AppDomain.CurrentDomain.FriendlyName,
-                    Description = $"Swagger for {AppDomain.CurrentDomain.FriendlyName}"
+                    Description = $"ProjectManagementSystem Api"
                 });
 
                 var securityScheme = new OpenApiSecurityScheme

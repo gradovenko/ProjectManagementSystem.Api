@@ -21,7 +21,8 @@ namespace ProjectManagementSystem.Infrastructure.User.TimeEntries
             {
                 builder.ToTable("Project");
                 builder.HasKey(p => p.Id);
-                builder.Property(p => p.Id).IsRequired();
+                builder.Property(p => p.Id)
+                    .IsRequired();
             });
             
             modelBuilder.Entity<Issue>(builder =>

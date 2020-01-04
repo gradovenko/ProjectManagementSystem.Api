@@ -4,16 +4,16 @@ namespace ProjectManagementSystem.Domain.Admin.CreateUsers
 {
     public sealed class User
     {
-        public Guid Id { get; private set; }
-        public string Name { get; private set; }
-        public string Email { get; private set; }
-        public string PasswordHash { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public UserRole Role { get; private set; }
-        public UserStatus Status { get; private set; }
-        public DateTime CreateDate { get; private set; }
-        private Guid _concurrencyStamp = Guid.NewGuid();
+        public Guid Id { get; }
+        public string Name { get; }
+        public string Email { get; }
+        public string PasswordHash { get; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public UserRole Role { get; }
+        public UserStatus Status { get; }
+        public DateTime CreateDate { get; }
+        private Guid _concurrencyStamp;
 
         public User(Guid id, string name, string email, string passwordHash, string firstName, string lastName, UserRole role)
         {
@@ -26,6 +26,7 @@ namespace ProjectManagementSystem.Domain.Admin.CreateUsers
             Role = role;
             CreateDate = DateTime.UtcNow;
             Status = UserStatus.Active;
+            _concurrencyStamp = Guid.NewGuid();
         }
     }
 }

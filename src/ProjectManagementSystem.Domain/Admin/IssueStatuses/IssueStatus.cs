@@ -2,11 +2,11 @@ using System;
 
 namespace ProjectManagementSystem.Domain.Admin.IssueStatuses
 {
-    public class IssueStatus
+    public sealed class IssueStatus
     {
-        public Guid Id { get; private set; }
-        public string Name { get; private set; }
-        public bool IsActive { get; private set; }
+        public Guid Id { get; }
+        public string Name { get; }
+        public bool IsActive { get; }
 
         public IssueStatus(Guid id, string name, bool isActive)
         {

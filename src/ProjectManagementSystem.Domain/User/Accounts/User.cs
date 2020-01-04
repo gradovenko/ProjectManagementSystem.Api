@@ -2,15 +2,16 @@ using System;
 
 namespace ProjectManagementSystem.Domain.User.Accounts
 {
-    public class User
+    public sealed class User
     {
-        protected User() { }
         public Guid Id { get; private set; }
         public string Name { get; private set; }
         public string Email { get; private set; }
         public string PasswordHash { get; private set; }
         public DateTime? UpdateDate { get; private set; }
-        private Guid _concurrencyStamp = Guid.NewGuid();
+        private Guid _concurrencyStamp;
+
+        private User() { }
 
         internal void UpdateName(string name)
         {
