@@ -3,15 +3,15 @@ using FluentValidation;
 
 namespace ProjectManagementSystem.WebApi.Models.Admin.Trackers
 {
-    public class CreateTrackerBindModel
+    public class CreateTrackerBinding
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
     }
     
-    public class CreateTrackerBindModelValidator : AbstractValidator<CreateTrackerBindModel>
+    public class CreateTrackerBindingValidator : AbstractValidator<CreateTrackerBinding>
     {
-        public CreateTrackerBindModelValidator()
+        public CreateTrackerBindingValidator()
         {
             RuleFor(b => b.Id)
                 .NotEmpty();

@@ -19,9 +19,6 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// <summary>
         /// Get my name and email
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="mediator"></param>
-        /// <returns></returns>
         [HttpGet("settings/account", Name = "GetAccountRoute")]
         [ProducesResponseType(typeof(UserView), 200)]
         public async Task<IActionResult> Get(
@@ -36,10 +33,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// <summary>
         /// Update my name
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="userUpdateService"></param>
         /// <param name="binding"></param>
-        /// <returns></returns>
         [HttpPut("settings/account/name")]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         [ProducesResponseType(typeof(ProblemDetails), 422)]
@@ -68,11 +62,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// <summary>
         /// Update my email
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="userUpdateService"></param>
         /// <param name="binding">Input model</param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
         [HttpPut("settings/account/email")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]

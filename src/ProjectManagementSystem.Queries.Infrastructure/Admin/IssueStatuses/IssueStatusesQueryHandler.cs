@@ -7,7 +7,7 @@ using ProjectManagementSystem.Queries.Admin.IssueStatuses;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssueStatuses
 {
-    public class IssueStatusesQueryHandler : IRequestHandler<IssueStatusesQuery, Page<FullIssueStatusView>>
+    public sealed class IssueStatusesQueryHandler : IRequestHandler<IssueStatusesQuery, Page<FullIssueStatusView>>
     {
         private readonly IssueStatusDbContext _context;
 

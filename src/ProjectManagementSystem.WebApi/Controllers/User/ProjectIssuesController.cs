@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProjectManagementSystem.Domain.User.CreateProjectIssues;
+using ProjectManagementSystem.Domain.User.Issues;
 using ProjectManagementSystem.Queries;
 using ProjectManagementSystem.Queries.User.ProjectIssues;
 using ProjectManagementSystem.WebApi.Exceptions;
@@ -30,14 +30,14 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         public async Task<IActionResult> CreateIssue(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
-            [FromBody] CreateIssueBindModel model,
+            [FromBody] CreateIssueBinding model,
             [FromServices] IssueCreationService issueCreationService)
         {
             try
             {
-                await issueCreationService.CreateIssue(id, model.Id, model.Title, model.Description, model.StartDate,
-                    model.DueDate, model.TrackerId, model.StatusId, model.PriorityId, User.GetId(), model.AssigneeId,
-                    cancellationToken);
+                await issueCreationService.CreateIssue(model.Id, model.Title, model.Description, model.StartDate,
+                    model.DueDate, id, model.TrackerId, model.StatusId, model.PriorityId, User.GetId(),
+                    model.AssigneeId, cancellationToken);
             }
             catch (ProjectNotFoundException)
             {
@@ -73,13 +73,13 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
         /// Find issues
         /// </summary>
         /// <param name="id">Project identifier</param>
-        /// <param name="model">Input query bind model</param>
+        /// <param name="binding">Input query bind model</param>
         [HttpGet("projects/{id}/issues", Name = "GetProjectIssuesRoute")]
         [ProducesResponseType(typeof(Page<IssueListView>), 200)]
         public async Task<IActionResult> FindIssues(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
-            [FromQuery] QueryIssueBindModel model,
+            [FromQuery] FindProjectIssuesBinding binding,
             [FromServices] IProjectRepository projectRepository,
             [FromServices] IMediator mediator)
         {
@@ -88,7 +88,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.User
             if (project == null)
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.ProjectNotFound, "Project not found");
 
-            return Ok(await mediator.Send(new IssueListQuery(id, model.Offset, model.Limit), cancellationToken));
+            return Ok(await mediator.Send(new IssueListQuery(id, binding.Offset, binding.Limit), cancellationToken));
         }
 
 

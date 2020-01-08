@@ -1,6 +1,5 @@
 using System;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Domain.Admin.CreateUsers;
 
 namespace ProjectManagementSystem.Infrastructure.Admin.Users
 {
@@ -8,13 +7,13 @@ namespace ProjectManagementSystem.Infrastructure.Admin.Users
     {
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
-        internal DbSet<Domain.Admin.CreateUsers.User> Users { get; set; }
+        internal DbSet<Domain.Admin.Users.User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Domain.Admin.CreateUsers.User>(builder =>
+            modelBuilder.Entity<Domain.Admin.Users.User>(builder =>
             {
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);

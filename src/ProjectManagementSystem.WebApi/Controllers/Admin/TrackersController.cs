@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using ProjectManagementSystem.Domain.Admin.CreateTrackers;
+using ProjectManagementSystem.Domain.Admin.Trackers;
 using ProjectManagementSystem.Queries.Admin.Trackers;
 using ProjectManagementSystem.WebApi.Exceptions;
 using ProjectManagementSystem.WebApi.Models.Admin.Trackers;
@@ -16,18 +16,14 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <summary>
         /// Create tracker
         /// </summary>
-        /// <param name="cancellationToken"></param>
         /// <param name="model">Input model</param>
-        /// <param name="trackerRepository"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
         [HttpPost("admin/trackers")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         public async Task<IActionResult> Create(
             CancellationToken cancellationToken,
-            [FromBody] CreateTrackerBindModel model,
+            [FromBody] CreateTrackerBinding model,
             [FromServices] ITrackerRepository trackerRepository)
         {
             var tracker = await trackerRepository.Get(model.Id, cancellationToken);
@@ -46,28 +42,21 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <summary>
         /// Find trackers
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="model"></param>
-        /// <param name="mediator"></param>
-        /// <returns></returns>
+        /// <param name="binding"></param>
         [HttpGet("admin/trackers", Name = "GetTrackersAdminRoute")]
         [ProducesResponseType(typeof(ShortTrackerView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
-            [FromQuery] QueryTrackerBindModel model,
+            [FromQuery] FindTrackersBinding binding,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new TrackersQuery(model.Offset, model.Limit), cancellationToken));
+            return Ok(await mediator.Send(new TrackersQuery(binding.Offset, binding.Limit), cancellationToken));
         }
 
         /// <summary>
         /// Get a tracker
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="id">Tracker id</param>
-        /// <param name="mediator"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
+        /// <param name="id">Tracker identifier</param>
         [HttpGet("admin/trackers/{id}", Name = "GetTrackerAdminRoute")]
         [ProducesResponseType(typeof(FullTrackerView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

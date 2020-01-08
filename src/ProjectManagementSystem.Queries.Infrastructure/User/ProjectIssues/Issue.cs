@@ -5,7 +5,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
     internal sealed class Issue
     {
         public Guid Id { get; private set; }
-        public long Index { get; private set; }
+        public long Number { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
         public DateTime CreateDate { get; private set; }

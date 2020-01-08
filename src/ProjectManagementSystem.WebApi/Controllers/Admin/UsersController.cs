@@ -4,11 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProjectManagementSystem.Domain.Admin.CreateUsers;
 using ProjectManagementSystem.Queries.Admin.Users;
 using ProjectManagementSystem.WebApi.Exceptions;
 using ProjectManagementSystem.WebApi.Models.Admin.Users;
 using MediatR;
+using ProjectManagementSystem.Domain.Admin.Users;
+using UserRole = ProjectManagementSystem.Domain.Admin.Users.UserRole;
 
 namespace ProjectManagementSystem.WebApi.Controllers.Admin
 {
@@ -54,7 +55,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
 
             var passwordHash = passwordHasher.HashPassword(binding.Password);
 
-            user = new Domain.Admin.CreateUsers.User(binding.Id, binding.Name, binding.Email, passwordHash, binding.FirstName, binding.LastName, Enum.Parse<Domain.Admin.CreateUsers.UserRole>(binding.Role.ToString()));
+            user = new Domain.Admin.Users.User(binding.Id, binding.Name, binding.Email, passwordHash, binding.FirstName, binding.LastName, Enum.Parse<UserRole>(binding.Role.ToString()));
 
             await userRepository.Save(user);
 
@@ -96,7 +97,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         [ProducesResponseType(typeof(ShortUserView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
-            [FromQuery] QueryUserBinding binding,
+            [FromQuery] FindUsersBinding binding,
             [FromServices] IMediator mediator)
         {
             return Ok(await mediator.Send(new UsersQuery(binding.Offset, binding.Limit), cancellationToken));

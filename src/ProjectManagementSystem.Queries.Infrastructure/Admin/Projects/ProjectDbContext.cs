@@ -17,29 +17,16 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
             {
                 builder.ToTable("Project");
                 builder.HasKey(p => p.Id);
-
                 builder.Property(p => p.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
-                builder.Property(p => p.Name)
-                    .HasColumnName("Name")
-                    .IsRequired();
-                builder.Property(p => p.Description)
-                    .HasColumnName("Description")
-                    .IsRequired();
-                builder.Property(p => p.IsPrivate)
-                    .HasColumnName("IsPrivate")
-                    .IsRequired();
+                    .HasColumnName("ProjectId");
+                builder.Property(p => p.Name);
+                builder.Property(p => p.Description);
+                builder.Property(p => p.IsPrivate);
                 builder.Property(p => p.Status)
-                    .HasColumnName("Status")
                     .HasConversion(
                         ps => ps.ToString(),
-                        ps => (ProjectStatus) Enum.Parse(typeof(ProjectStatus), ps))
-                    .IsRequired();
-                builder.Property(p => p.CreateDate)
-                    .HasColumnName("CreateDate")
-                    .IsRequired();
+                        ps => (ProjectStatus) Enum.Parse(typeof(ProjectStatus), ps));
+                builder.Property(p => p.CreateDate);
             });
         }
     }

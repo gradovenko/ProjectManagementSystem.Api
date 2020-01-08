@@ -24,7 +24,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 .Select(i => new IssueListView
                 {
                     Id = i.Id,
-                    Index = i.Index,
+                    Number = i.Number,
                     Title = i.Title,
                     TrackerName = i.Tracker.Name,
                     StatusName = i.Status.Name,

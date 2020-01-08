@@ -1,0 +1,28 @@
+using FluentValidation;
+
+namespace ProjectManagementSystem.WebApi.Models.Admin.IssuePriorities
+{
+    public sealed class FindIssuePrioritiesBinding
+    {
+        /// <summary>
+        /// Offset
+        /// </summary>
+        public int Offset { get; set; } = 0;
+        
+        /// <summary>
+        /// Limit
+        /// </summary>
+        public int Limit { get; set; } = 10;
+    }
+
+    public sealed class FindIssuePrioritiesBindingValidator : AbstractValidator<FindIssuePrioritiesBinding>
+    {
+        public FindIssuePrioritiesBindingValidator()
+        {
+            RuleFor(b => b.Offset)
+                .GreaterThanOrEqualTo(0);
+            RuleFor(b => b.Limit)
+                .InclusiveBetween(2, 1000);
+        }
+    }
+}

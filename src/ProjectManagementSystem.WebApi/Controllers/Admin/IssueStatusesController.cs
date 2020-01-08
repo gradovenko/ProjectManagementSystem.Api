@@ -19,11 +19,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <summary>
         /// Create issue status
         /// </summary>
-        /// <param name="cancellationToken"></param>
         /// <param name="binding"></param>
-        /// <param name="issueStatusRepository"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
         [HttpPost("admin/issueStatuses")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -49,15 +45,12 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <summary>
         /// Find issue statuses
         /// </summary>
-        /// <param name="cancellationToken"></param>
         /// <param name="binding"></param>
-        /// <param name="mediator"></param>
-        /// <returns></returns>
         [HttpGet("admin/issueStatuses")]
         [ProducesResponseType(typeof(ShortIssueStatusView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
-            [FromQuery] QueryIssueStatusBinding binding,
+            [FromQuery] FindIssueStatusesBinding binding,
             [FromServices] IMediator mediator)
         {
             return Ok(await mediator.Send(new IssueStatusesQuery(binding.Offset, binding.Limit), cancellationToken));
@@ -66,11 +59,7 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <summary>
         /// Get issue status
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="id">User ID</param>
-        /// <param name="mediator"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
+        /// <param name="id">User identifier</param>
         [HttpGet("admin/issueStatuses/{id}", Name = "GetIssueStatusAdminRoute")]
         [ProducesResponseType(typeof(ShortIssueStatusView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

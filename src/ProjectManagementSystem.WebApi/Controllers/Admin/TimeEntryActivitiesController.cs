@@ -19,24 +19,24 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <summary>
         /// Create time entry activity
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="binding"></param>
         [HttpPost("admin/timeEntryActivities")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         public async Task<IActionResult> Create(
             CancellationToken cancellationToken,
-            [FromBody] CreateTimeEntryActivityBindModel model,
+            [FromBody] CreateTimeEntryActivityBinding binding,
             [FromServices] ITimeEntryActivityRepository timeEntryActivityRepository)
         {
-            var timeEntryActivity = await timeEntryActivityRepository.Get(model.Id, cancellationToken);
+            var timeEntryActivity = await timeEntryActivityRepository.Get(binding.Id, cancellationToken);
 
             if (timeEntryActivity != null)
-                if (!timeEntryActivity.Name.Equals(model.Name))
+                if (!timeEntryActivity.Name.Equals(binding.Name))
                     throw new ApiException(HttpStatusCode.Conflict, ErrorCode.TimeEntryActivityAlreadyExists,
                         "Issue status already exists with other parameters");
 
-            timeEntryActivity = new TimeEntryActivity(model.Id, model.Name, model.IsActive);
+            timeEntryActivity = new TimeEntryActivity(binding.Id, binding.Name, binding.IsActive);
 
             await timeEntryActivityRepository.Save(timeEntryActivity);
 
@@ -46,15 +46,15 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <summary>
         /// Find time entry activities
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="binding"></param>
         [HttpGet("admin/timeEntryActivities")]
         [ProducesResponseType(typeof(TimeEntryActivityListViewModel), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
-            [FromQuery] QueryTimeEntryActivityBindModel model,
+            [FromQuery] FindTimeEntryActivitiesBinding binding,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new TimeEntryActivityListQuery(model.Offset, model.Limit), cancellationToken));
+            return Ok(await mediator.Send(new TimeEntryActivityListQuery(binding.Offset, binding.Limit), cancellationToken));
         }
 
         /// <summary>

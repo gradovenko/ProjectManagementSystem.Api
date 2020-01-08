@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProjectManagementSystem.Domain.Admin.CreateProjects;
+using ProjectManagementSystem.Domain.Admin.Projects;
 using ProjectManagementSystem.Queries.Admin.Projects;
 using ProjectManagementSystem.WebApi.Exceptions;
 using ProjectManagementSystem.WebApi.Models.Admin.Projects;
@@ -19,19 +19,14 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <summary>
         /// Create project
         /// </summary>
-        /// <param name="cancellationToken"></param>
         /// <param name="model">Input bind model</param>
-        /// <param name="projectRepository"></param>
-        /// <param name="trackerRepository"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
         [HttpPost("admin/projects")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         public async Task<IActionResult> Create(
             CancellationToken cancellationToken,
-            [FromBody] CreateProjectBindModel model,
+            [FromBody] CreateProjectBinding model,
             [FromServices] IProjectRepository projectRepository,
             [FromServices] ITrackerRepository trackerRepository)
         {
@@ -65,28 +60,21 @@ namespace ProjectManagementSystem.WebApi.Controllers.Admin
         /// <summary>
         /// Find projects
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="model">Input query model</param>
-        /// <param name="mediator"></param>
-        /// <returns></returns>
+        /// <param name="binding">Input query model</param>
         [HttpGet("admin/projects", Name = "GetProjectsAdminRoute")]
         [ProducesResponseType(typeof(ShortProjectView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
-            [FromQuery] QueryProjectBindModel model,
+            [FromQuery] FindProjectsBinding binding,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new ProjectsQuery(model.Offset, model.Limit), cancellationToken));
+            return Ok(await mediator.Send(new ProjectsQuery(binding.Offset, binding.Limit), cancellationToken));
         }
 
         /// <summary>
         /// Get a project
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="id">Project id</param>
-        /// <param name="mediator"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
+        /// <param name="id">Project identifier</param>
         [HttpGet("admin/projects/{id}", Name = "GetProjectAdminRoute")]
         [ProducesResponseType(typeof(FullProjectView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
