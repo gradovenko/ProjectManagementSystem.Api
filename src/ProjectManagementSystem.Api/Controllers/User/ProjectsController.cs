@@ -19,7 +19,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// <summary>
         /// Find projects
         /// </summary>
-        /// <param name="binding">Input query bind model</param>
+        /// <param name="binding">Input model</param>
         [HttpGet("projects", Name = "GetProjectsRoute")]
         [ProducesResponseType(typeof(Page<ProjectListView>), 200)]
         public async Task<IActionResult> Find(

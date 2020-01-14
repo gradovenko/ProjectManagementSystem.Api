@@ -22,7 +22,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// Create issue
         /// </summary>
         /// <param name="id">Project identifier</param>
-        /// <param name="model">Input create bind model</param>
+        /// <param name="binding">Input model</param>
         [HttpPost("projects/{id}/issues")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -30,14 +30,14 @@ namespace ProjectManagementSystem.Api.Controllers.User
         public async Task<IActionResult> CreateIssue(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
-            [FromBody] CreateIssueBinding model,
+            [FromBody] CreateIssueBinding binding,
             [FromServices] IssueCreationService issueCreationService)
         {
             try
             {
-                await issueCreationService.CreateIssue(model.Id, model.Title, model.Description, model.StartDate,
-                    model.DueDate, id, model.TrackerId, model.StatusId, model.PriorityId, User.GetId(),
-                    model.AssigneeId, cancellationToken);
+                await issueCreationService.CreateIssue(binding.Id, binding.Title, binding.Description, binding.StartDate,
+                    binding.DueDate, id, binding.TrackerId, binding.StatusId, binding.PriorityId, User.GetId(),
+                    binding.AssigneeId, cancellationToken);
             }
             catch (ProjectNotFoundException)
             {
@@ -49,8 +49,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
             }
             catch (IssueStatusNotFoundException)
             {
-                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueStatusNotFound,
-                    "Issue status not found");
+                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueStatusNotFound, "Issue status not found");
             }
             catch (IssuePriorityNotFoundException)
             {
@@ -62,18 +61,17 @@ namespace ProjectManagementSystem.Api.Controllers.User
             }
             catch (IssueAlreadyExistsException)
             {
-                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists,
-                    "Issue already exists with other parameters");
+                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists, "Issue already exists with other parameters");
             }
 
-            return CreatedAtRoute("GetProjectIssueRoute", new {projectId = id, issueId = model.Id}, null);
+            return CreatedAtRoute("GetProjectIssueRoute", new {projectId = id, issueId = binding.Id}, null);
         }
 
         /// <summary>
         /// Find issues
         /// </summary>
         /// <param name="id">Project identifier</param>
-        /// <param name="binding">Input query bind model</param>
+        /// <param name="binding">Input model</param>
         [HttpGet("projects/{id}/issues", Name = "GetProjectIssuesRoute")]
         [ProducesResponseType(typeof(Page<IssueListView>), 200)]
         public async Task<IActionResult> FindIssues(
@@ -93,7 +91,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
 
 
         /// <summary>
-        /// Get a issue
+        /// Get issue
         /// </summary>
         /// <param name="projectId">Project identifier</param>
         /// <param name="issueId">Issue identifier</param>

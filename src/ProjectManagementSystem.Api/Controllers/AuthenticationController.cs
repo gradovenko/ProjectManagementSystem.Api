@@ -16,6 +16,8 @@ namespace ProjectManagementSystem.Api.Controllers
         /// Authenticate using login and password, or refresh token
         /// </summary>
         /// <param name="binding">Auth</param>
+        /// <response code="200">Successfully</response>
+        /// <response code="200">Successfully</response>
         [HttpPost("oauth2/token")]
         [ProducesResponseType(typeof(TokenView), 200)]
         [ProducesResponseType(typeof(ErrorView), 400)]

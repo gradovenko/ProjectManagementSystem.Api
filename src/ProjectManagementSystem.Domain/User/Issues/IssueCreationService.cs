@@ -62,8 +62,7 @@ namespace ProjectManagementSystem.Domain.User.Issues
             if (issue != null)
                 throw new IssueAlreadyExistsException();
 
-            issue = new Issue(issueId, title, description, startDate, dueDate, trackerId, statusId, priorityId,
-                authorId, assigneeId);
+            issue = new Issue(issueId, title, description, startDate, dueDate, trackerId, statusId, priorityId, authorId, assigneeId);
 
             project.AddIssue(issue);
 

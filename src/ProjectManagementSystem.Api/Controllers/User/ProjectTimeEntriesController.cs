@@ -18,6 +18,12 @@ namespace ProjectManagementSystem.Api.Controllers.User
     [ApiController]
     public sealed class ProjectTimeEntriesController : ControllerBase
     {
+        /// <summary>
+        /// Create project time entries
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <param name="projectId">Project identifier</param>
+        /// <param name="binding">Input model</param>
         [HttpPost("projects/{projectId}/timeEntries")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]

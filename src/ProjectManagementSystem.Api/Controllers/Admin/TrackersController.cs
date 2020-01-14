@@ -54,7 +54,7 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         }
 
         /// <summary>
-        /// Get a tracker
+        /// Get tracker
         /// </summary>
         /// <param name="id">Tracker identifier</param>
         [HttpGet("admin/trackers/{id}", Name = "GetTrackerAdminRoute")]

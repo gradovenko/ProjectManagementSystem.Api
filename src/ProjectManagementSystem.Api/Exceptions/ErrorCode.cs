@@ -10,7 +10,7 @@ namespace ProjectManagementSystem.Api.Exceptions
         public const string Forbidden = "forbidden";
         public const string UserNotFound = "user_not_found";
         public const string UserAlreadyExists = "user_already_exists";
-        public const string UsernameAlreadyExists = "username_already_exists";
+        public const string NameAlreadyExists = "name_already_exists";
         public const string EmailAlreadyExists = "email_already_exists";
         public const string InvalidPassword = "invalid_password";
         public const string IssuePriorityNotFound = "issue_priority_not_found";

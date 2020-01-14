@@ -18,13 +18,20 @@ namespace ProjectManagementSystem.Api.Controllers.User
     [ApiController]
     public sealed class IssuesController : ControllerBase
     {
+        /// <summary>
+        /// Create issue
+        /// </summary>
+        /// <param name="binding">Input model</param>
+        /// <response code="201">Successfully</response>
+        /// <response code="409">Issue already exists with other parameters</response>
+        /// <response code="422">Project/tracker/issue status/issue priority/assignee not found</response>
         [HttpPost("issues")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
+        [ProducesResponseType(typeof(ProblemDetails), 422)]
         public async Task<IActionResult> CreateIssue(
             CancellationToken cancellationToken,
-            [FromRoute] Guid id,
             [FromBody] CreateIssueBinding binding,
             [FromServices] IssueCreationService issueCreationService)
         {
@@ -36,34 +43,37 @@ namespace ProjectManagementSystem.Api.Controllers.User
             }
             catch (ProjectNotFoundException)
             {
-                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.ProjectNotFound, "Project not found");
+                throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.ProjectNotFound, "Project not found");
             }
             catch (TrackerNotFoundException)
             {
-                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Tracker not found");
+                throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.TrackerNotFound, "Tracker not found");
             }
             catch (IssueStatusNotFoundException)
             {
-                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueStatusNotFound,
-                    "Issue status not found");
+                throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.IssueStatusNotFound, "Issue status not found");
             }
             catch (IssuePriorityNotFoundException)
             {
-                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Issue priority not found");
+                throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.IssuePriorityNotFound, "Issue priority not found");
             }
             catch (AssigneeNotFoundException)
             {
-                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.AssigneeNotFound, "Assignee not found");
+                throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.AssigneeNotFound, "Assignee not found");
             }
             catch (IssueAlreadyExistsException)
             {
-                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists,
-                    "Issue already exists with other parameters");
+                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists, "Issue already exists with other parameters");
             }
 
             return CreatedAtRoute("GetIssueRoute", new {issueId = binding.Id}, null);
         }
 
+        /// <summary>
+        /// Get issues
+        /// </summary>
+        /// <param name="binding">Input model</param>
+        /// <response code="200">Successfully</response>
         [HttpGet("issues", Name = "GetIssuesRoute")]
         [ProducesResponseType(typeof(Page<IssueListView>), 200)]
         public async Task<IActionResult> FindIssues(
@@ -74,6 +84,12 @@ namespace ProjectManagementSystem.Api.Controllers.User
             return Ok(await mediator.Send(new IssueListQuery(binding.Offset, binding.Limit), cancellationToken));
         }
 
+        /// <summary>
+        /// Get issue
+        /// </summary>
+        /// <param name="id">Issue identifier</param>
+        /// <response code="200">Successfully</response>
+        /// <response code="404">Issue not found</response>
         [HttpGet("issues/{id}", Name = "GetIssueRoute")]
         [ProducesResponseType(typeof(IssueView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

@@ -18,6 +18,10 @@ namespace ProjectManagementSystem.Api.Controllers.User
     [ApiController]
     public sealed class TimeEntriesController : ControllerBase
     {
+        /// <summary>
+        /// Create time entry
+        /// </summary>
+        /// <param name="binding">Input model</param>
         [HttpPost("timeEntries")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -25,15 +29,14 @@ namespace ProjectManagementSystem.Api.Controllers.User
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         public async Task<IActionResult> CreateTimeEntry(
             CancellationToken cancellationToken,
-            [FromRoute] Guid projectId,
-            [FromRoute] Guid issueId,
             [FromBody] CreateTimeEntryBinding binding,
             [FromServices] TimeEntryCreationService timeEntryCreationService)
         {
             try
             {
-                await timeEntryCreationService.CreateTimeEntry(projectId, issueId, binding.Id, binding.Hours,
-                    binding.Description, binding.DueDate, User.GetId(), binding.ActivityId, cancellationToken);
+                await timeEntryCreationService.CreateTimeEntry(binding.ProjectId, binding.IssueId, binding.Id,
+                    binding.Hours, binding.Description, binding.DueDate, User.GetId(), binding.ActivityId,
+                    cancellationToken);
             }
             catch (ProjectNotFoundException)
             {
@@ -49,7 +52,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
             }
             catch (TimeEntryActivityNotFoundException)
             {
-                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TimeEntryActivityNotFound,
+                throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TimeEntryActivityNotFound, 
                     "Time entry activity not found");
             }
             catch (TimeEntryAlreadyExistsException)
@@ -61,6 +64,10 @@ namespace ProjectManagementSystem.Api.Controllers.User
             return CreatedAtRoute("GetTimeEntryRoute", new {timeEntryId = binding.Id}, null);
         }
 
+        /// <summary>
+        /// Get time entries
+        /// </summary>
+        /// <param name="binding">Input model</param>
         [HttpGet("timeEntries", Name = "GetTimeEntriesRoute")]
         [ProducesResponseType(typeof(Page<TimeEntryListView>), 200)]
         public async Task<IActionResult> FindTimeEntries(
@@ -70,7 +77,11 @@ namespace ProjectManagementSystem.Api.Controllers.User
         {
             return Ok(await mediator.Send(new TimeEntryListQuery(binding.Offset, binding.Limit), cancellationToken));
         }
-        
+
+        /// <summary>
+        /// Get time entry
+        /// </summary>
+        /// <param name="id">Time entry identifier</param>
         [HttpGet("timeEntries/{id}", Name = "GetTimeEntryRoute")]
         [ProducesResponseType(typeof(TimeEntryView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -80,10 +91,10 @@ namespace ProjectManagementSystem.Api.Controllers.User
             [FromServices] IMediator mediator)
         {
             var timeEntry = await mediator.Send(new TimeEntryQuery(id), cancellationToken);
-            
+
             if (timeEntry == null)
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TimeEntryNotFound, "Time entry not found");
-        
+
             return Ok(timeEntry);
         }
     }

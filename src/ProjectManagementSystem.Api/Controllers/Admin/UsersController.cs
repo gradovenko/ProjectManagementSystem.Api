@@ -46,7 +46,7 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
             user = await userRepository.GetByName(binding.Name, cancellationToken);
 
             if (user != null)
-                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.UsernameAlreadyExists, "Username already exists");
+                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.NameAlreadyExists, "Username already exists");
 
             user = await userRepository.GetByEmail(binding.Email, cancellationToken);
 

@@ -27,13 +27,13 @@ namespace ProjectManagementSystem.Api.Controllers.User
             CancellationToken cancellationToken,
             [FromRoute] Guid projectId,
             [FromRoute] Guid issueId,
-            [FromBody] CreateTimeEntryBinding model,
+            [FromBody] CreateTimeEntryBinding binding,
             [FromServices] TimeEntryCreationService timeEntryCreationService)
         {
             try
             {
-                await timeEntryCreationService.CreateTimeEntry(projectId, issueId, model.Id, model.Hours,
-                    model.Description, model.DueDate, User.GetId(), model.ActivityId, cancellationToken);
+                await timeEntryCreationService.CreateTimeEntry(projectId, issueId, binding.Id, binding.Hours,
+                    binding.Description, binding.DueDate, User.GetId(), binding.ActivityId, cancellationToken);
             }
             catch (ProjectNotFoundException)
             {
@@ -58,9 +58,14 @@ namespace ProjectManagementSystem.Api.Controllers.User
                     "Time entry already exists with other parameters");
             }
 
-            return CreatedAtRoute("GetProjectIssueTimeEntryRoute", new {projectId, issueId, timeEntryId = model.Id}, null);
+            return CreatedAtRoute("GetIssueTimeEntryRoute", new {issueId, timeEntryId = binding.Id}, null);
         }
 
+        /// <summary>
+        /// Find time entries
+        /// </summary>
+        /// <param name="id">Issue identifier</param>
+        /// <param name="binding">Input model</param>
         [HttpGet("issues/{id}/timeEntries", Name = "GetIssueTimeEntriesRoute")]
         [ProducesResponseType(typeof(Page<TimeEntryListView>), 200)]
         public async Task<IActionResult> FindTimeEntries(
@@ -78,6 +83,11 @@ namespace ProjectManagementSystem.Api.Controllers.User
             return Ok(await mediator.Send(new TimeEntryListQuery(id, binding.Offset, binding.Limit), cancellationToken));
         }
 
+        /// <summary>
+        /// Get time entry
+        /// </summary>
+        /// <param name="issueId">Issue identifier</param>
+        /// <param name="timeEntryId">Time entry identifier</param>
         [HttpGet("issues/{issueId}/timeEntries/{timeEntryId}", Name = "GetIssueTimeEntryRoute")]
         [ProducesResponseType(typeof(TimeEntryView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
