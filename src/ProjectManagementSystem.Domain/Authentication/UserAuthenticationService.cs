@@ -38,7 +38,7 @@ namespace ProjectManagementSystem.Domain.Authentication
             return new Token(accessToken.Value, accessToken.ExpiresIn, refreshToken);
         }
 
-        public async Task<Token> AuthenticationByRefreshToken(Guid refreshToken, CancellationToken cancellationToken)
+        public async Task<Token> AuthenticationByRefreshToken(string refreshToken, CancellationToken cancellationToken)
         {
             var newRefreshToken = await _refreshTokenStore.Reissue(refreshToken);
 

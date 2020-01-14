@@ -1,5 +1,3 @@
-using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -17,74 +15,55 @@ namespace ProjectManagementSystem.Api.Controllers
         /// <summary>
         /// Authenticate using login and password, or refresh token
         /// </summary>
-        /// <param name="grantType">password or refresh_token</param>
-        /// <param name="login">Email</param>
-        /// <param name="password">Password</param>
-        /// <param name="refreshToken">Refresh token</param>
-        [HttpPost("oauth/token")]
+        /// <param name="binding">Auth</param>
+        [HttpPost("oauth2/token")]
         [ProducesResponseType(typeof(TokenView), 200)]
-        [ProducesResponseType(typeof(ProblemDetails), 401)]
+        [ProducesResponseType(typeof(ErrorView), 400)]
         public async Task<IActionResult> Authentication(CancellationToken cancellationToken,
-            [FromForm(Name = "grant_type")] string grantType,
-            [FromForm(Name = "login")] string login,
-            [FromForm(Name = "password")] string password,
-            [FromForm(Name = "refresh_token")] string refreshToken,
+            [FromForm] AuthenticationBinding binding,
             [FromServices] UserAuthenticationService authenticationService)
         {
             const string passwordGrantType = "password";
             const string refreshTokenGrantType = "refresh_token";
 
-            if (string.IsNullOrEmpty(grantType))
-                throw new ApiException(HttpStatusCode.BadRequest, ErrorCode.GrantTypeIsEmpty,
-                    "Grant type cannot be empty");
-            
-            switch (grantType)
+            if (string.IsNullOrEmpty(binding.GrantType))
+                return BadRequest(new ErrorView(ErrorCode.InvalidRequest, "Field 'grant_type' is required"));
+
+            switch (binding.GrantType)
             {
                 case passwordGrantType:
                     try
                     {
-                        if (string.IsNullOrEmpty(login))
-                            throw new ApiException(HttpStatusCode.BadRequest, ErrorCode.LoginIsEmpty,
-                                $"Login cannot be empty for grant type '{passwordGrantType}'");
+                        if (string.IsNullOrEmpty(binding.Username))
+                            return BadRequest(new ErrorView(ErrorCode.InvalidRequest, $"Field 'username' is required for '{passwordGrantType}' grant type"));
 
-                        if (string.IsNullOrEmpty(password))
-                            throw new ApiException(HttpStatusCode.BadRequest, ErrorCode.PasswordIsEmpty,
-                                $"Password cannot be empty for grant type '{passwordGrantType}'");
+                        if (string.IsNullOrEmpty(binding.Password))
+                            BadRequest(new ErrorView(ErrorCode.InvalidRequest, $"Field 'password' is required for '{passwordGrantType}' grant type"));
 
-                        var token = await authenticationService.AuthenticationByPassword(login,
-                            password, cancellationToken);
-                        
+                        var token = await authenticationService.AuthenticationByPassword(binding.Username, binding.Password, cancellationToken);
+
                         return Ok(new TokenView(token.AccessToken, token.ExpiresIn, token.RefreshToken));
                     }
                     catch (InvalidCredentialsException)
                     {
-                        throw new ApiException(HttpStatusCode.Unauthorized, ErrorCode.InvalidCredentials,
-                            "Login or password is invalid");
+                        return BadRequest(new ErrorView(ErrorCode.UnauthorizedClient, "Invalid username or password"));
                     }
                 case refreshTokenGrantType:
                     try
                     {
-                        if (string.IsNullOrEmpty(refreshToken))
-                            throw new ApiException(HttpStatusCode.BadRequest, ErrorCode.RefreshTokenIsEmpty,
-                                $"Refresh token cannot empty for grant type '{refreshTokenGrantType}'");
+                        if (string.IsNullOrEmpty(binding.RefreshToken))
+                            return BadRequest(new ErrorView(ErrorCode.InvalidRequest, "Field 'refresh_token' is required for '{refreshTokenGrantType}' grant type"));
 
-                        if (Guid.TryParse(refreshToken, out var normalizedRefreshToken) == false)
-                            throw new ApiException(HttpStatusCode.BadRequest, ErrorCode.InvalidRefreshToken,
-                                $"Invalid refresh token");
+                        var token = await authenticationService.AuthenticationByRefreshToken(binding.RefreshToken, cancellationToken);
 
-                        var token = await authenticationService.AuthenticationByRefreshToken(normalizedRefreshToken,
-                            cancellationToken);
-                        
                         return Ok(new TokenView(token.AccessToken, token.ExpiresIn, token.RefreshToken));
                     }
                     catch (InvalidCredentialsException)
                     {
-                        throw new ApiException(HttpStatusCode.Unauthorized, ErrorCode.InvalidCredentials,
-                            "Refresh token not found");
+                        return BadRequest(new ErrorView(ErrorCode.InvalidGrant, "Invalid refresh token"));
                     }
                 default:
-                    throw new ApiException(HttpStatusCode.BadRequest, ErrorCode.UnsupportedGrantType,
-                        "Unsupported grant type");
+                    return BadRequest(new ErrorView(ErrorCode.UnsupportedGrantType, $"The authorization grant type '{binding.GrantType}' is not supported. Supported authorization grant types: '{passwordGrantType}', '{refreshTokenGrantType}'"));
             }
         }
     }

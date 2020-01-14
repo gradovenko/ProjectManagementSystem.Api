@@ -3,13 +3,9 @@ namespace ProjectManagementSystem.Api.Exceptions
     public sealed class ErrorCode
     {
         public const string InternalServerError = "internal_server_error";
-        public const string BadRequest = "bad_request";
-        public const string InvalidCredentials = "invalid_credentials";
-        public const string GrantTypeIsEmpty = "grant_type_is_empty";
-        public const string LoginIsEmpty = "login_is_empty";
-        public const string PasswordIsEmpty = "password_is_empty";
-        public const string RefreshTokenIsEmpty = "refresh_token_is_empty";
-        public const string InvalidRefreshToken = "invalid_refresh_token";
+        public const string InvalidRequest = "invalid_request";
+        public const string InvalidGrant = "invalid_grant";
+        public const string UnauthorizedClient = "unauthorized_client";
         public const string UnsupportedGrantType = "unsupported_grant_type";
         public const string Forbidden = "forbidden";
         public const string UserNotFound = "user_not_found";

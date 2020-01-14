@@ -17,12 +17,12 @@ namespace ProjectManagementSystem.Api.Models.Authentication
         [JsonPropertyName("refresh_token")]
         public string RefreshToken { get; }
 
-        public TokenView(string accessToken, TimeSpan expiresIn, Guid refreshToken)
+        public TokenView(string accessToken, TimeSpan expiresIn, string refreshToken)
         {
             AccessToken = accessToken;
             TokenType = "Bearer";
             ExpiresIn = (long)expiresIn.TotalSeconds;
-            RefreshToken = refreshToken.ToString();
+            RefreshToken = refreshToken;
         }
     }
 }
