@@ -7,31 +7,31 @@ using ProjectManagementSystem.Queries.Admin.IssueStatuses;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssueStatuses
 {
-    public sealed class IssueStatusesQueryHandler : IRequestHandler<IssueStatusesQuery, Page<FullIssueStatusView>>
+    public sealed class IssueStatusListQueryHandler : IRequestHandler<IssueStatusListQuery, Page<IssueStatusListItemView>>
     {
         private readonly IssueStatusDbContext _context;
 
-        public IssueStatusesQueryHandler(IssueStatusDbContext context)
+        public IssueStatusListQueryHandler(IssueStatusDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Page<FullIssueStatusView>> Handle(IssueStatusesQuery query, CancellationToken cancellationToken)
+        public async Task<Page<IssueStatusListItemView>> Handle(IssueStatusListQuery query, CancellationToken cancellationToken)
         {
             var sql = _context.IssueStatuses.AsNoTracking()
-                .Select(issuePriority => new FullIssueStatusView
+                .Select(issuePriority => new IssueStatusListItemView
                 {
                     Id = issuePriority.Id,
                     Name = issuePriority.Name,
                     IsActive = issuePriority.IsActive
                 });
 
-            return new Page<FullIssueStatusView>
+            return new Page<IssueStatusListItemView>
             {
                 Limit = query.Limit,
                 Offset = query.Offset,
                 Total = await sql.CountAsync(cancellationToken),
-                Items = await sql.Skip(query.Offset).Take(query.Limit).ToArrayAsync(cancellationToken)
+                Items = await sql.Skip(query.Offset).Take(query.Limit).ToListAsync(cancellationToken)
             };
         }
     }

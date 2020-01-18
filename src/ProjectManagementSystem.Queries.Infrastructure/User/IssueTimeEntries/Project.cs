@@ -4,7 +4,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.IssueTimeEntries
 {
     internal sealed class Project
     {
-        public Guid Id { get; private set; }
-        public string Name { get; private set; }
+        public Guid Id { get; }
+        public string Name { get; }
     }
 }

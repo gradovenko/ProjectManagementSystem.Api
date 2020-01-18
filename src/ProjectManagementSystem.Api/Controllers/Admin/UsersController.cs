@@ -15,17 +15,13 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
 {
     [Authorize(Roles = "Admin")]
     [ApiController]
+    [ProducesResponseType(401)]
     public sealed class UsersController : ControllerBase
     {
         /// <summary>
         /// Create user
         /// </summary>
-        /// <param name="cancellationToken"></param>
         /// <param name="binding">Input model</param>
-        /// <param name="userRepository"></param>
-        /// <param name="passwordHasher"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
         [HttpPost("admin/users")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -63,15 +59,25 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         }
 
         /// <summary>
-        /// Get user
+        /// Find users
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="id">User ID</param>
-        /// <param name="mediator"></param>
-        /// <returns></returns>
-        /// <exception cref="ApiException"></exception>
+        /// <param name="binding">Input model</param>
+        [HttpGet("admin/users", Name = "FindUsersAdminRoute")]
+        [ProducesResponseType(typeof(UserView), 200)]
+        public async Task<IActionResult> Find(
+            CancellationToken cancellationToken,
+            [FromQuery] FindUsersBinding binding,
+            [FromServices] IMediator mediator)
+        {
+            return Ok(await mediator.Send(new UserListQuery(binding.Offset, binding.Limit), cancellationToken));
+        }
+        
+        /// <summary>
+        /// Get the user
+        /// </summary>
+        /// <param name="id">User identifier</param>
         [HttpGet("admin/users/{id}", Name = "GetUserAdminRoute")]
-        [ProducesResponseType(typeof(ShortUserView), 200)]
+        [ProducesResponseType(typeof(UserView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,
@@ -84,23 +90,6 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
                 throw new ApiException(HttpStatusCode.NotFound, ErrorCode.UserNotFound, "User not found");
 
             return Ok(user);
-        }
-
-        /// <summary>
-        /// Find users
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="binding"></param>
-        /// <param name="mediator"></param>
-        /// <returns></returns>
-        [HttpGet("admin/users", Name = "FindUsersAdminRoute")]
-        [ProducesResponseType(typeof(ShortUserView), 200)]
-        public async Task<IActionResult> Find(
-            CancellationToken cancellationToken,
-            [FromQuery] FindUsersBinding binding,
-            [FromServices] IMediator mediator)
-        {
-            return Ok(await mediator.Send(new UsersQuery(binding.Offset, binding.Limit), cancellationToken));
         }
     }
 }

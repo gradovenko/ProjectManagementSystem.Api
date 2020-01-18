@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users

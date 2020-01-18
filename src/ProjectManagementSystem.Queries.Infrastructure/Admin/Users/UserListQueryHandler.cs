@@ -7,19 +7,19 @@ using ProjectManagementSystem.Queries.Admin.Users;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users
 {
-    public class UsersQueryHandler : IRequestHandler<UsersQuery, Page<FullUserView>>
+    public sealed class UserListQueryHandler : IRequestHandler<UserListQuery, Page<UserListItemView>>
     {
         private readonly UserDbContext _context;
 
-        public UsersQueryHandler(UserDbContext context)
+        public UserListQueryHandler(UserDbContext context)
         {
             _context = context;
         }
         
-        public async Task<Page<FullUserView>> Handle(UsersQuery query, CancellationToken cancellationToken)
+        public async Task<Page<UserListItemView>> Handle(UserListQuery query, CancellationToken cancellationToken)
         {
             var sql = _context.Users.AsNoTracking()
-                .Select(user => new FullUserView
+                .Select(user => new UserListItemView
                 {
                     Id = user.Id,
                     Name = user.Name,
@@ -28,12 +28,12 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users
                     LastName = user.LastName,
                 });
 
-            return new Page<FullUserView>
+            return new Page<UserListItemView>
             {
                 Limit = query.Limit,
                 Offset = query.Offset,
                 Total = await sql.CountAsync(cancellationToken),
-                Items = await sql.Skip(query.Offset).Take(query.Limit).ToArrayAsync(cancellationToken)
+                Items = await sql.Skip(query.Offset).Take(query.Limit).ToListAsync(cancellationToken)
             };
         }
     }

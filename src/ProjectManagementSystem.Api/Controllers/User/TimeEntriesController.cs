@@ -69,7 +69,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// </summary>
         /// <param name="binding">Input model</param>
         [HttpGet("timeEntries", Name = "GetTimeEntriesRoute")]
-        [ProducesResponseType(typeof(Page<TimeEntryListView>), 200)]
+        [ProducesResponseType(typeof(Page<TimeEntryListItemView>), 200)]
         public async Task<IActionResult> FindTimeEntries(
             CancellationToken cancellationToken,
             [FromQuery] FindTimeEntriesBinding binding,

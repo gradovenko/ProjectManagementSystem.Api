@@ -14,40 +14,41 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
 {
     [Authorize(Roles = "Admin")]
     [ApiController]
-    public class ProjectsController : ControllerBase
+    [ProducesResponseType(401)]
+    public sealed class ProjectsController : ControllerBase
     {
         /// <summary>
         /// Create project
         /// </summary>
-        /// <param name="model">Input bind model</param>
+        /// <param name="binding">Input model</param>
         [HttpPost("admin/projects")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         public async Task<IActionResult> Create(
             CancellationToken cancellationToken,
-            [FromBody] CreateProjectBinding model,
+            [FromBody] CreateProjectBinding binding,
             [FromServices] IProjectRepository projectRepository,
             [FromServices] ITrackerRepository trackerRepository)
         {
-            var project = await projectRepository.Get(model.Id, cancellationToken);
+            var project = await projectRepository.Get(binding.Id, cancellationToken);
 
             if (project != null)
-                if (!project.Name.Equals(model.Name) ||
-                    !project.Description.Equals(model.Description))
+                if (!project.Name.Equals(binding.Name) ||
+                    !project.Description.Equals(binding.Description))
                     throw new ApiException(HttpStatusCode.Conflict, ErrorCode.ProjectAlreadyExists,
                         "Project already exists with other parameters");
 
-            project = new Project(model.Id, model.Name, model.Description, model.IsPrivate);
+            project = new Project(binding.Id, binding.Name, binding.Description, binding.IsPrivate);
             
-            foreach (var trackerId in model.Trackers)
+            foreach (var trackerId in binding.Trackers)
             {
                 var tracker = await trackerRepository.Get(trackerId, cancellationToken);
                 
                 if (tracker == null)
                     throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Tracker not found");
                 
-                var projectTracker = new ProjectTracker(model.Id, tracker.Id);
+                var projectTracker = new ProjectTracker(binding.Id, tracker.Id);
                 
                 project.AddProjectTracker(projectTracker);
             }
@@ -60,23 +61,23 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// <summary>
         /// Find projects
         /// </summary>
-        /// <param name="binding">Input query model</param>
+        /// <param name="binding">Input model</param>
         [HttpGet("admin/projects", Name = "GetProjectsAdminRoute")]
-        [ProducesResponseType(typeof(ShortProjectView), 200)]
+        [ProducesResponseType(typeof(ProjectView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
             [FromQuery] FindProjectsBinding binding,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new ProjectsQuery(binding.Offset, binding.Limit), cancellationToken));
+            return Ok(await mediator.Send(new ProjectListQuery(binding.Offset, binding.Limit), cancellationToken));
         }
 
         /// <summary>
-        /// Get a project
+        /// Get the project
         /// </summary>
         /// <param name="id">Project identifier</param>
         [HttpGet("admin/projects/{id}", Name = "GetProjectAdminRoute")]
-        [ProducesResponseType(typeof(FullProjectView), 200)]
+        [ProducesResponseType(typeof(ProjectListItemView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,

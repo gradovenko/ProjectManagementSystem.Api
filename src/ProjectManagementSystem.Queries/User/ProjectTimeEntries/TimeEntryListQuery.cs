@@ -2,7 +2,7 @@ using System;
 
 namespace ProjectManagementSystem.Queries.User.ProjectTimeEntries
 {
-    public sealed class TimeEntryListQuery : PageQuery<TimeEntryListView>
+    public sealed class TimeEntryListQuery : PageQuery<TimeEntryListItemView>
     {
         public Guid ProjectId { get; }
 

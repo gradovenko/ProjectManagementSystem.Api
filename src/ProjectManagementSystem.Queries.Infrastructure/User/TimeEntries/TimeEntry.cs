@@ -4,19 +4,19 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.TimeEntries
 {
     internal sealed class TimeEntry
     {
-        public Guid Id { get; private set; }
-        public decimal Hours { get; private set; }
-        public string Description { get; private set; }
-        public DateTime DueDate { get; private set; }
-        public DateTime CreateDate { get; private set; }
-        public DateTime? UpdateDate { get; private set; }
-        public Guid ProjectId { get; private set; }
-        public Project Project { get; private set; }
-        public Guid IssueId { get; private set; }
-        public Issue Issue { get; private set; }
-        public Guid UserId { get; private set; }
-        public User User { get; private set; }
-        public Guid ActivityId { get; private set; }
-        public TimeEntryActivity Activity { get; private set; }
+        public Guid Id { get; }
+        public decimal Hours { get; }
+        public string Description { get; }
+        public DateTime DueDate { get; }
+        public DateTime CreateDate { get; }
+        public DateTime? UpdateDate { get; }
+        public Guid ProjectId { get; }
+        public Project Project { get; }
+        public Guid IssueId { get; }
+        public Issue Issue { get; }
+        public Guid UserId { get; }
+        public User User { get; }
+        public Guid ActivityId { get; }
+        public TimeEntryActivity Activity { get; }
     }
 }

@@ -1,8 +1,8 @@
 using System;
 
-namespace ProjectManagementSystem.Queries.User.ProjectIssues
+namespace ProjectManagementSystem.Queries.User.Issues
 {
-    public sealed class IssueListView
+    public sealed class IssueListItemView
     {
         /// <summary>
         /// Issue identifier

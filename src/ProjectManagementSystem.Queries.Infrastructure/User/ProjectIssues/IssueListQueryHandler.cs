@@ -7,7 +7,7 @@ using ProjectManagementSystem.Queries.User.ProjectIssues;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
 {
-    public sealed class IssueListQueryHandler : IRequestHandler<IssueListQuery, Page<IssueListView>>
+    public sealed class IssueListQueryHandler : IRequestHandler<IssueListQuery, Page<IssueListItemView>>
     {
         private readonly IssueDbContext _context;
 
@@ -16,12 +16,12 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
             _context = context;
         }
 
-        public async Task<Page<IssueListView>> Handle(IssueListQuery query, CancellationToken cancellationToken)
+        public async Task<Page<IssueListItemView>> Handle(IssueListQuery query, CancellationToken cancellationToken)
         {
             var sql = _context.Issues.AsNoTracking()
                 .OrderBy(p => p.CreateDate)
                 .Where(i => i.ProjectId == query.ProjectId)
-                .Select(i => new IssueListView
+                .Select(i => new IssueListItemView
                 {
                     Id = i.Id,
                     Number = i.Number,
@@ -34,7 +34,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 })
                 .AsQueryable();
 
-            return new Page<IssueListView>
+            return new Page<IssueListItemView>
             {
                 Limit = query.Limit,
                 Offset = query.Offset,

@@ -14,12 +14,13 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
 {
     [Authorize(Roles = "Admin")]
     [ApiController]
+    [ProducesResponseType(401)]
     public class TimeEntryActivitiesController : ControllerBase
     {
         /// <summary>
         /// Create time entry activity
         /// </summary>
-        /// <param name="binding"></param>
+        /// <param name="binding">Input model</param>
         [HttpPost("admin/timeEntryActivities")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -46,9 +47,9 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// <summary>
         /// Find time entry activities
         /// </summary>
-        /// <param name="binding"></param>
+        /// <param name="binding">Input model</param>
         [HttpGet("admin/timeEntryActivities")]
-        [ProducesResponseType(typeof(TimeEntryActivityListViewModel), 200)]
+        [ProducesResponseType(typeof(TimeEntryActivityListItemView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
             [FromQuery] FindTimeEntryActivitiesBinding binding,
@@ -58,11 +59,11 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         }
 
         /// <summary>
-        /// Get time entry activity
+        /// Get the time entry activity
         /// </summary>
         /// <param name="id">Time entry activity identifier</param>
         [HttpGet("admin/timeEntryActivities/{id}", Name = "GetTimeEntryActivityAdminRoute")]
-        [ProducesResponseType(typeof(TimeEntryActivityViewModel), 200)]
+        [ProducesResponseType(typeof(TimeEntryActivityView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,

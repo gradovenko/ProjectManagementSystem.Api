@@ -14,7 +14,8 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
 {
     [Authorize(Roles = "Admin")]
     [ApiController]
-    public class IssuePrioritiesController : ControllerBase
+    [ProducesResponseType(401)]
+    public sealed class IssuePrioritiesController : ControllerBase
     {
         /// <summary>
         /// Create issue priority
@@ -47,13 +48,13 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// </summary>
         /// <param name="binding"></param>
         [HttpGet("admin/issuePriorities")]
-        [ProducesResponseType(typeof(ShortIssuePriorityView), 200)]
+        [ProducesResponseType(typeof(IssuePriorityView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
             [FromQuery] FindIssuePrioritiesBinding binding,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new IssuePrioritiesQuery(binding.Offset, binding.Limit), cancellationToken));
+            return Ok(await mediator.Send(new IssuePriorityListQuery(binding.Offset, binding.Limit), cancellationToken));
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// </summary>
         /// <param name="id">Issue priority identifier</param>
         [HttpGet("admin/issuePriorities/{id}", Name = "GetIssuePriorityAdminRoute")]
-        [ProducesResponseType(typeof(ShortIssuePriorityView), 200)]
+        [ProducesResponseType(typeof(IssuePriorityView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,

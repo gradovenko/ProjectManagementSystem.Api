@@ -67,7 +67,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         }
 
         [HttpGet("projects/{projectId}/timeEntries", Name = "GetProjectTimeEntriesRoute")]
-        [ProducesResponseType(typeof(Page<TimeEntryListView>), 200)]
+        [ProducesResponseType(typeof(Page<TimeEntryListItemView>), 200)]
         public async Task<IActionResult> FindTimeEntries(
             CancellationToken cancellationToken,
             [FromRoute] Guid projectId,

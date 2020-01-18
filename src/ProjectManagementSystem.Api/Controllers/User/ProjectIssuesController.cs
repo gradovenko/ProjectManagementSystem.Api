@@ -73,7 +73,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// <param name="id">Project identifier</param>
         /// <param name="binding">Input model</param>
         [HttpGet("projects/{id}/issues", Name = "GetProjectIssuesRoute")]
-        [ProducesResponseType(typeof(Page<IssueListView>), 200)]
+        [ProducesResponseType(typeof(Page<IssueListItemView>), 200)]
         public async Task<IActionResult> FindIssues(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,

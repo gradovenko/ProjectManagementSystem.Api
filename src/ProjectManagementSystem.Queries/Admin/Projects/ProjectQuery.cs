@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ProjectManagementSystem.Queries.Admin.Projects
 {
-    public class ProjectQuery : IRequest<ShortProjectView>
+    public sealed class ProjectQuery : IRequest<ProjectView>
     {
         public Guid Id { get; }
         

@@ -2,7 +2,7 @@ using System;
 
 namespace ProjectManagementSystem.Queries.User.TimeEntries
 {
-    public sealed class TimeEntryListView
+    public sealed class TimeEntryListItemView
     {
         public Guid Id { get; set; }
         public decimal Hours { get; set; }

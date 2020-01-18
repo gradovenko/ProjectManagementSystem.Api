@@ -67,7 +67,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// <param name="id">Issue identifier</param>
         /// <param name="binding">Input model</param>
         [HttpGet("issues/{id}/timeEntries", Name = "GetIssueTimeEntriesRoute")]
-        [ProducesResponseType(typeof(Page<TimeEntryListView>), 200)]
+        [ProducesResponseType(typeof(Page<TimeEntryListItemView>), 200)]
         public async Task<IActionResult> FindTimeEntries(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,

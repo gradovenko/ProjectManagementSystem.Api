@@ -14,12 +14,13 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
 {
     [Authorize(Roles = "Admin")]
     [ApiController]
-    public class IssueStatusesController : ControllerBase
+    [ProducesResponseType(401)]
+    public sealed class IssueStatusesController : ControllerBase
     {
         /// <summary>
         /// Create issue status
         /// </summary>
-        /// <param name="binding"></param>
+        /// <param name="binding">Input model</param>
         [HttpPost("admin/issueStatuses")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -45,23 +46,22 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// <summary>
         /// Find issue statuses
         /// </summary>
-        /// <param name="binding"></param>
         [HttpGet("admin/issueStatuses")]
-        [ProducesResponseType(typeof(ShortIssueStatusView), 200)]
+        [ProducesResponseType(typeof(IssueStatusView), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
             [FromQuery] FindIssueStatusesBinding binding,
             [FromServices] IMediator mediator)
         {
-            return Ok(await mediator.Send(new IssueStatusesQuery(binding.Offset, binding.Limit), cancellationToken));
+            return Ok(await mediator.Send(new IssueStatusListQuery(binding.Offset, binding.Limit), cancellationToken));
         }
 
         /// <summary>
-        /// Get issue status
+        /// Get the issue status
         /// </summary>
         /// <param name="id">User identifier</param>
         [HttpGet("admin/issueStatuses/{id}", Name = "GetIssueStatusAdminRoute")]
-        [ProducesResponseType(typeof(ShortIssueStatusView), 200)]
+        [ProducesResponseType(typeof(IssueStatusView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> Get(
             CancellationToken cancellationToken,

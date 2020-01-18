@@ -1,8 +1,8 @@
 using System;
 
-namespace ProjectManagementSystem.Queries.User.ProjectTimeEntries
+namespace ProjectManagementSystem.Queries.User.IssueTimeEntries
 {
-    public sealed class TimeEntryListView
+    public sealed class TimeEntryListItemView
     {
         public Guid Id { get; set; }
         public decimal Hours { get; set; }
@@ -10,7 +10,6 @@ namespace ProjectManagementSystem.Queries.User.ProjectTimeEntries
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime DueDate { get; set; }
-        public long IssueNumber { get; set; }
         public string UserName { get; set; }
         public string ActivityName { get; set; }
     }

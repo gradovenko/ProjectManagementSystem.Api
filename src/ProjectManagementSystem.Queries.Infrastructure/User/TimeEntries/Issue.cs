@@ -4,7 +4,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.TimeEntries
 {
     internal sealed class Issue
     {
-        public Guid Id { get; private set; }
-        public long Number { get; private set; }
+        public Guid Id { get; }
+        public long Number { get; }
     }
 }

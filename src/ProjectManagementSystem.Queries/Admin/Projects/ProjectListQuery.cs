@@ -1,4 +1,4 @@
-namespace ProjectManagementSystem.Queries.User.Projects
+namespace ProjectManagementSystem.Queries.Admin.Projects
 {
     public sealed class ProjectListQuery : PageQuery<ProjectListItemView>
     {

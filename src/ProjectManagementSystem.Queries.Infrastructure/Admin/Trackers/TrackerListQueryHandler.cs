@@ -7,30 +7,30 @@ using ProjectManagementSystem.Queries.Admin.Trackers;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Trackers
 {
-    public sealed class TrackersQueryHandler : IRequestHandler<TrackersQuery, Page<FullTrackerView>>
+    public sealed class TrackerListQueryHandler : IRequestHandler<TrackerListQuery, Page<TrackerListItemView>>
     {
         private readonly TrackerDbContext _context;
 
-        public TrackersQueryHandler(TrackerDbContext context)
+        public TrackerListQueryHandler(TrackerDbContext context)
         {
             _context = context;
         }
         
-        public async Task<Page<FullTrackerView>> Handle(TrackersQuery query, CancellationToken cancellationToken)
+        public async Task<Page<TrackerListItemView>> Handle(TrackerListQuery query, CancellationToken cancellationToken)
         {
             var sql = _context.Trackers.AsNoTracking()
-                .Select(project => new FullTrackerView
+                .Select(project => new TrackerListItemView
                 {
                     Id = project.Id,
                     Name = project.Name
                 });
 
-            return new Page<FullTrackerView>
+            return new Page<TrackerListItemView>
             {
                 Limit = query.Limit,
                 Offset = query.Offset,
                 Total = await sql.CountAsync(cancellationToken),
-                Items = await sql.Skip(query.Offset).Take(query.Limit).ToArrayAsync(cancellationToken)
+                Items = await sql.Skip(query.Offset).Take(query.Limit).ToListAsync(cancellationToken)
             };
         }
     }

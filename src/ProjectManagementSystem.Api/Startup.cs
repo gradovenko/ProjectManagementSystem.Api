@@ -209,13 +209,13 @@ namespace ProjectManagementSystem.Api
             services.AddDbContext<Queries.Infrastructure.Admin.Users.UserDbContext>(options => 
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.Admin.Users.UserQuery, Queries.Admin.Users.ShortUserView>, Queries.Infrastructure.Admin.Users.UserQueryHandler>();
+            services.AddScoped<IRequestHandler<Queries.Admin.Users.UserQuery, Queries.Admin.Users.UserView>, Queries.Infrastructure.Admin.Users.UserQueryHandler>();
             
             services.AddMediatR(typeof(Queries.Admin.Users.UserQuery).Assembly);
 
-            services.AddScoped<IRequestHandler<Queries.Admin.Users.UsersQuery, Page<Queries.Admin.Users.FullUserView>>, Queries.Infrastructure.Admin.Users.UsersQueryHandler>();
+            services.AddScoped<IRequestHandler<Queries.Admin.Users.UserListQuery, Page<Queries.Admin.Users.UserListItemView>>, Queries.Infrastructure.Admin.Users.UserListQueryHandler>();
             
-            services.AddMediatR(typeof(Queries.Admin.Users.UsersQuery).Assembly);
+            services.AddMediatR(typeof(Queries.Admin.Users.UserListQuery).Assembly);
 
             #endregion
 
@@ -224,15 +224,15 @@ namespace ProjectManagementSystem.Api
             services.AddDbContext<Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityDbContext>(options => 
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.Admin.IssuePriorities.IssuePriorityQuery, Queries.Admin.IssuePriorities.ShortIssuePriorityView>, 
+            services.AddScoped<IRequestHandler<Queries.Admin.IssuePriorities.IssuePriorityQuery, Queries.Admin.IssuePriorities.IssuePriorityView>, 
                 Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityQueryHandler>();
             
             services.AddMediatR(typeof(Queries.Admin.IssuePriorities.IssuePriorityQuery).Assembly);
 
-            services.AddScoped<IRequestHandler<Queries.Admin.IssuePriorities.IssuePrioritiesQuery, Page<Queries.Admin.IssuePriorities.FullIssuePriorityView>>, 
-                Queries.Infrastructure.Admin.IssuePriorities.IssuePrioritiesQueryHandler>();
+            services.AddScoped<IRequestHandler<Queries.Admin.IssuePriorities.IssuePriorityListQuery, Page<Queries.Admin.IssuePriorities.IssuePriorityListItemView>>, 
+                Queries.Infrastructure.Admin.IssuePriorities.IssuePriorityListQueryHandler>();
             
-            services.AddMediatR(typeof(Queries.Admin.IssuePriorities.IssuePrioritiesQuery).Assembly);
+            services.AddMediatR(typeof(Queries.Admin.IssuePriorities.IssuePriorityListQuery).Assembly);
 
             #endregion
 
@@ -241,15 +241,15 @@ namespace ProjectManagementSystem.Api
             services.AddDbContext<Queries.Infrastructure.Admin.IssueStatuses.IssueStatusDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.Admin.IssueStatuses.IssueStatusQuery, Queries.Admin.IssueStatuses.ShortIssueStatusView>, 
+            services.AddScoped<IRequestHandler<Queries.Admin.IssueStatuses.IssueStatusQuery, Queries.Admin.IssueStatuses.IssueStatusView>, 
                 Queries.Infrastructure.Admin.IssueStatuses.IssueStatusQueryHandler>();
             
             services.AddMediatR(typeof(Queries.Admin.IssueStatuses.IssueStatusQuery).Assembly);
 
-            services.AddScoped<IRequestHandler<Queries.Admin.IssueStatuses.IssueStatusesQuery, Page<Queries.Admin.IssueStatuses.FullIssueStatusView>>, 
-                Queries.Infrastructure.Admin.IssueStatuses.IssueStatusesQueryHandler>();
+            services.AddScoped<IRequestHandler<Queries.Admin.IssueStatuses.IssueStatusListQuery, Page<Queries.Admin.IssueStatuses.IssueStatusListItemView>>, 
+                Queries.Infrastructure.Admin.IssueStatuses.IssueStatusListQueryHandler>();
 
-            services.AddMediatR(typeof(Queries.Admin.IssueStatuses.IssueStatusesQuery).Assembly);
+            services.AddMediatR(typeof(Queries.Admin.IssueStatuses.IssueStatusListQuery).Assembly);
 
             #endregion
 
@@ -258,15 +258,15 @@ namespace ProjectManagementSystem.Api
             services.AddDbContext<Queries.Infrastructure.Admin.Projects.ProjectDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.Admin.Projects.ProjectQuery, Queries.Admin.Projects.ShortProjectView>, 
+            services.AddScoped<IRequestHandler<Queries.Admin.Projects.ProjectQuery, Queries.Admin.Projects.ProjectView>, 
                 Queries.Infrastructure.Admin.Projects.ProjectQueryHandler>();
             
             services.AddMediatR(typeof(Queries.Admin.Projects.ProjectQuery).Assembly);
 
-            services.AddScoped<IRequestHandler<Queries.Admin.Projects.ProjectsQuery, Page<Queries.Admin.Projects.FullProjectView>>, 
-                Queries.Infrastructure.Admin.Projects.ProjectsQueryHandler>();
+            services.AddScoped<IRequestHandler<Queries.Admin.Projects.ProjectListQuery, Page<Queries.Admin.Projects.ProjectListItemView>>, 
+                Queries.Infrastructure.Admin.Projects.ProjectListQueryHandler>();
             
-            services.AddMediatR(typeof(Queries.Admin.Projects.ProjectsQuery).Assembly);
+            services.AddMediatR(typeof(Queries.Admin.Projects.ProjectListQuery).Assembly);
 
             #endregion
 
@@ -275,15 +275,15 @@ namespace ProjectManagementSystem.Api
             services.AddDbContext<Queries.Infrastructure.Admin.Trackers.TrackerDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.Admin.Trackers.TrackerQuery, Queries.Admin.Trackers.ShortTrackerView>, 
+            services.AddScoped<IRequestHandler<Queries.Admin.Trackers.TrackerQuery, Queries.Admin.Trackers.TrackerView>, 
                 Queries.Infrastructure.Admin.Trackers.TrackerQueryHandler>();
             
             services.AddMediatR(typeof(Queries.Admin.Trackers.TrackerQuery).Assembly);
 
-            services.AddScoped<IRequestHandler<Queries.Admin.Trackers.TrackersQuery, Page<Queries.Admin.Trackers.FullTrackerView>>, 
-                Queries.Infrastructure.Admin.Trackers.TrackersQueryHandler>();
+            services.AddScoped<IRequestHandler<Queries.Admin.Trackers.TrackerListQuery, Page<Queries.Admin.Trackers.TrackerListItemView>>, 
+                Queries.Infrastructure.Admin.Trackers.TrackerListQueryHandler>();
             
-            services.AddMediatR(typeof(Queries.Admin.Trackers.TrackersQuery).Assembly);
+            services.AddMediatR(typeof(Queries.Admin.Trackers.TrackerListQuery).Assembly);
 
             #endregion
 
@@ -292,12 +292,12 @@ namespace ProjectManagementSystem.Api
             services.AddDbContext<Queries.Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityDbContext>(options => 
                 options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.Admin.TimeEntryActivities.TimeEntryActivityQuery, Queries.Admin.TimeEntryActivities.TimeEntryActivityViewModel>, 
+            services.AddScoped<IRequestHandler<Queries.Admin.TimeEntryActivities.TimeEntryActivityQuery, Queries.Admin.TimeEntryActivities.TimeEntryActivityView>, 
                 Queries.Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityQueryHandler>();
             
             services.AddMediatR(typeof(Queries.Admin.TimeEntryActivities.TimeEntryActivityQuery).Assembly);
 
-            services.AddScoped<IRequestHandler<Queries.Admin.TimeEntryActivities.TimeEntryActivityListQuery, Page<Queries.Admin.TimeEntryActivities.TimeEntryActivityListViewModel>>, 
+            services.AddScoped<IRequestHandler<Queries.Admin.TimeEntryActivities.TimeEntryActivityListQuery, Page<Queries.Admin.TimeEntryActivities.TimeEntryActivityListItemView>>, 
                 Queries.Infrastructure.Admin.TimeEntryActivities.TimeEntryActivityListQueryHandler>();
             
             services.AddMediatR(typeof(Queries.Admin.TimeEntryActivities.TimeEntryActivityListQuery).Assembly);
@@ -322,7 +322,7 @@ namespace ProjectManagementSystem.Api
 
             services.AddDbContext<Queries.Infrastructure.User.Projects.ProjectDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.User.Projects.ProjectListQuery, Page<Queries.User.Projects.ProjectListView>>, 
+            services.AddScoped<IRequestHandler<Queries.User.Projects.ProjectListQuery, Page<Queries.User.Projects.ProjectListItemView>>, 
                 Queries.Infrastructure.User.Projects.ProjectsQueryHandler>();
             
             services.AddMediatR(typeof(Queries.User.Projects.ProjectListQuery).Assembly);
@@ -333,7 +333,7 @@ namespace ProjectManagementSystem.Api
 
             services.AddDbContext<Queries.Infrastructure.User.ProjectIssues.IssueDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.User.ProjectIssues.IssueListQuery, Page<Queries.User.ProjectIssues.IssueListView>>, 
+            services.AddScoped<IRequestHandler<Queries.User.ProjectIssues.IssueListQuery, Page<Queries.User.ProjectIssues.IssueListItemView>>, 
                 Queries.Infrastructure.User.ProjectIssues.IssueListQueryHandler>();
             
             services.AddMediatR(typeof(Queries.User.ProjectIssues.IssueListQuery).Assembly);
@@ -349,7 +349,7 @@ namespace ProjectManagementSystem.Api
 
             services.AddDbContext<Queries.Infrastructure.User.IssueTimeEntries.TimeEntryDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.User.IssueTimeEntries.TimeEntryListQuery, Page<Queries.User.IssueTimeEntries.TimeEntryListView>>, 
+            services.AddScoped<IRequestHandler<Queries.User.IssueTimeEntries.TimeEntryListQuery, Page<Queries.User.IssueTimeEntries.TimeEntryListItemView>>, 
                 Queries.Infrastructure.User.IssueTimeEntries.TimeEntryListQueryHandler>();
             
             services.AddMediatR(typeof(Queries.User.IssueTimeEntries.TimeEntryListQuery).Assembly);
@@ -365,7 +365,7 @@ namespace ProjectManagementSystem.Api
 
             services.AddDbContext<Queries.Infrastructure.User.ProjectTimeEntries.TimeEntryDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.User.ProjectTimeEntries.TimeEntryListQuery, Page<Queries.User.ProjectTimeEntries.TimeEntryListView>>, 
+            services.AddScoped<IRequestHandler<Queries.User.ProjectTimeEntries.TimeEntryListQuery, Page<Queries.User.ProjectTimeEntries.TimeEntryListItemView>>, 
                 Queries.Infrastructure.User.ProjectTimeEntries.TimeEntryListQueryHandler>();
             
             services.AddMediatR(typeof(Queries.User.ProjectTimeEntries.TimeEntryListQuery).Assembly);
@@ -381,7 +381,7 @@ namespace ProjectManagementSystem.Api
 
             services.AddDbContext<Queries.Infrastructure.User.TimeEntries.TimeEntryDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
 
-            services.AddScoped<IRequestHandler<Queries.User.TimeEntries.TimeEntryListQuery, Page<Queries.User.TimeEntries.TimeEntryListView>>, 
+            services.AddScoped<IRequestHandler<Queries.User.TimeEntries.TimeEntryListQuery, Page<Queries.User.TimeEntries.TimeEntryListItemView>>, 
                 Queries.Infrastructure.User.TimeEntries.TimeEntryListQueryHandler>();
             
             services.AddMediatR(typeof(Queries.User.TimeEntries.TimeEntryListQuery).Assembly);

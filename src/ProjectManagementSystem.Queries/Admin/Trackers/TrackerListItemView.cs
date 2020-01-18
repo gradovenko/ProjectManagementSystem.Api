@@ -1,7 +1,10 @@
+using System;
+
 namespace ProjectManagementSystem.Queries.Admin.Trackers
 {
-    public class ShortTrackerView
+    public sealed class TrackerListItemView
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }

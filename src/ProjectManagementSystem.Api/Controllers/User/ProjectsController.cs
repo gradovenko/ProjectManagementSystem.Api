@@ -21,7 +21,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// </summary>
         /// <param name="binding">Input model</param>
         [HttpGet("projects", Name = "GetProjectsRoute")]
-        [ProducesResponseType(typeof(Page<ProjectListView>), 200)]
+        [ProducesResponseType(typeof(Page<ProjectListItemView>), 200)]
         public async Task<IActionResult> Find(
             CancellationToken cancellationToken,
             [FromQuery] FindProjectsBinding binding,

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ProjectManagementSystem.Queries.Admin.IssueStatuses
 {
-    public class IssueStatusQuery : IRequest<ShortIssueStatusView>
+    public sealed class IssueStatusQuery : IRequest<IssueStatusView>
     {
         public Guid Id { get; }
         

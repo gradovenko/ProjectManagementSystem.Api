@@ -7,7 +7,7 @@ using ProjectManagementSystem.Queries.User.ProjectTimeEntries;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectTimeEntries
 {
-    public sealed class TimeEntryListQueryHandler : IRequestHandler<TimeEntryListQuery, Page<TimeEntryListView>>
+    public sealed class TimeEntryListQueryHandler : IRequestHandler<TimeEntryListQuery, Page<TimeEntryListItemView>>
     {
         private readonly TimeEntryDbContext _context;
 
@@ -16,12 +16,12 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectTimeEntries
             _context = context;
         }
 
-        public async Task<Page<TimeEntryListView>> Handle(TimeEntryListQuery query, CancellationToken cancellationToken)
+        public async Task<Page<TimeEntryListItemView>> Handle(TimeEntryListQuery query, CancellationToken cancellationToken)
         {
             var sql = _context.TimeEntries.AsNoTracking()
                 .OrderBy(te => te.CreateDate)
                 .Where(te => te.ProjectId == query.ProjectId)
-                .Select(te => new TimeEntryListView
+                .Select(te => new TimeEntryListItemView
                 {
                     Id = te.Id,
                     Hours = te.Hours,
@@ -35,7 +35,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectTimeEntries
                 })
                 .AsQueryable();
 
-            return new Page<TimeEntryListView>
+            return new Page<TimeEntryListItemView>
             {
                 Limit = query.Limit,
                 Offset = query.Offset,

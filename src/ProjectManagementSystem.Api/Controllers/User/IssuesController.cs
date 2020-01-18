@@ -75,7 +75,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// <param name="binding">Input model</param>
         /// <response code="200">Successfully</response>
         [HttpGet("issues", Name = "GetIssuesRoute")]
-        [ProducesResponseType(typeof(Page<IssueListView>), 200)]
+        [ProducesResponseType(typeof(Page<IssueListItemView>), 200)]
         public async Task<IActionResult> FindIssues(
             CancellationToken cancellationToken,
             [FromQuery] FindIssuesBinding binding,
