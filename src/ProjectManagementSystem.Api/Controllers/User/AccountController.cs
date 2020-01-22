@@ -14,6 +14,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
 {
     [Authorize]
     [ApiController]
+    [ProducesResponseType(401)]
     public sealed class AccountController : ControllerBase
     {
         /// <summary>

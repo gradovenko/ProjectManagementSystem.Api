@@ -16,13 +16,14 @@ namespace ProjectManagementSystem.Api.Controllers.User
 {
     [Authorize]
     [ApiController]
+    [ProducesResponseType(401)]
     public sealed class IssuesController : ControllerBase
     {
         /// <summary>
         /// Create issue
         /// </summary>
         /// <param name="binding">Input model</param>
-        /// <response code="201">Successfully</response>
+        /// <response code="201">Created issue</response>
         /// <response code="409">Issue already exists with other parameters</response>
         /// <response code="422">Project/tracker/issue status/issue priority/assignee not found</response>
         [HttpPost("issues")]
@@ -70,10 +71,10 @@ namespace ProjectManagementSystem.Api.Controllers.User
         }
 
         /// <summary>
-        /// Get issues
+        /// Find issues
         /// </summary>
         /// <param name="binding">Input model</param>
-        /// <response code="200">Successfully</response>
+        /// <response code="200">Issue list page</response>
         [HttpGet("issues", Name = "GetIssuesRoute")]
         [ProducesResponseType(typeof(Page<IssueListItemView>), 200)]
         public async Task<IActionResult> FindIssues(
@@ -85,10 +86,10 @@ namespace ProjectManagementSystem.Api.Controllers.User
         }
 
         /// <summary>
-        /// Get issue
+        /// Get the issue
         /// </summary>
         /// <param name="id">Issue identifier</param>
-        /// <response code="200">Successfully</response>
+        /// <response code="200">Issue</response>
         /// <response code="404">Issue not found</response>
         [HttpGet("issues/{id}", Name = "GetIssueRoute")]
         [ProducesResponseType(typeof(IssueView), 200)]

@@ -22,11 +22,15 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// Create time entry
         /// </summary>
         /// <param name="binding">Input model</param>
+        /// <response code="201">Time entry created</response>
+        /// <response code="400">Validation failed</response>
+        /// <response code="404">Project/issue/user/time entry activity not found</response>
+        /// <response code="409">Time entry already exists with other parameters</response>
         [HttpPost("timeEntries")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        [ProducesResponseType(typeof(ProblemDetails), 409)]
+        [ProducesResponseType(typeof(ProblemDetails), 422)]
         public async Task<IActionResult> CreateTimeEntry(
             CancellationToken cancellationToken,
             [FromBody] CreateTimeEntryBinding binding,
@@ -65,9 +69,10 @@ namespace ProjectManagementSystem.Api.Controllers.User
         }
 
         /// <summary>
-        /// Get time entries
+        /// Find time entries
         /// </summary>
         /// <param name="binding">Input model</param>
+        /// <response code="200">Time entry list page</response>
         [HttpGet("timeEntries", Name = "GetTimeEntriesRoute")]
         [ProducesResponseType(typeof(Page<TimeEntryListItemView>), 200)]
         public async Task<IActionResult> FindTimeEntries(
@@ -79,9 +84,11 @@ namespace ProjectManagementSystem.Api.Controllers.User
         }
 
         /// <summary>
-        /// Get time entry
+        /// Get the time entry
         /// </summary>
         /// <param name="id">Time entry identifier</param>
+        /// <response code="200">Time entry</response>
+        /// <response code="404">Time entry not found</response>
         [HttpGet("timeEntries/{id}", Name = "GetTimeEntryRoute")]
         [ProducesResponseType(typeof(TimeEntryView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

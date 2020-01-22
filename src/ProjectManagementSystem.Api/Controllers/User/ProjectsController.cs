@@ -14,12 +14,14 @@ namespace ProjectManagementSystem.Api.Controllers.User
 {
     [Authorize]
     [ApiController]
+    [ProducesResponseType(401)]
     public sealed class ProjectsController : ControllerBase
     {
         /// <summary>
         /// Find projects
         /// </summary>
         /// <param name="binding">Input model</param>
+        /// <response code="200">Project list page</response>
         [HttpGet("projects", Name = "GetProjectsRoute")]
         [ProducesResponseType(typeof(Page<ProjectListItemView>), 200)]
         public async Task<IActionResult> Find(
@@ -31,9 +33,11 @@ namespace ProjectManagementSystem.Api.Controllers.User
         }
         
         /// <summary>
-        /// Get a project
+        /// Get the project
         /// </summary>
         /// <param name="id">Project identifier</param>
+        /// <response code="200">Project</response>
+        /// <response code="404">Project not found</response>
         [HttpGet("projects/{id}", Name = "GetProjectRoute")]
         [ProducesResponseType(typeof(ProjectView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

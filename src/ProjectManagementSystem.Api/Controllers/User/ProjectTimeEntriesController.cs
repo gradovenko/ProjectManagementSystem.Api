@@ -21,9 +21,12 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// <summary>
         /// Create project time entries
         /// </summary>
-        /// <param name="cancellationToken"></param>
         /// <param name="projectId">Project identifier</param>
         /// <param name="binding">Input model</param>
+        /// <response code="201">Time entry created</response>
+        /// <response code="400">Validation failed</response>
+        /// <response code="404">Project/issue/user/time entry activity not found</response>
+        /// <response code="409">Time entry already exists with other parameters</response>
         [HttpPost("projects/{projectId}/timeEntries")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -66,6 +69,12 @@ namespace ProjectManagementSystem.Api.Controllers.User
             return CreatedAtRoute("GetProjectTimeEntryRoute", new {projectId, timeEntryId = binding.Id}, null);
         }
 
+        /// <summary>
+        /// Find project time entries
+        /// </summary>
+        /// <param name="projectId">Project identifier</param>
+        /// <param name="binding">Input model</param>
+        /// <response code="200">Time entry page list</response>
         [HttpGet("projects/{projectId}/timeEntries", Name = "GetProjectTimeEntriesRoute")]
         [ProducesResponseType(typeof(Page<TimeEntryListItemView>), 200)]
         public async Task<IActionResult> FindTimeEntries(
@@ -83,6 +92,13 @@ namespace ProjectManagementSystem.Api.Controllers.User
             return Ok(await mediator.Send(new TimeEntryListQuery(projectId, binding.Offset, binding.Limit), cancellationToken));
         }
 
+        /// <summary>
+        /// Get the project time entry
+        /// </summary>
+        /// <param name="projectId">Project identifier</param>
+        /// <param name="timeEntryId">Time entry identifier</param>
+        /// <response code="200">Time entry</response>
+        /// <response code="404">Time entry not found</response>
         [HttpGet("projects/{projectId}/timeEntries/{timeEntryId}", Name = "GetProjectTimeEntryRoute")]
         [ProducesResponseType(typeof(TimeEntryView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

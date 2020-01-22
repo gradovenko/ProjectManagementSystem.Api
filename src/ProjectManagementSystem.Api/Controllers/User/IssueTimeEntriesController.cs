@@ -16,8 +16,18 @@ namespace ProjectManagementSystem.Api.Controllers.User
 {
     [Authorize]
     [ApiController]
+    [ProducesResponseType(401)]
     public sealed class IssueTimeEntriesController : ControllerBase
     {
+        /// <summary>
+        /// Create issue time entry
+        /// </summary>
+        /// <param name="projectId">Project identifier</param>
+        /// <param name="issueId">Issue identifier</param>
+        /// <param name="binding">Input model</param>
+        /// <response code="201">Successfully</response>
+        /// <response code="409">Issue already exists with other parameters</response>
+        /// <response code="422">Project/tracker/issue status/issue priority/assignee not found</response>
         [HttpPost("issues/{issueId}/timeEntries")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -62,10 +72,11 @@ namespace ProjectManagementSystem.Api.Controllers.User
         }
 
         /// <summary>
-        /// Find time entries
+        /// Find issue time entries
         /// </summary>
         /// <param name="id">Issue identifier</param>
         /// <param name="binding">Input model</param>
+        /// <response code="200">Time entry list page</response>
         [HttpGet("issues/{id}/timeEntries", Name = "GetIssueTimeEntriesRoute")]
         [ProducesResponseType(typeof(Page<TimeEntryListItemView>), 200)]
         public async Task<IActionResult> FindTimeEntries(
@@ -84,10 +95,12 @@ namespace ProjectManagementSystem.Api.Controllers.User
         }
 
         /// <summary>
-        /// Get time entry
+        /// Get the project time entry
         /// </summary>
         /// <param name="issueId">Issue identifier</param>
         /// <param name="timeEntryId">Time entry identifier</param>
+        /// <response code="201">Time entry</response>
+        /// <response code="404">Time entry not found</response>
         [HttpGet("issues/{issueId}/timeEntries/{timeEntryId}", Name = "GetIssueTimeEntryRoute")]
         [ProducesResponseType(typeof(TimeEntryView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

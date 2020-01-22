@@ -16,10 +16,11 @@ namespace ProjectManagementSystem.Api.Controllers.User
 {
     [Authorize]
     [ApiController]
+    [ProducesResponseType(401)]
     public sealed class ProjectIssuesController : ControllerBase
     {
         /// <summary>
-        /// Create issue
+        /// Create project issue
         /// </summary>
         /// <param name="id">Project identifier</param>
         /// <param name="binding">Input model</param>
@@ -68,7 +69,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         }
 
         /// <summary>
-        /// Find issues
+        /// Find project issues
         /// </summary>
         /// <param name="id">Project identifier</param>
         /// <param name="binding">Input model</param>
@@ -91,7 +92,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
 
 
         /// <summary>
-        /// Get issue
+        /// Get the project issue
         /// </summary>
         /// <param name="projectId">Project identifier</param>
         /// <param name="issueId">Issue identifier</param>
