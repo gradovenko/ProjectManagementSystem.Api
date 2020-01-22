@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ProjectManagementSystem.Queries.Admin.TimeEntryActivities
 {
-    public class TimeEntryActivityQuery : IRequest<TimeEntryActivityViewModel>
+    public sealed class TimeEntryActivityQuery : IRequest<TimeEntryActivityView>
     {
         public Guid Id { get; }
 

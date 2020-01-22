@@ -16,34 +16,20 @@ namespace ProjectManagementSystem.Infrastructure.Authentication
             {
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);
-
                 builder.Property(u => u.Id)
+                    .HasColumnName("UserId")
                     .ValueGeneratedNever();
                 builder.Property(u => u.Name)
-                    .HasColumnName("Name")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.Email)
-                    .HasColumnName("Email")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.PasswordHash)
-                    .HasColumnName("PasswordHash")
                     .HasMaxLength(1024);
                 builder.Property(u => u.Role)
-                    .HasColumnName("Role")
-                    .HasConversion(
-                        r => r.ToString(),
-                        r => (UserRole) Enum.Parse(typeof(UserRole), r))
+                    .HasConversion<string>()
                     .IsRequired();
-
-                builder.HasIndex(u => u.Name)
-                    .HasName("UserNameIndex")
-                    .IsUnique();
-                
-                builder.HasIndex(u => u.Email)
-                    .HasName("EmailIndex")
-                    .IsUnique();
             });
         }
     }

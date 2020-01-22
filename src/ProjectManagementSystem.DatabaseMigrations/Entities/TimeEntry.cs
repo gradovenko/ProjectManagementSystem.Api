@@ -4,7 +4,7 @@ namespace ProjectManagementSystem.DatabaseMigrations.Entities
 {
     public sealed class TimeEntry
     {
-        public Guid Id { get; set; }
+        public Guid TimeEntryId { get; set; }
         public decimal Hours { get; set; }
         public string Description { get; set; }
         public DateTime DueDate { get; set; }

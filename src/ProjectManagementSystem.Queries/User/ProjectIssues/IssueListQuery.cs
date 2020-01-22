@@ -2,7 +2,7 @@ using System;
 
 namespace ProjectManagementSystem.Queries.User.ProjectIssues
 {
-    public sealed class IssueListQuery : PageQuery<IssueListView>
+    public sealed class IssueListQuery : PageQuery<IssueListItemView>
     {
         public Guid ProjectId { get; set; }
 

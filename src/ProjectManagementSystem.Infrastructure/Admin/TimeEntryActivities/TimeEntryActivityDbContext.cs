@@ -18,6 +18,7 @@ namespace ProjectManagementSystem.Infrastructure.Admin.TimeEntryActivities
                 builder.ToTable("TimeEntryActivity");
                 builder.HasKey(tea => tea.Id);
                 builder.Property(tea => tea.Id)
+                    .HasColumnName("TimeEntryActivityId")
                     .IsRequired();
                 builder.Property(tea => tea.Name)
                     .IsRequired();

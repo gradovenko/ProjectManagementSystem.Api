@@ -21,71 +21,55 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.Issue", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("Id")
+                    b.Property<Guid>("IssueId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssigneeId")
-                        .HasColumnName("AssigneeId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("AuthorId")
-                        .HasColumnName("AuthorId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnName("ConcurrencyStamp")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnName("CreateDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnName("Description")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DueDate")
-                        .HasColumnName("DueDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<long>("Index")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("Index")
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                    b.Property<long>("Number")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("PriorityId")
-                        .HasColumnName("PriorityId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("StartDate")
-                        .HasColumnName("StartDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("StatusId")
-                        .HasColumnName("StatusId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnName("Title")
                         .HasColumnType("text");
 
                     b.Property<Guid>("TrackerId")
-                        .HasColumnName("TrackerId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnName("UpdateDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("IssueId");
 
                     b.HasIndex("AssigneeId");
 
@@ -104,82 +88,69 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.IssuePriority", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("Id")
+                    b.Property<Guid>("IssuePriorityId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnName("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IssuePriorityId");
 
                     b.ToTable("IssuePriority");
                 });
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.IssueStatus", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("Id")
+                    b.Property<Guid>("IssueStatusId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnName("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IssueStatusId");
 
                     b.ToTable("IssueStatus");
                 });
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.Project", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("Id")
+                    b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnName("ConcurrencyStamp")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnName("CreateDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnName("Description")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsPrivate")
-                        .HasColumnName("IsPrivate")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("Name")
                         .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnName("Status")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProjectId");
 
                     b.ToTable("Project");
                 });
@@ -201,72 +172,58 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.RefreshToken", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("Id")
-                        .HasColumnType("uuid");
+                    b.Property<string>("RefreshTokenId")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("ExpireDate")
-                        .HasColumnName("ExpireDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnName("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                    b.HasKey("RefreshTokenId");
 
                     b.ToTable("RefreshToken");
                 });
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.TimeEntry", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("Id")
+                    b.Property<Guid>("TimeEntryId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ActivityId")
-                        .HasColumnName("ActivityId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnName("ConcurrencyStamp")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnName("CreateDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnName("Description")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DueDate")
-                        .HasColumnName("DueDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("Hours")
-                        .HasColumnName("Hours")
                         .HasColumnType("numeric");
 
                     b.Property<Guid>("IssueId")
-                        .HasColumnName("IssueId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProjectId")
-                        .HasColumnName("ProjectId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnName("UpdateDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnName("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                    b.HasKey("TimeEntryId");
 
                     b.HasIndex("ActivityId");
 
@@ -281,124 +238,105 @@ namespace ProjectManagementSystem.DatabaseMigrations.Migrations
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.TimeEntryActivity", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("Id")
+                    b.Property<Guid>("TimeEntryActivityId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnName("ConcurrencyStamp")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnName("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("TimeEntryActivityId");
 
                     b.ToTable("TimeEntryActivity");
                 });
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.Tracker", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("Id")
+                    b.Property<Guid>("TrackerId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnName("ConcurrencyStamp")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("TrackerId");
 
                     b.ToTable("Tracker");
                 });
 
             modelBuilder.Entity("ProjectManagementSystem.DatabaseMigrations.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("Id")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnName("ConcurrencyStamp")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnName("CreateDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnName("Email")
                         .HasColumnType("character varying(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnName("FirstName")
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnName("LastName")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("Name")
                         .HasColumnType("character varying(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnName("PasswordHash")
                         .HasColumnType("character varying(1024)")
                         .HasMaxLength(1024);
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnName("Role")
                         .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnName("Status")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(64)")
+                        .HasMaxLength(64);
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnName("UpdateDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasName("EmailIndex");
+                        .IsUnique();
 
                     b.HasIndex("Name")
-                        .IsUnique()
-                        .HasName("UserNameIndex");
+                        .IsUnique();
 
                     b.ToTable("User");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
-                            ConcurrencyStamp = new Guid("8d150a60-5a55-4e14-a43a-a1bd43d21ab0"),
+                            UserId = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
+                            ConcurrencyStamp = new Guid("93fc1cfb-4720-4833-a1b0-99f0f9216f7c"),
                             CreateDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@projectms.local",
                             FirstName = "Admin",

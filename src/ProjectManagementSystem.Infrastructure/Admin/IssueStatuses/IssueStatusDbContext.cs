@@ -17,16 +17,12 @@ namespace ProjectManagementSystem.Infrastructure.Admin.IssueStatuses
             {
                 builder.ToTable("IssueStatus");
                 builder.HasKey(@is => @is.Id);
-
                 builder.Property(@is => @is.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
+                    .HasColumnName("IssueStatusId")
+                    .ValueGeneratedNever();
                 builder.Property(@is => @is.Name)
-                    .HasColumnName("Name")
                     .IsRequired();
                 builder.Property(@is => @is.IsActive)
-                    .HasColumnName("IsActive")
                     .IsRequired();
             });
         }

@@ -1,6 +1,6 @@
 namespace ProjectManagementSystem.Infrastructure.Authentication
 {
-    public class JwtOptions
+    public sealed class JwtOptions
     {
         public string Issuer { get; set; }
 

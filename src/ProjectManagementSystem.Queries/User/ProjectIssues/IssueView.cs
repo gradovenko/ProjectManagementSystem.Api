@@ -12,7 +12,7 @@ namespace ProjectManagementSystem.Queries.User.ProjectIssues
         /// <summary>
         /// Issue sequence number
         /// </summary>
-        public long Index { get; set; }
+        public long Number { get; set; }
         
         /// <summary>
         /// Issue title

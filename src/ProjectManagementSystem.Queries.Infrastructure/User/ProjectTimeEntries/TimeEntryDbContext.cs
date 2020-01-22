@@ -16,22 +16,25 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectTimeEntries
             {
                 builder.ToTable("Project");
                 builder.HasKey(p => p.Id);
-                builder.Property(p => p.Id);
+                builder.Property(p => p.Id)
+                    .HasColumnName("ProjectId");
             });
             
             modelBuilder.Entity<Issue>(builder =>
             {
                 builder.ToTable("Issue");
                 builder.HasKey(i => i.Id);
-                builder.Property(i => i.Id);
-                builder.Property(i => i.Index);
+                builder.Property(i => i.Id)
+                    .HasColumnName("IssueId");
+                builder.Property(i => i.Number);
             });
 
             modelBuilder.Entity<User>(builder =>
             {
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);
-                builder.Property(u => u.Id);
+                builder.Property(u => u.Id)
+                    .HasColumnName("UserId");
                 builder.Property(u => u.Name);
             });
             
@@ -39,7 +42,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectTimeEntries
             {
                 builder.ToTable("TimeEntryActivity");
                 builder.HasKey(tea => tea.Id);
-                builder.Property(tea => tea.Id);
+                builder.Property(tea => tea.Id)
+                    .HasColumnName("TimeEntryActivityId");
                 builder.Property(tea => tea.Name);
             }); 
 
@@ -47,7 +51,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectTimeEntries
             {
                 builder.ToTable("TimeEntry");
                 builder.HasKey(te => te.Id);
-                builder.Property(te => te.Id);
+                builder.Property(te => te.Id)
+                    .HasColumnName("TimeEntryId");
                 builder.Property(te => te.Hours);
                 builder.Property(te => te.Description);
                 builder.Property(te => te.DueDate);

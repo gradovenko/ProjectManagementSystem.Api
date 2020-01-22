@@ -5,7 +5,7 @@ namespace ProjectManagementSystem.Domain.Authentication
 {
     public interface IRefreshTokenStore
     {
-        Task<Guid> Create(Guid userId);
-        Task<RefreshToken> Reissue(Guid refreshToken);
+        Task<string> Create(Guid userId);
+        Task<RefreshToken> Reissue(string refreshToken);
     }
 }

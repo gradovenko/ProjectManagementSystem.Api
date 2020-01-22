@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.TimeEntryActivities
 {
-    public class TimeEntryActivityDbContext : DbContext
+    public sealed class TimeEntryActivityDbContext : DbContext
     {
         public TimeEntryActivityDbContext(DbContextOptions<TimeEntryActivityDbContext> options) : base(options) { }
         
@@ -16,7 +16,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.TimeEntryActiviti
             {
                 builder.ToTable("TimeEntryActivity");
                 builder.HasKey(tea => tea.Id);
-                builder.Property(tea => tea.Id);
+                builder.Property(tea => tea.Id)
+                    .HasColumnName("TimeEntryActivityId");
                 builder.Property(tea => tea.Name);
                 builder.Property(tea => tea.IsActive);
             });

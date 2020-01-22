@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ProjectManagementSystem.Queries.User.Accounts
 {
-    public class UserQuery : IRequest<UserView>
+    public sealed class UserQuery : IRequest<UserView>
     {
         public Guid Id { get; }
         

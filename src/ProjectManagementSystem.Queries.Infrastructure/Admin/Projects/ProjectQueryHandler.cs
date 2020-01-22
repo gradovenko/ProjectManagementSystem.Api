@@ -9,7 +9,7 @@ using ProjectManagementSystem.Queries.Infrastructure.Extensions;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
 {
-    public sealed class ProjectQueryHandler : IRequestHandler<ProjectQuery, ShortProjectView>
+    public sealed class ProjectQueryHandler : IRequestHandler<ProjectQuery, ProjectView>
     {
         private readonly ProjectDbContext _context;
 
@@ -18,11 +18,11 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Projects
             _context = context;
         }
 
-        public async Task<ShortProjectView> Handle(ProjectQuery query, CancellationToken cancellationToken)
+        public async Task<ProjectView> Handle(ProjectQuery query, CancellationToken cancellationToken)
         {
             return await _context.Projects.AsNoTracking()
                 .Where(project => project.Id == query.Id)
-                .Select(project => new ShortProjectView
+                .Select(project => new ProjectView
                 {
                     Name = project.Name,
                     Description = project.Description,

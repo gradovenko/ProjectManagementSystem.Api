@@ -1,2 +1,2 @@
-# ProjectManagementSystem.WebApi
-ProjectManagementSystem.WebApi
+# ProjectManagementSystem.Api
+ProjectManagementSystem.Api

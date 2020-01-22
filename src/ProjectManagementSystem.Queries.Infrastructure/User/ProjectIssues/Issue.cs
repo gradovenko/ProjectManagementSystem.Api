@@ -4,25 +4,25 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
 {
     internal sealed class Issue
     {
-        public Guid Id { get; private set; }
-        public long Index { get; private set; }
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-        public DateTime CreateDate { get; private set; }
-        public DateTime? UpdateDate { get; private set; }
-        public DateTime? StartDate { get; private set; }
-        public DateTime? DueDate { get; private set; }
-        public Guid ProjectId { get; private set; }
-        public Project Project { get; private set; }
-        public Guid TrackerId { get; private set; }
-        public Tracker Tracker { get; private set; }
-        public Guid StatusId { get; private set; }
-        public IssueStatus Status { get; private set; }
-        public Guid PriorityId { get; private set; }
-        public IssuePriority Priority { get; private set; }
-        public Guid AuthorId { get; private set; }
-        public User Author { get; private set; }
-        public Guid? AssigneeId { get; private set; }
-        public User? Assignee { get; private set; }
+        public Guid Id { get; }
+        public long Number { get; }
+        public string Title { get; }
+        public string Description { get; }
+        public DateTime CreateDate { get; }
+        public DateTime? UpdateDate { get; }
+        public DateTime? StartDate { get; }
+        public DateTime? DueDate { get; }
+        public Guid ProjectId { get; }
+        public Project Project { get; }
+        public Guid TrackerId { get; }
+        public Tracker Tracker { get; }
+        public Guid StatusId { get; }
+        public IssueStatus Status { get; }
+        public Guid PriorityId { get; }
+        public IssuePriority Priority { get; }
+        public Guid AuthorId { get; }
+        public User Author { get; }
+        public Guid? AssigneeId { get; }
+        public User? Assignee { get; }
     }
 }

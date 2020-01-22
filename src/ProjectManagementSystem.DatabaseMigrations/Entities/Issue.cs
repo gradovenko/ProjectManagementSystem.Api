@@ -4,8 +4,8 @@ namespace ProjectManagementSystem.DatabaseMigrations.Entities
 {
     public sealed class Issue
     {
-        public Guid Id { get; set; }
-        public long Index { get; set; }
+        public Guid IssueId { get; set; }
+        public long Number { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime CreateDate { get; set; }

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ProjectManagementSystem.Queries.Admin.Trackers
 {
-    public class TrackerQuery : IRequest<ShortTrackerView>
+    public sealed class TrackerQuery : IRequest<TrackerView>
     {
         public Guid Id { get; }
         

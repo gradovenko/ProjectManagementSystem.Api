@@ -30,7 +30,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 .Select(i => new IssueView
                 {
                     Id = i.Id,
-                    Index = i.Index,
+                    Number = i.Number,
                     Title = i.Title,
                     Description = i.Description,
                     CreateDate = i.CreateDate,

@@ -2,8 +2,8 @@ using System;
 
 namespace ProjectManagementSystem.Domain.User.Accounts
 {
-    public class NameAlreadyExistsException : Exception
+    public sealed class NameAlreadyExistsException : Exception
     {
-        
+        public NameAlreadyExistsException() { }
     }
 }

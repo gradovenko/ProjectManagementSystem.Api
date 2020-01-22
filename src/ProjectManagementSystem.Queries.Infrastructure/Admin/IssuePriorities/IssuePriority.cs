@@ -2,10 +2,10 @@ using System;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssuePriorities
 {
-    public class IssuePriority
+    internal sealed class IssuePriority
     {
-        public Guid Id { get; private set; }
-        public string Name { get; private set; }
-        public bool IsActive { get; private set; }
+        public Guid Id { get; }
+        public string Name { get; }
+        public bool IsActive { get; }
     }
 }

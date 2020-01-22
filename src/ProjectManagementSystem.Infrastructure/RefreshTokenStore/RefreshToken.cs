@@ -4,13 +4,13 @@ namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore
 {
     public sealed class RefreshToken
     {
-        public Guid Id { get; private set; }
-
+        public string Id { get; }
         public DateTime ExpireDate { get; private set; }
-        
-        public Guid UserId { get; private set; }
+        public Guid UserId { get; }
 
-        public RefreshToken(Guid id, TimeSpan expiresIn, Guid userId)
+        private RefreshToken() { }
+
+        public RefreshToken(string id, TimeSpan expiresIn, Guid userId)
         {
             Id = id;
             ExpireDate = DateTime.UtcNow.Add(expiresIn);;
@@ -21,7 +21,5 @@ namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore
         {
             ExpireDate = DateTime.UtcNow;
         }
-        
-        private RefreshToken() { }
     }
 }
