@@ -14,9 +14,9 @@ namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore
             _context = context;
         }
         
-        public async Task<Guid> Create(Guid userId)
+        public async Task<string> Create(Guid userId)
         {
-            var refreshToken = new RefreshToken(Guid.NewGuid(), TimeSpan.FromDays(1), userId);
+            var refreshToken = new RefreshToken(Guid.NewGuid().ToString(), TimeSpan.FromDays(1), userId);
 
             _context.RefreshTokens.Add(refreshToken);
 
@@ -25,7 +25,7 @@ namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore
             return refreshToken.Id;
         }
 
-        public async Task<Domain.Authentication.RefreshToken> Reissue(Guid refreshToken)
+        public async Task<Domain.Authentication.RefreshToken> Reissue(string refreshToken)
         {
             var oldRefreshToken = await _context.RefreshTokens.SingleOrDefaultAsync(rt => rt.Id == refreshToken && rt.ExpireDate > DateTime.UtcNow);
 
@@ -34,7 +34,7 @@ namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore
 
             oldRefreshToken.Terminate();
 
-            var newRefreshToken = new RefreshToken(Guid.NewGuid(), TimeSpan.FromDays(1), oldRefreshToken.UserId);
+            var newRefreshToken = new RefreshToken(Guid.NewGuid().ToString(), TimeSpan.FromDays(1), oldRefreshToken.UserId);
 
             _context.RefreshTokens.Add(newRefreshToken);
 

@@ -7,7 +7,7 @@ using ProjectManagementSystem.Queries.User.Accounts;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.User.Accounts
 {
-    public class UserQueryHandler : IRequestHandler<UserQuery, UserView>
+    public sealed class UserQueryHandler : IRequestHandler<UserQuery, UserView>
     {
         private readonly UserDbContext _context;
 

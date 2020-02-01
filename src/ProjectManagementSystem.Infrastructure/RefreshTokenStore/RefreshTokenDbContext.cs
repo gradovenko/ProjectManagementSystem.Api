@@ -13,13 +13,13 @@ namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore
             modelBuilder.Entity<RefreshToken>(builder =>
             {
                 builder.ToTable("RefreshToken");
-                builder.HasKey(ut => ut.Id);
-
-                builder.Property(u => u.Id)
+                builder.HasKey(rt => rt.Id);
+                builder.Property(rt => rt.Id)
+                    .HasColumnName("RefreshTokenId")
                     .ValueGeneratedNever();
-                builder.Property(ut => ut.ExpireDate)
+                builder.Property(rt => rt.ExpireDate)
                     .IsRequired();
-                builder.Property(ut => ut.UserId)
+                builder.Property(rt => rt.UserId)
                     .IsRequired();
             });
         }

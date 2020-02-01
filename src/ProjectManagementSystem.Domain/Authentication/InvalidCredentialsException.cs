@@ -2,8 +2,8 @@ using System;
 
 namespace ProjectManagementSystem.Domain.Authentication
 {
-    public class InvalidCredentialsException : Exception
+    public sealed class InvalidCredentialsException : Exception
     {
-        
+        public InvalidCredentialsException() { }
     }
 }

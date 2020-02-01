@@ -7,7 +7,7 @@ using ProjectManagementSystem.Queries.Admin.Users;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users
 {
-    public class UserQueryHandler : IRequestHandler<UserQuery, ShortUserView>
+    public sealed class UserQueryHandler : IRequestHandler<UserQuery, UserView>
     {
         private readonly UserDbContext _context;
 
@@ -16,11 +16,11 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users
             _context = context;
         }
 
-        public async Task<ShortUserView> Handle(UserQuery query, CancellationToken cancellationToken)
+        public async Task<UserView> Handle(UserQuery query, CancellationToken cancellationToken)
         {
             return await _context.Users.AsNoTracking()
                 .Where(user => user.Id == query.Id)
-                .Select(user => new ShortUserView
+                .Select(user => new UserView
                 {
                     Name = user.Name,
                     Email = user.Email,

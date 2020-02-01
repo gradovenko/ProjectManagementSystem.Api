@@ -6,7 +6,7 @@ using ProjectManagementSystem.Domain.Admin.IssueStatuses;
 
 namespace ProjectManagementSystem.Infrastructure.Admin.IssueStatuses
 {
-    public class IssueStatusRepository : IIssueStatusRepository
+    public sealed class IssueStatusRepository : IIssueStatusRepository
     {
         private readonly IssueStatusDbContext _context;
 

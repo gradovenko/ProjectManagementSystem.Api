@@ -2,13 +2,13 @@ using System;
 
 namespace ProjectManagementSystem.Domain.Authentication
 {
-    public class RefreshToken
+    public sealed class RefreshToken
     {
-        public Guid Value { get; }
+        public string Value { get; }
 
         public Guid UserId { get; }
 
-        public RefreshToken(Guid value, Guid userId)
+        public RefreshToken(string value, Guid userId)
         {
             Value = value;
             UserId = userId;

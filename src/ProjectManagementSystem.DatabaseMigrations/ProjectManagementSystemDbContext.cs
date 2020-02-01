@@ -5,11 +5,8 @@ using ProjectManagementSystem.DatabaseMigrations.Entities;
 namespace ProjectManagementSystem.DatabaseMigrations
 {
     public sealed class ProjectManagementSystemDbContext : DbContext
-    {
-        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) :
-            base(options)
-        {
-        }
+    { 
+        public ProjectManagementSystemDbContext(DbContextOptions<ProjectManagementSystemDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,70 +15,48 @@ namespace ProjectManagementSystem.DatabaseMigrations
             modelBuilder.Entity<User>(builder =>
             {
                 builder.ToTable("User");
-                builder.HasKey(u => u.Id);
-
-                builder.Property(u => u.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
+                builder.HasKey(u => u.UserId);
+                builder.Property(u => u.UserId)
+                    .ValueGeneratedNever();
                 builder.Property(u => u.Name)
-                    .HasColumnName("Name")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.Email)
-                    .HasColumnName("Email")
                     .HasMaxLength(256)
                     .IsRequired();
                 builder.Property(u => u.PasswordHash)
-                    .HasColumnName("PasswordHash")
                     .HasMaxLength(1024)
                     .IsRequired();
                 builder.Property(u => u.FirstName)
-                    .HasColumnName("FirstName")
                     .IsRequired();
                 builder.Property(u => u.LastName)
-                    .HasColumnName("LastName")
                     .IsRequired();
                 builder.Property(u => u.Role)
-                    .HasColumnName("Role")
-                    .HasConversion(
-                        r => r.ToString(),
-                        r => (UserRole) Enum.Parse(typeof(UserRole), r))
                     .IsRequired();
                 builder.Property(u => u.CreateDate)
-                    .HasColumnName("CreateDate")
                     .IsRequired();
-                builder.Property(u => u.UpdateDate)
-                    .HasColumnName("UpdateDate");
+                builder.Property(u => u.UpdateDate);
                 builder.Property(u => u.Status)
-                    .HasColumnName("Status")
-                    .HasConversion(
-                        s => s.ToString(),
-                        s => (UserStatus) Enum.Parse(typeof(UserStatus), s))
+                    .HasMaxLength(64)
                     .IsRequired();
                 builder.Property(u => u.ConcurrencyStamp)
-                    .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
-
                 builder.HasIndex(u => u.Name)
-                    .HasName("UserNameIndex")
                     .IsUnique();
                 builder.HasIndex(u => u.Email)
-                    .HasName("EmailIndex")
                     .IsUnique();
 
                 builder.HasData(new User
                 {
-                    Id = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
+                    UserId = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
                     Name = "Admin",
                     Email = "admin@projectms.local",
-                    PasswordHash =
-                        "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
+                    PasswordHash = "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
                     FirstName = "Admin",
                     LastName = "Admin",
-                    Role = UserRole.Admin,
+                    Role = "Admin",
                     CreateDate = DateTime.UnixEpoch,
-                    Status = UserStatus.Active,
+                    Status = "Active",
                     ConcurrencyStamp = Guid.NewGuid()
                 });
             });
@@ -89,100 +64,68 @@ namespace ProjectManagementSystem.DatabaseMigrations
             modelBuilder.Entity<RefreshToken>(builder =>
             {
                 builder.ToTable("RefreshToken");
-                builder.HasKey(rt => rt.Id);
-
-                builder.Property(rt => rt.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
+                builder.HasKey(rt => rt.RefreshTokenId);
+                builder.Property(rt => rt.RefreshTokenId)
+                    .ValueGeneratedNever();
                 builder.Property(rt => rt.ExpireDate)
-                    .HasColumnName("ExpireDate")
                     .IsRequired();
                 builder.Property(rt => rt.UserId)
-                    .HasColumnName("UserId")
                     .IsRequired();
             });
 
             modelBuilder.Entity<IssuePriority>(builder =>
             {
                 builder.ToTable("IssuePriority");
-                builder.HasKey(ip => ip.Id);
-
-                builder.Property(ip => ip.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
+                builder.HasKey(ip => ip.IssuePriorityId);
+                builder.Property(ip => ip.IssuePriorityId)
+                    .ValueGeneratedNever();
                 builder.Property(ip => ip.Name)
-                    .HasColumnName("Name")
                     .IsRequired();
                 builder.Property(ip => ip.IsActive)
-                    .HasColumnName("IsActive")
                     .IsRequired();
             });
 
             modelBuilder.Entity<IssueStatus>(builder =>
             {
                 builder.ToTable("IssueStatus");
-                builder.HasKey(@is => @is.Id);
-
-                builder.Property(@is => @is.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
+                builder.HasKey(@is => @is.IssueStatusId);
+                builder.Property(@is => @is.IssueStatusId)
+                    .ValueGeneratedNever();
                 builder.Property(@is => @is.Name)
-                    .HasColumnName("Name")
                     .IsRequired();
                 builder.Property(@is => @is.IsActive)
-                    .HasColumnName("IsActive")
                     .IsRequired();
             });
 
             modelBuilder.Entity<Project>(builder =>
             {
                 builder.ToTable("Project");
-                builder.HasKey(p => p.Id);
-
-                builder.Property(p => p.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
+                builder.HasKey(p => p.ProjectId);
+                builder.Property(p => p.ProjectId)
+                    .ValueGeneratedNever();
                 builder.Property(p => p.Name)
-                    .HasColumnName("Name")
                     .IsRequired();
                 builder.Property(p => p.Description)
-                    .HasColumnName("Description")
                     .IsRequired();
                 builder.Property(p => p.IsPrivate)
-                    .HasColumnName("IsPrivate")
                     .IsRequired();
                 builder.Property(p => p.Status)
-                    .HasColumnName("Status")
-                    .HasConversion(
-                        ps => ps.ToString(),
-                        ps => (ProjectStatus) Enum.Parse(typeof(ProjectStatus), ps))
                     .IsRequired();
                 builder.Property(p => p.CreateDate)
-                    .HasColumnName("CreateDate")
                     .IsRequired();
                 builder.Property(u => u.ConcurrencyStamp)
-                    .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
             });
 
             modelBuilder.Entity<Tracker>(builder =>
             {
                 builder.ToTable("Tracker");
-                builder.HasKey(t => t.Id);
-
-                builder.Property(t => t.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
+                builder.HasKey(t => t.TrackerId);
+                builder.Property(t => t.TrackerId)
+                    .ValueGeneratedNever();
                 builder.Property(t => t.Name)
-                    .HasColumnName("Name")
                     .IsRequired();
                 builder.Property(t => t.ConcurrencyStamp)
-                    .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
             });
 
@@ -190,155 +133,125 @@ namespace ProjectManagementSystem.DatabaseMigrations
             {
                 builder.ToTable("ProjectTracker");
                 builder.HasKey(pt => new {pt.ProjectId, pt.TrackerId});
-
                 builder.HasOne(pt => pt.Project)
                     .WithMany()
                     .HasForeignKey(pt => pt.ProjectId)
-                    .HasPrincipalKey(p => p.Id);
+                    .HasPrincipalKey(p => p.ProjectId);
                 builder.HasOne(pt => pt.Tracker)
                     .WithMany()
                     .HasForeignKey(pt => pt.TrackerId)
-                    .HasPrincipalKey(t => t.Id);
+                    .HasPrincipalKey(t => t.TrackerId);
             });
 
             modelBuilder.Entity<Issue>(builder =>
             {
                 builder.ToTable("Issue");
-                builder.HasKey(i => i.Id);
-                builder.Property(i => i.Id)
-                    .HasColumnName("Id")
+                builder.HasKey(i => i.IssueId);
+                builder.Property(i => i.IssueId)
                     .ValueGeneratedNever();
-                builder.Property(i => i.Index)
-                    .HasColumnName("Index")
-                    .ValueGeneratedOnAdd();
+                builder.Property(i => i.Number)
+                    .IsRequired();
                 builder.Property(i => i.Title)
-                    .HasColumnName("Title")
                     .IsRequired();
                 builder.Property(i => i.Description)
-                    .HasColumnName("Description")
                     .IsRequired();
                 builder.Property(i => i.CreateDate)
-                    .HasColumnName("CreateDate")
                     .IsRequired();
-                builder.Property(i => i.UpdateDate)
-                    .HasColumnName("UpdateDate");
-                builder.Property(i => i.StartDate)
-                    .HasColumnName("StartDate");
-                builder.Property(i => i.EndDate)
-                    .HasColumnName("EndDate");
+                builder.Property(i => i.UpdateDate);
+                builder.Property(i => i.StartDate);
+                builder.Property(i => i.DueDate);
                 builder.Property(i => i.TrackerId)
-                    .HasColumnName("TrackerId")
                     .IsRequired();
                 builder.Property(i => i.StatusId)
-                    .HasColumnName("StatusId")
                     .IsRequired();
                 builder.Property(i => i.PriorityId)
-                    .HasColumnName("PriorityId")
                     .IsRequired();
                 builder.Property(i => i.AuthorId)
-                    .HasColumnName("AuthorId")
                     .IsRequired();
-                builder.Property(i => i.PerformerId)
-                    .HasColumnName("PerformerId");
+                builder.Property(i => i.AssigneeId);
                 builder.Property(i => i.ConcurrencyStamp)
-                    .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
                 builder.HasOne(i => i.Project)
                     .WithMany()
                     .HasForeignKey(i => i.ProjectId)
-                    .HasPrincipalKey(p => p.Id);
+                    .HasPrincipalKey(p => p.ProjectId);
                 builder.HasOne(i => i.Tracker)
                     .WithMany()
                     .HasForeignKey(i => i.TrackerId)
-                    .HasPrincipalKey(t => t.Id);
+                    .HasPrincipalKey(t => t.TrackerId);
                 builder.HasOne(i => i.Status)
                     .WithMany()
                     .HasForeignKey(i => i.StatusId)
-                    .HasPrincipalKey(@is => @is.Id);
+                    .HasPrincipalKey(@is => @is.IssueStatusId);
                 builder.HasOne(i => i.Priority)
                     .WithMany()
                     .HasForeignKey(i => i.PriorityId)
-                    .HasPrincipalKey(ip => ip.Id);
+                    .HasPrincipalKey(ip => ip.IssuePriorityId);
                 builder.HasOne(i => i.Author)
                     .WithMany()
                     .HasForeignKey(i => i.AuthorId)
-                    .HasPrincipalKey(a => a.Id);
-                builder.HasOne(i => i.Performer)
+                    .HasPrincipalKey(a => a.UserId);
+                builder.HasOne(i => i.Assignee)
                     .WithMany()
-                    .HasForeignKey(i => i.PerformerId)
-                    .HasPrincipalKey(p => p.Id);
+                    .HasForeignKey(i => i.AssigneeId)
+                    .HasPrincipalKey(p => p.UserId);
             });
 
             modelBuilder.Entity<TimeEntryActivity>(builder =>
             {
                 builder.ToTable("TimeEntryActivity");
-                builder.HasKey(tea => tea.Id);
-                builder.Property(tea => tea.Id)
-                    .HasColumnName("Id")
+                builder.HasKey(tea => tea.TimeEntryActivityId);
+                builder.Property(tea => tea.TimeEntryActivityId)
                     .ValueGeneratedNever();
                 builder.Property(tea => tea.Name)
-                    .HasColumnName("Name")
                     .IsRequired();
                 builder.Property(tea => tea.IsActive)
-                    .HasColumnName("IsActive")
                     .IsRequired();
                 builder.Property(tea => tea.ConcurrencyStamp)
-                    .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
             });
 
             modelBuilder.Entity<TimeEntry>(builder =>
             {
                 builder.ToTable("TimeEntry");
-                builder.HasKey(te => te.Id);
-                builder.Property(te => te.Id)
-                    .HasColumnName("Id")
+                builder.HasKey(te => te.TimeEntryId);
+                builder.Property(te => te.TimeEntryId)
                     .ValueGeneratedNever();
                 builder.Property(te => te.Hours)
-                    .HasColumnName("Hours")
                     .IsRequired();
                 builder.Property(te => te.Description)
-                    .HasColumnName("Description")
                     .IsRequired();
                 builder.Property(te => te.DueDate)
-                    .HasColumnName("DueDate")
                     .IsRequired();
                 builder.Property(te => te.CreateDate)
-                    .HasColumnName("CreateDate")
                     .IsRequired();
-                builder.Property(te => te.UpdateDate)
-                    .HasColumnName("UpdateDate");
+                builder.Property(te => te.UpdateDate);
                 builder.Property(te => te.ProjectId)
-                    .HasColumnName("ProjectId")
                     .IsRequired();
                 builder.Property(te => te.IssueId)
-                    .HasColumnName("IssueId")
                     .IsRequired();
                 builder.Property(te => te.UserId)
-                    .HasColumnName("UserId")
                     .IsRequired();
                 builder.Property(te => te.ActivityId)
-                    .HasColumnName("ActivityId")
                     .IsRequired();
                 builder.Property(te => te.ConcurrencyStamp)
-                    .HasColumnName("ConcurrencyStamp")
                     .IsConcurrencyToken();
                 builder.HasOne(te => te.Project)
                     .WithMany()
                     .HasForeignKey(te => te.ProjectId)
-                    .HasPrincipalKey(p => p.Id);
+                    .HasPrincipalKey(p => p.ProjectId);
                 builder.HasOne(te => te.Issue)
                     .WithMany()
                     .HasForeignKey(te => te.IssueId)
-                    .HasPrincipalKey(p => p.Id);
+                    .HasPrincipalKey(p => p.IssueId);
                 builder.HasOne(te => te.User)
                     .WithMany()
                     .HasForeignKey(te => te.UserId)
-                    .HasPrincipalKey(p => p.Id);
+                    .HasPrincipalKey(p => p.UserId);
                 builder.HasOne(te => te.Activity)
                     .WithMany()
                     .HasForeignKey(te => te.ActivityId)
-                    .HasPrincipalKey(p => p.Id);
+                    .HasPrincipalKey(p => p.TimeEntryActivityId);
             });
 
             modelBuilder.Entity<Role>(builder =>
@@ -384,11 +297,11 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.HasOne(m => m.User)
                     .WithMany()
                     .HasForeignKey(m => m.UserId)
-                    .HasPrincipalKey(u => u.Id);
+                    .HasPrincipalKey(u => u.UserId);
                 builder.HasOne(m => m.Project)
                     .WithMany()
                     .HasForeignKey(m => m.ProjectId)
-                    .HasPrincipalKey(p => p.Id);
+                    .HasPrincipalKey(p => p.ProjectId);
             });
             
             modelBuilder.Entity<MemberRole>(builder =>

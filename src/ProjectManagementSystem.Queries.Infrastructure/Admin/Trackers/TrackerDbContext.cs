@@ -16,14 +16,9 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Trackers
             {
                 builder.ToTable("Tracker");
                 builder.HasKey(t => t.Id);
-
                 builder.Property(t => t.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever()
-                    .IsRequired();
-                builder.Property(t => t.Name)
-                    .HasColumnName("Name")
-                    .IsRequired();
+                    .HasColumnName("TrackerId");
+                builder.Property(t => t.Name);
             });
         }
     }

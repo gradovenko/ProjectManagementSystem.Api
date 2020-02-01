@@ -17,7 +17,7 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.ToTable("Project");
                 builder.HasKey(p => p.Id);
                 builder.Property(p => p.Id)
-                    .HasColumnName("Id");
+                    .HasColumnName("ProjectId");
             });
 
             modelBuilder.Entity<Tracker>(builder =>
@@ -25,9 +25,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.ToTable("Tracker");
                 builder.HasKey(t => t.Id);
                 builder.Property(t => t.Id)
-                    .HasColumnName("Id");
-                builder.Property(t => t.Name)
-                    .HasColumnName("Name");
+                    .HasColumnName("TrackerId");
+                builder.Property(t => t.Name);
             });
 
             modelBuilder.Entity<IssueStatus>(builder =>
@@ -35,9 +34,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.ToTable("IssueStatus");
                 builder.HasKey(@is => @is.Id);
                 builder.Property(@is => @is.Id)
-                    .HasColumnName("Id");
-                builder.Property(@is => @is.Name)
-                    .HasColumnName("Name");
+                    .HasColumnName("IssueStatusId");
+                builder.Property(@is => @is.Name);
             });
 
             modelBuilder.Entity<IssuePriority>(builder =>
@@ -45,9 +43,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.ToTable("IssuePriority");
                 builder.HasKey(ip => ip.Id);
                 builder.Property(ip => ip.Id)
-                    .HasColumnName("Id");
-                builder.Property(ip => ip.Name)
-                    .HasColumnName("Name");
+                    .HasColumnName("IssuePriorityId");
+                builder.Property(ip => ip.Name);
             });
 
             modelBuilder.Entity<User>(builder =>
@@ -55,9 +52,8 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.ToTable("User");
                 builder.HasKey(u => u.Id);
                 builder.Property(u => u.Id)
-                    .HasColumnName("Id");
-                builder.Property(u => u.Name)
-                    .HasColumnName("Name");
+                    .HasColumnName("UserId");
+                builder.Property(u => u.Name);
             });
 
             modelBuilder.Entity<Issue>(builder =>
@@ -65,29 +61,18 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                 builder.ToTable("Issue");
                 builder.HasKey(i => i.Id);
                 builder.Property(i => i.Id)
-                    .HasColumnName("Id");
-                builder.Property(i => i.Index)
-                    .HasColumnName("Index");
-                builder.Property(i => i.Title)
-                    .HasColumnName("Title");
-                builder.Property(i => i.Description)
-                    .HasColumnName("Description");
-                builder.Property(i => i.CreateDate)
-                    .HasColumnName("CreateDate");
-                builder.Property(i => i.StartDate)
-                    .HasColumnName("StartDate");
-                builder.Property(i => i.EndDate)
-                    .HasColumnName("EndDate");
-                builder.Property(i => i.TrackerId)
-                    .HasColumnName("TrackerId");
-                builder.Property(i => i.StatusId)
-                    .HasColumnName("StatusId");
-                builder.Property(i => i.PriorityId)
-                    .HasColumnName("PriorityId");
-                builder.Property(i => i.AuthorId)
-                    .HasColumnName("AuthorId");
-                builder.Property(i => i.PerformerId)
-                    .HasColumnName("PerformerId");
+                    .HasColumnName("IssueId");
+                builder.Property(i => i.Number);
+                builder.Property(i => i.Title);
+                builder.Property(i => i.Description);
+                builder.Property(i => i.CreateDate);
+                builder.Property(i => i.StartDate);
+                builder.Property(i => i.DueDate);
+                builder.Property(i => i.TrackerId);
+                builder.Property(i => i.StatusId);
+                builder.Property(i => i.PriorityId);
+                builder.Property(i => i.AuthorId);
+                builder.Property(i => i.AssigneeId);
                 builder.HasOne(i => i.Project)
                     .WithMany()
                     .HasForeignKey(i => i.ProjectId)
@@ -108,9 +93,9 @@ namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues
                     .WithMany()
                     .HasForeignKey(i => i.AuthorId)
                     .HasPrincipalKey(a => a.Id);
-                builder.HasOne(i => i.Performer)
+                builder.HasOne(i => i.Assignee)
                     .WithMany()
-                    .HasForeignKey(i => i.PerformerId)
+                    .HasForeignKey(i => i.AssigneeId)
                     .HasPrincipalKey(p => p.Id);
             });
         }

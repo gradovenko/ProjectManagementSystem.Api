@@ -2,10 +2,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ProjectManagementSystem.Domain.Admin.Users;
 
 namespace ProjectManagementSystem.Infrastructure.Admin.Users
 {
-    public class UserRepository : Domain.Admin.CreateUsers.IUserRepository
+    public sealed class UserRepository : IUserRepository
     {
         private readonly UserDbContext _context;
 
@@ -14,28 +15,28 @@ namespace ProjectManagementSystem.Infrastructure.Admin.Users
             _context = context;
         }
         
-        public async Task<Domain.Admin.CreateUsers.User> Get(Guid userId, CancellationToken cancellationToken)
+        public async Task<Domain.Admin.Users.User> Get(Guid userId, CancellationToken cancellationToken)
         {
             return await _context.Users
                 .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Id == userId, cancellationToken);
         }
         
-        public async Task<Domain.Admin.CreateUsers.User> FindByName(string name, CancellationToken cancellationToken)
+        public async Task<Domain.Admin.Users.User> GetByName(string name, CancellationToken cancellationToken)
         {
             return await _context.Users
                 .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Name == name, cancellationToken);
         }
 
-        public async Task<Domain.Admin.CreateUsers.User> FindByEmail(string email, CancellationToken cancellationToken)
+        public async Task<Domain.Admin.Users.User> GetByEmail(string email, CancellationToken cancellationToken)
         {
             return await _context.Users
                 .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
 
-        public async Task Save(Domain.Admin.CreateUsers.User user)
+        public async Task Save(Domain.Admin.Users.User user)
         {
             if (_context.Entry(user).State == EntityState.Detached)
                 await _context.Users.AddAsync(user);

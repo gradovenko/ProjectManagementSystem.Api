@@ -12,7 +12,7 @@ namespace ProjectManagementSystem.Queries.User.ProjectIssues
         /// <summary>
         /// Issue sequence number
         /// </summary>
-        public long Index { get; set; }
+        public long Number { get; set; }
         
         /// <summary>
         /// Issue title
@@ -40,9 +40,9 @@ namespace ProjectManagementSystem.Queries.User.ProjectIssues
         public DateTime? StartDate { get; set; }
         
         /// <summary>
-        /// Issue end date
+        /// Issue due date
         /// </summary>
-        public DateTime? EndDate { get; set; }
+        public DateTime? DueDate { get; set; }
         
         /// <summary>
         /// Issue tracker name
@@ -65,8 +65,8 @@ namespace ProjectManagementSystem.Queries.User.ProjectIssues
         public string AuthorName { get;  set; }
         
         /// <summary>
-        /// Issue performer name
+        /// Issue assignee name
         /// </summary>
-        public string PerformerName { get; set; }
+        public string AssigneeName { get; set; }
     }
 }

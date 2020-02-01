@@ -23,7 +23,7 @@ namespace ProjectManagementSystem.Domain.Authentication
         public async Task<Token> AuthenticationByPassword(string email, string password,
             CancellationToken cancellationToken)
         {
-            var user = await _userRepository.FindByEmail(email, cancellationToken);
+            var user = await _userRepository.GetByEmail(email, cancellationToken);
 
             if (user == null)
                 throw new InvalidCredentialsException();
@@ -38,7 +38,7 @@ namespace ProjectManagementSystem.Domain.Authentication
             return new Token(accessToken.Value, accessToken.ExpiresIn, refreshToken);
         }
 
-        public async Task<Token> AuthenticationByRefreshToken(Guid refreshToken, CancellationToken cancellationToken)
+        public async Task<Token> AuthenticationByRefreshToken(string refreshToken, CancellationToken cancellationToken)
         {
             var newRefreshToken = await _refreshTokenStore.Reissue(refreshToken);
 

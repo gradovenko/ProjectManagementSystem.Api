@@ -7,7 +7,7 @@ using ProjectManagementSystem.Queries.Admin.Trackers;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Trackers
 {
-    public class TrackerQueryHandler : IRequestHandler<TrackerQuery, ShortTrackerView>
+    public sealed class TrackerQueryHandler : IRequestHandler<TrackerQuery, TrackerView>
     {
         private readonly TrackerDbContext _context;
 
@@ -16,11 +16,11 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Trackers
             _context = context;
         }
 
-        public async Task<ShortTrackerView> Handle(TrackerQuery query, CancellationToken cancellationToken)
+        public async Task<TrackerView> Handle(TrackerQuery query, CancellationToken cancellationToken)
         {
             return await _context.Trackers.AsNoTracking()
                 .Where(project => project.Id == query.Id)
-                .Select(project => new ShortTrackerView
+                .Select(project => new TrackerView
                 {
                     Name = project.Name,
                 })

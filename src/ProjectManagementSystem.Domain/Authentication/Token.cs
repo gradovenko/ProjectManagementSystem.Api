@@ -8,9 +8,9 @@ namespace ProjectManagementSystem.Domain.Authentication
 
         public TimeSpan ExpiresIn { get; }
 
-        public Guid RefreshToken { get; }
+        public string RefreshToken { get; }
         
-        public Token(string accessToken, TimeSpan expiresIn, Guid refreshToken)
+        public Token(string accessToken, TimeSpan expiresIn, string refreshToken)
         {
             AccessToken = accessToken ?? throw new ArgumentNullException(nameof(accessToken));
             ExpiresIn = expiresIn;

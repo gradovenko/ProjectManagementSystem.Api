@@ -2,7 +2,7 @@ using System;
 
 namespace ProjectManagementSystem.DatabaseMigrations.Entities
 {
-    public class ProjectTracker
+    public sealed class ProjectTracker
     {
         public Guid ProjectId { get; set; }
         public Project Project { get; set; }
