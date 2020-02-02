@@ -257,8 +257,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
             modelBuilder.Entity<Role>(builder =>
             {
                 builder.ToTable("Role");
-                builder.HasKey(r => r.Id);
-                builder.Property(r => r.Id)
+                builder.HasKey(r => r.RoleId);
+                builder.Property(r => r.RoleId)
                     .ValueGeneratedNever();
                 builder.Property(r => r.Name)
                     .IsRequired();
@@ -267,8 +267,8 @@ namespace ProjectManagementSystem.DatabaseMigrations
             modelBuilder.Entity<Permission>(builder =>
             {
                 builder.ToTable("Permission");
-                builder.HasKey(p => p.Id);
-                builder.Property(p => p.Id)
+                builder.HasKey(p => p.PermissionId);
+                builder.Property(p => p.PermissionId)
                     .ValueGeneratedNever();
                 builder.Property(p => p.Name)
                     .IsRequired();
@@ -281,18 +281,18 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.HasOne(rp => rp.Role)
                     .WithMany()
                     .HasForeignKey(rp => rp.RoleId)
-                    .HasPrincipalKey(r => r.Id);
+                    .HasPrincipalKey(r => r.RoleId);
                 builder.HasOne(rp => rp.Permission)
                     .WithMany()
                     .HasForeignKey(rp => rp.PermissionId)
-                    .HasPrincipalKey(p => p.Id);
+                    .HasPrincipalKey(p => p.PermissionId);
             });
 
             modelBuilder.Entity<Member>(builder =>
             {
                 builder.ToTable("Member");
-                builder.HasKey(m => m.Id);
-                builder.Property(m => m.Id)
+                builder.HasKey(m => m.MemberId);
+                builder.Property(m => m.MemberId)
                     .ValueGeneratedNever();
                 builder.HasOne(m => m.User)
                     .WithMany()
@@ -311,11 +311,11 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.HasOne(mr => mr.Member)
                     .WithMany()
                     .HasForeignKey(mr => mr.MemberId)
-                    .HasPrincipalKey(m => m.Id);
+                    .HasPrincipalKey(m => m.MemberId);
                 builder.HasOne(mr => mr.Role)
                     .WithMany()
                     .HasForeignKey(mr => mr.RoleId)
-                    .HasPrincipalKey(r => r.Id);
+                    .HasPrincipalKey(r => r.RoleId);
             });
         }
     }

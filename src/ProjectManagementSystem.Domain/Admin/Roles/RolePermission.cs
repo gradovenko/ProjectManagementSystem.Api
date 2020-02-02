@@ -1,11 +1,11 @@
 using System;
 
-namespace ProjectManagementSystem.Domain.Admin.CreateRoles
+namespace ProjectManagementSystem.Domain.Admin.Roles
 {
-    public class RolePermission
+    public sealed class RolePermission
     {
-        public Guid RoleId { get; set; }
-        public Guid PermissionId { get; set; }
+        public Guid RoleId { get; }
+        public Guid PermissionId { get; }
 
         public RolePermission(Guid roleId, Guid permissionId)
         {

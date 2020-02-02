@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ProjectManagementSystem.Queries.Admin.Roles
 {
-    public sealed class RoleQuery : IRequest<RoleViewModel>
+    public sealed class RoleQuery : IRequest<RoleView>
     {
         public Guid Id { get; }
 
