@@ -21,6 +21,7 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// Create issue status
         /// </summary>
         /// <param name="binding">Input model</param>
+        /// <response code="400">Validation failed</response>
         [HttpPost("admin/issueStatuses")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -46,6 +47,7 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// <summary>
         /// Find issue statuses
         /// </summary>
+        /// <param name="binding">Input model</param>
         [HttpGet("admin/issueStatuses")]
         [ProducesResponseType(typeof(IssueStatusView), 200)]
         public async Task<IActionResult> Find(

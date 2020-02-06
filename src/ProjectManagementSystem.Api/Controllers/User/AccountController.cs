@@ -20,7 +20,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// <summary>
         /// Get account information
         /// </summary>
-        /// <response code="200">200</response>
+        /// <response code="200">Account information</response>
         [HttpGet("settings/account", Name = "GetAccountRoute")]
         [ProducesResponseType(typeof(UserView), 200)]
         public async Task<IActionResult> Get(
@@ -36,7 +36,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// Update name
         /// </summary>
         /// <param name="binding">Input model</param>
-        /// <response code="200">Successfully</response>
+        /// <response code="200">Set name</response>
         /// <response code="409">Name already exists</response>
         /// <response code="422">Invalid password</response>
         [HttpPut("settings/account/name")]
@@ -68,7 +68,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// Update email
         /// </summary>
         /// <param name="binding">Input model</param>
-        /// <response code="200">Successfully</response>
+        /// <response code="200">Set email</response>
         /// <response code="409">Email already exists</response>
         /// <response code="422">Invalid password</response>
         [HttpPut("settings/account/email")]

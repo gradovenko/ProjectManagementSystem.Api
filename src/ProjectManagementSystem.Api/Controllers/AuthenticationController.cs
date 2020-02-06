@@ -17,7 +17,7 @@ namespace ProjectManagementSystem.Api.Controllers
         /// </summary>
         /// <param name="binding">Auth</param>
         /// <response code="200">Successfully</response>
-        /// <response code="200">Successfully</response>
+        /// <response code="200">Bad request</response>
         [HttpPost("oauth2/token")]
         [ProducesResponseType(typeof(TokenView), 200)]
         [ProducesResponseType(typeof(ErrorView), 400)]

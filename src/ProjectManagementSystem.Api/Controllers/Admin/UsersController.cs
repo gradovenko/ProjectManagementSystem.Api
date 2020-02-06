@@ -22,6 +22,9 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// Create user
         /// </summary>
         /// <param name="binding">Input model</param>
+        /// <response code="201">Created user</response>
+        /// <response code="400">Validation failed</response>
+        /// <response code="409">User / name / email already exists with other parameters</response>
         [HttpPost("admin/users")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -42,7 +45,7 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
             user = await userRepository.GetByName(binding.Name, cancellationToken);
 
             if (user != null)
-                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.NameAlreadyExists, "Username already exists");
+                throw new ApiException(HttpStatusCode.Conflict, ErrorCode.NameAlreadyExists, "Name already exists");
 
             user = await userRepository.GetByEmail(binding.Email, cancellationToken);
 
@@ -62,6 +65,7 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// Find users
         /// </summary>
         /// <param name="binding">Input model</param>
+        /// <response code="200">User list page</response>
         [HttpGet("admin/users", Name = "FindUsersAdminRoute")]
         [ProducesResponseType(typeof(UserView), 200)]
         public async Task<IActionResult> Find(
@@ -76,6 +80,8 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// Get the user
         /// </summary>
         /// <param name="id">User identifier</param>
+        /// <response code="200">User</response>
+        /// <response code="404">User not found</response>
         [HttpGet("admin/users/{id}", Name = "GetUserAdminRoute")]
         [ProducesResponseType(typeof(UserView), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
