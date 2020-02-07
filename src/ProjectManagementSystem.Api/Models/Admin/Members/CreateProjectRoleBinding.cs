@@ -3,22 +3,27 @@ using FluentValidation;
 
 namespace ProjectManagementSystem.Api.Models.Admin.Members
 {
-    public sealed class CreateProjectRoleBinding
+    public sealed class CreateMemberBinding
     {
         /// <summary>
-        /// 
+        /// Member identifier
+        /// </summary>
+        public Guid Id { get; set; }
+        
+        /// <summary>
+        /// Project identifier
         /// </summary>
         public Guid ProjectId { get; set; }
         
         /// <summary>
-        /// 
+        /// Role identifier
         /// </summary>
         public Guid RoleId { get; set; }
     }
     
-    public sealed class CreateProjectRoleBindingValidator : AbstractValidator<CreateProjectRoleBinding>
+    public sealed class CreateMemberBindingValidator : AbstractValidator<CreateMemberBinding>
     {
-        public CreateProjectRoleBindingValidator()
+        public CreateMemberBindingValidator()
         {
             RuleFor(b => b.ProjectId)
                 .NotEmpty();

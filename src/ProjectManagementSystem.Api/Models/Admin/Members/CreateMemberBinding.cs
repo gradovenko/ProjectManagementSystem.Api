@@ -4,19 +4,19 @@ using FluentValidation;
 
 namespace ProjectManagementSystem.Api.Models.Admin.Members
 {
-    public sealed class CreateMemberBinding
+    public sealed class CreateMembersBinding
     {
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<CreateProjectRoleBinding> ProjectRoles { get; set; }
+        public IEnumerable<CreateMemberBinding> Members { get; set; }
     }
     
-    public sealed class CreateMemberBindingValidator : AbstractValidator<CreateMemberBinding>
+    public sealed class CreateMembersBindingValidator : AbstractValidator<CreateMembersBinding>
     {
-        public CreateMemberBindingValidator()
+        public CreateMembersBindingValidator()
         {
-            RuleForEach(b => b.ProjectRoles)
+            RuleForEach(b => b.Members)
                 .NotEmpty();
         }
     }

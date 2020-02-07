@@ -31,6 +31,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         [ProducesResponseType(typeof(ProblemDetails), 422)]
+        [Permission("CreateIssue")]
         public async Task<IActionResult> CreateIssue(
             CancellationToken cancellationToken,
             [FromBody] CreateIssueBinding binding,

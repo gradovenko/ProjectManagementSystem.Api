@@ -27,44 +27,20 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         public async Task<IActionResult> Create(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
-            [FromBody] CreateMemberBinding binding,
+            [FromBody] CreateMembersBinding binding,
             //[FromServices] IUser roleRepository,
             [FromServices] IUserRepository userRepository)
         {
-            //
-            
-            var user = await userRepository.Get(binding.Id, cancellationToken);
-            
-            // if (role != null)
-            //     if (!role.Name.Equals(binding.Name))
-            //         throw new ApiException(HttpStatusCode.Conflict, ErrorCode.RoleAlreadyExists,
-            //             "Role already exists with other parameters");
-            //
-            // role = new Role(binding.Id, binding.Name);
-            
-            foreach (var projectRole in binding.ProjectRoles)
-            {
-                user.AddMember(new Member(Guid.NewGuid(), id, projectRole.ProjectId));
+            var user = await userRepository.Get(id, cancellationToken);
 
-                foreach (var member in user.Members)
-                {
-                    member.
-                }
-                
-                //
-                // var permission = await permissionRepository.Get(permissionId, cancellationToken);
-                //
-                // if (permission == null)
-                //     throw new ApiException(HttpStatusCode.NotFound, ErrorCode.PermissionNotFound, "Permission not found");
-                //
-                // var rolePermission = new RolePermission(binding.Id, permission.Id);
-                //
-                // role.AddRolePermission(rolePermission);
+            foreach (var member in binding.Members)
+            {
+                user.AddMember(new Member(member.Id, id, member.ProjectId, member.RoleId));
             }
 
-            await roleRepository.Save(role);
+            await userRepository.Save(user);
 
-            return CreatedAtRoute("GetRoleAdminRoute", new {id = role.Id}, null);
+            return CreatedAtRoute("GetMemberAdminRoute", new {id}, null);
         }
     }
 }
