@@ -24,6 +24,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// </summary>
         /// <param name="id">Project identifier</param>
         /// <param name="binding">Input model</param>
+        /// <response code="400">Validation failed</response>
         [HttpPost("projects/{id}/issues")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]

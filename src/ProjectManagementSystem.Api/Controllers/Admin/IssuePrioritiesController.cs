@@ -20,7 +20,8 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// <summary>
         /// Create issue priority
         /// </summary>
-        /// <param name="binding"></param>
+        /// <param name="binding">Input model</param>
+        /// <response code="400">Validation failed</response>
         [HttpPost("admin/issuePriorities")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -46,7 +47,7 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// <summary>
         /// Find issue priorities
         /// </summary>
-        /// <param name="binding"></param>
+        /// <param name="binding">Input model</param>
         [HttpGet("admin/issuePriorities")]
         [ProducesResponseType(typeof(IssuePriorityView), 200)]
         public async Task<IActionResult> Find(

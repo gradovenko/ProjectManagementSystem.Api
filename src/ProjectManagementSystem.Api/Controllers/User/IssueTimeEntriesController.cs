@@ -26,6 +26,7 @@ namespace ProjectManagementSystem.Api.Controllers.User
         /// <param name="issueId">Issue identifier</param>
         /// <param name="binding">Input model</param>
         /// <response code="201">Successfully</response>
+        /// <response code="400">Validation failed</response>
         /// <response code="409">Issue already exists with other parameters</response>
         /// <response code="422">Project/tracker/issue status/issue priority/assignee not found</response>
         [HttpPost("issues/{issueId}/timeEntries")]

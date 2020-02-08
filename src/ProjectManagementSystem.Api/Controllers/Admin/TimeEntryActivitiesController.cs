@@ -21,6 +21,7 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// Create time entry activity
         /// </summary>
         /// <param name="binding">Input model</param>
+        /// <response code="400">Validation failed</response>
         [HttpPost("admin/timeEntryActivities")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]

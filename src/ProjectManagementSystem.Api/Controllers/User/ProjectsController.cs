@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Exceptions;
 using ProjectManagementSystem.Api.Models.User.Projects;
+using ProjectManagementSystem.Domain.User.Projects;
 using ProjectManagementSystem.Queries;
 using ProjectManagementSystem.Queries.User.Projects;
 
@@ -17,6 +18,48 @@ namespace ProjectManagementSystem.Api.Controllers.User
     [ProducesResponseType(401)]
     public sealed class ProjectsController : ControllerBase
     {
+        /// <summary>
+        /// Create project
+        /// </summary>
+        /// <param name="binding">Input model</param>
+        /// <response code="400">Validation failed</response>
+        [HttpPost("projects")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(ProblemDetails), 409)]
+        public async Task<IActionResult> Create(
+            CancellationToken cancellationToken,
+            [FromBody] CreateProjectBinding binding,
+            [FromServices] IProjectRepository projectRepository,
+            [FromServices] ITrackerRepository trackerRepository)
+        {
+            var project = await projectRepository.Get(binding.Id, cancellationToken);
+
+            if (project != null)
+                if (!project.Name.Equals(binding.Name) ||
+                    !project.Description.Equals(binding.Description))
+                    throw new ApiException(HttpStatusCode.Conflict, ErrorCode.ProjectAlreadyExists,
+                        "Project already exists with other parameters");
+
+            project = new Project(binding.Id, binding.Name, binding.Description, binding.IsPrivate);
+            
+            foreach (var trackerId in binding.Trackers)
+            {
+                var tracker = await trackerRepository.Get(trackerId, cancellationToken);
+                
+                if (tracker == null)
+                    throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Tracker not found");
+                
+                var projectTracker = new ProjectTracker(binding.Id, tracker.Id);
+                
+                project.AddProjectTracker(projectTracker);
+            }
+
+            await projectRepository.Save(project);
+
+            return CreatedAtRoute("GetProjectRoute", new {id = project.Id}, null);
+        }
+        
         /// <summary>
         /// Find projects
         /// </summary>
