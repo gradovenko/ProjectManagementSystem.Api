@@ -19,7 +19,6 @@ using ProjectManagementSystem.Api.Middlewares;
 using ProjectManagementSystem.DatabaseMigrations;
 using ProjectManagementSystem.Domain.Admin.Projects;
 using ProjectManagementSystem.Domain.Admin.Users;
-using ProjectManagementSystem.Infrastructure.Admin.Projects;
 using ProjectManagementSystem.Infrastructure.Admin.Trackers;
 using ProjectManagementSystem.Queries;
 
@@ -139,9 +138,9 @@ namespace ProjectManagementSystem.Api
 
             #region Projects
 
-            services.AddDbContext<ProjectDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
-            services.AddScoped<IProjectRepository, ProjectRepository>();
-            services.AddScoped<ITrackerRepository, Infrastructure.Admin.Projects.TrackerRepository>();
+            services.AddDbContext<Infrastructure.Admin.Projects.ProjectDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddScoped<Domain.Admin.Projects.IProjectRepository, Infrastructure.Admin.Projects.ProjectRepository>();
+            services.AddScoped<Domain.Admin.Projects.ITrackerRepository, Infrastructure.Admin.Projects.TrackerRepository>();
 
             #endregion
 
@@ -194,6 +193,14 @@ namespace ProjectManagementSystem.Api
             services.AddScoped<Domain.User.TimeEntries.ITimeEntryActivityRepository, Infrastructure.User.TimeEntries.TimeEntryActivityRepository>();
             services.AddScoped<Domain.User.TimeEntries.ITimeEntryRepository, Infrastructure.User.TimeEntries.TimeEntryRepository>();
             services.AddScoped<Domain.User.TimeEntries.TimeEntryCreationService>();
+
+            #endregion
+            
+            #region Projects
+
+            services.AddDbContext<Infrastructure.User.Projects.ProjectDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ProjectMS")));
+            services.AddScoped<Domain.User.Projects.IProjectRepository, Infrastructure.User.Projects.ProjectRepository>();
+            services.AddScoped<Domain.User.Projects.ITrackerRepository, Infrastructure.User.Projects.TrackerRepository>();
 
             #endregion
 

@@ -20,23 +20,24 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// <summary>
         /// Create tracker
         /// </summary>
-        /// <param name="model">Input model</param>
+        /// <param name="binding">Input model</param>
+        /// <response code="400">Validation failed</response>
         [HttpPost("admin/trackers")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         public async Task<IActionResult> Create(
             CancellationToken cancellationToken,
-            [FromBody] CreateTrackerBinding model,
+            [FromBody] CreateTrackerBinding binding,
             [FromServices] ITrackerRepository trackerRepository)
         {
-            var tracker = await trackerRepository.Get(model.Id, cancellationToken);
+            var tracker = await trackerRepository.Get(binding.Id, cancellationToken);
 
             if (tracker != null)
-                if (!tracker.Name.Equals(model.Name))
+                if (!tracker.Name.Equals(binding.Name))
                     throw new ApiException(HttpStatusCode.Conflict, ErrorCode.TrackerAlreadyExists, "Tracker already exists with other parameters");
 
-            tracker = new Tracker(model.Id, model.Name);
+            tracker = new Tracker(binding.Id, binding.Name);
 
             await trackerRepository.Save(tracker);
             
