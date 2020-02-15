@@ -7,7 +7,6 @@ namespace ProjectManagementSystem.Domain.Admin.Members
     public interface IUserRepository
     {
         Task<User> Get(Guid id, CancellationToken cancellationToken);
-        
         Task Save(User user);
     }
 }

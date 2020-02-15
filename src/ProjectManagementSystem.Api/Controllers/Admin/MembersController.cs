@@ -19,28 +19,24 @@ namespace ProjectManagementSystem.Api.Controllers.Admin
         /// <summary>
         /// Create member
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="binding">Input model</param>
-        [HttpPost("admin/users/{id}/membership")]
-        [ProducesResponseType(201)]
+        [HttpPost("admin/users/{id}/members")]
         [ProducesResponseType(400)]
         [ProducesResponseType(typeof(ProblemDetails), 409)]
         public async Task<IActionResult> Create(
             CancellationToken cancellationToken,
             [FromRoute] Guid id,
-            [FromBody] CreateMembersBinding binding,
-            //[FromServices] IUser roleRepository,
+            [FromBody] CreateMemberBinding binding,
             [FromServices] IUserRepository userRepository)
         {
             var user = await userRepository.Get(id, cancellationToken);
 
-            foreach (var member in binding.Members)
-            {
-                user.AddMember(new Member(member.Id, id, member.ProjectId, member.RoleId));
-            }
+            user.AddMember(new Member(binding.Id, id, binding.ProjectId, binding.RoleId));
 
             await userRepository.Save(user);
 
-            return CreatedAtRoute("GetMemberAdminRoute", new {id}, null);
+            return CreatedAtRoute("GetMemberAdminRoute", new {id = binding.Id}, null);
         }
     }
 }

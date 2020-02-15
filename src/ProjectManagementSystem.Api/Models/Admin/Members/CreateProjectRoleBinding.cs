@@ -25,6 +25,8 @@ namespace ProjectManagementSystem.Api.Models.Admin.Members
     {
         public CreateMemberBindingValidator()
         {
+            RuleFor(b => b.Id)
+                .NotEmpty();
             RuleFor(b => b.ProjectId)
                 .NotEmpty();
             RuleFor(b => b.RoleId)
