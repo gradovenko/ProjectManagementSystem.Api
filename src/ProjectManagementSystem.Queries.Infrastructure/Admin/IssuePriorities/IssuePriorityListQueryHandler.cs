@@ -21,11 +21,16 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssuePriorities
         public async Task<Page<IssuePriorityListItemView>> Handle(IssuePriorityListQuery query,
             CancellationToken cancellationToken)
         {
-            var sql = await _dbConnection.QueryAsync<IssuePriorityListItemView>(@"
+            var sqlCount = _dbConnection.QueryAsync<int>(@"
+SELECT COUNT(*)
+FROM ""IssuePriority""
+");
+            
+            var sqlItems = _dbConnection.QueryAsync<IssuePriorityListItemView>($@"
 SELECT i.""IssuePriorityId"" AS ""Id"", i.""Name"", i.""IsActive""
 FROM ""IssuePriority"" AS i
 ORDER BY (SELECT 1)
-LIMIT @__p_1 OFFSET @__p_0
+LIMIT {} OFFSET @__p_0
 ");
                 
                 
