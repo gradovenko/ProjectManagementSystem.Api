@@ -14,11 +14,13 @@ namespace ProjectManagementSystem.Infrastructure.User.Members
         {
             _context = context;
         }
-        
-        public async Task<Domain.User.Members.Member> Get(Guid userId, CancellationToken cancellationToken)
+
+        public async Task<Member> Get(Guid userId, Guid projectId, Guid roleId, CancellationToken cancellationToken)
         {
-            return await _context.Members
-                .SingleOrDefaultAsync(u => u.UserId == userId, cancellationToken);
+            return await _context.Members.SingleOrDefaultAsync(m => 
+                m.UserId == userId && 
+                m.ProjectId == projectId && 
+                m.RoleId == roleId, cancellationToken);
         }
     }
 }

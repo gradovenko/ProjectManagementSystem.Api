@@ -6,6 +6,6 @@ namespace ProjectManagementSystem.Domain.User.Members
 {
     public interface IMemberRepository
     {
-        Task<Member> Get(Guid id, CancellationToken cancellationToken);
+        Task<Member> Get(Guid userId, Guid projectId, Guid roleId, CancellationToken cancellationToken);
     }
 }

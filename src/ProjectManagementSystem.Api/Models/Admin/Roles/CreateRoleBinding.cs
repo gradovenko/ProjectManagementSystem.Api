@@ -19,7 +19,7 @@ namespace ProjectManagementSystem.Api.Models.Admin.Roles
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<Guid> Permissions { get; set; }
+        public IEnumerable<string> Permissions { get; set; }
     }
     
     public sealed class CreateRoleBindingValidator : AbstractValidator<CreateRoleBinding>

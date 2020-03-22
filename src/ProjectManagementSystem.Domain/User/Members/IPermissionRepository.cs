@@ -1,8 +1,7 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProjectManagementSystem.Domain.Admin.Roles
+namespace ProjectManagementSystem.Domain.User.Members
 {
     public interface IPermissionRepository
     {

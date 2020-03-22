@@ -270,8 +270,6 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.HasKey(p => p.PermissionId);
                 builder.Property(p => p.PermissionId)
                     .ValueGeneratedNever();
-                builder.Property(p => p.Name)
-                    .IsRequired();
             });
 
             modelBuilder.Entity<RolePermission>(builder =>
@@ -291,9 +289,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
             modelBuilder.Entity<Member>(builder =>
             {
                 builder.ToTable("Member");
-                builder.HasKey(m => m.MemberId);
-                builder.Property(m => m.MemberId)
-                    .ValueGeneratedNever();
+                builder.HasKey(m => new {m.UserId, m.ProjectId, m.RoleId});
                 builder.HasOne(m => m.User)
                     .WithMany()
                     .HasForeignKey(m => m.UserId)
@@ -302,19 +298,9 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .WithMany()
                     .HasForeignKey(m => m.ProjectId)
                     .HasPrincipalKey(p => p.ProjectId);
-            });
-            
-            modelBuilder.Entity<MemberRole>(builder =>
-            {
-                builder.ToTable("MemberRole");
-                builder.HasKey(mr => new {mr.MemberId, mr.RoleId});
-                builder.HasOne(mr => mr.Member)
+                builder.HasOne(m => m.Role)
                     .WithMany()
-                    .HasForeignKey(mr => mr.MemberId)
-                    .HasPrincipalKey(m => m.MemberId);
-                builder.HasOne(mr => mr.Role)
-                    .WithMany()
-                    .HasForeignKey(mr => mr.RoleId)
+                    .HasForeignKey(m => m.RoleId)
                     .HasPrincipalKey(r => r.RoleId);
             });
         }

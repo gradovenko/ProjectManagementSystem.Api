@@ -5,9 +5,9 @@ namespace ProjectManagementSystem.Domain.Admin.Roles
     public sealed class RolePermission
     {
         public Guid RoleId { get; }
-        public Guid PermissionId { get; }
+        public string PermissionId { get; }
 
-        public RolePermission(Guid roleId, Guid permissionId)
+        public RolePermission(Guid roleId, string permissionId)
         {
             RoleId = roleId;
             PermissionId = permissionId;
