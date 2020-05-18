@@ -1,6 +1,8 @@
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Queries.Admin.IssuePriorities;
@@ -9,17 +11,31 @@ namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssuePriorities
 {
     public class IssuePriorityListQueryHandler : IRequestHandler<IssuePriorityListQuery, Page<IssuePriorityListItemView>>
     {
-        private readonly IssuePriorityDbContext _context;
+        private readonly IDbConnection _dbConnection;
 
-        public IssuePriorityListQueryHandler(IssuePriorityDbContext context)
+        public IssuePriorityListQueryHandler(IDbConnection dbConnection)
         {
-            _context = context;
+            _dbConnection = dbConnection;
         }
 
         public async Task<Page<IssuePriorityListItemView>> Handle(IssuePriorityListQuery query,
             CancellationToken cancellationToken)
         {
-            var sql = _context.IssuePriorities.AsNoTracking()
+            var sqlCount = _dbConnection.QueryAsync<int>(@"
+SELECT COUNT(*)
+FROM ""IssuePriority""
+");
+            
+            var sqlItems = _dbConnection.QueryAsync<IssuePriorityListItemView>($@"
+SELECT i.""IssuePriorityId"" AS ""Id"", i.""Name"", i.""IsActive""
+FROM ""IssuePriority"" AS i
+ORDER BY (SELECT 1)
+LIMIT {} OFFSET @__p_0
+");
+                
+                
+                
+                .IssuePriorities.AsNoTracking()
                 .Select(issuePriority => new IssuePriorityListItemView
                 {
                     Id = issuePriority.Id,
