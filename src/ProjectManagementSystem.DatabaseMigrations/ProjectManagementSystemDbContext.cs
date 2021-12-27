@@ -45,7 +45,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .IsUnique();
                 builder.HasIndex(u => u.Email)
                     .IsUnique();
-                
+
                 builder.HasData(new User
                 {
                     UserId = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
@@ -60,7 +60,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     ConcurrencyStamp = Guid.NewGuid()
                 });
             });
-            
+
             modelBuilder.Entity<RefreshToken>(builder =>
             {
                 builder.ToTable("RefreshToken");
@@ -72,7 +72,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.Property(rt => rt.UserId)
                     .IsRequired();
             });
-            
+
             modelBuilder.Entity<IssuePriority>(builder =>
             {
                 builder.ToTable("IssuePriority");
@@ -84,7 +84,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.Property(ip => ip.IsActive)
                     .IsRequired();
             });
-            
+
             modelBuilder.Entity<IssueStatus>(builder =>
             {
                 builder.ToTable("IssueStatus");
@@ -96,7 +96,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.Property(@is => @is.IsActive)
                     .IsRequired();
             });
-            
+
             modelBuilder.Entity<Project>(builder =>
             {
                 builder.ToTable("Project");
@@ -116,7 +116,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.Property(u => u.ConcurrencyStamp)
                     .IsConcurrencyToken();
             });
-            
+
             modelBuilder.Entity<Tracker>(builder =>
             {
                 builder.ToTable("Tracker");
@@ -128,11 +128,11 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.Property(t => t.ConcurrencyStamp)
                     .IsConcurrencyToken();
             });
-            
+
             modelBuilder.Entity<ProjectTracker>(builder =>
             {
                 builder.ToTable("ProjectTracker");
-                builder.HasKey(pt => new { pt.ProjectId, pt.TrackerId });
+                builder.HasKey(pt => new {pt.ProjectId, pt.TrackerId});
                 builder.HasOne(pt => pt.Project)
                     .WithMany()
                     .HasForeignKey(pt => pt.ProjectId)
@@ -142,7 +142,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasForeignKey(pt => pt.TrackerId)
                     .HasPrincipalKey(t => t.TrackerId);
             });
-            
+
             modelBuilder.Entity<Issue>(builder =>
             {
                 builder.ToTable("Issue");
@@ -196,7 +196,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .HasForeignKey(i => i.AssigneeId)
                     .HasPrincipalKey(p => p.UserId);
             });
-            
+
             modelBuilder.Entity<TimeEntryActivity>(builder =>
             {
                 builder.ToTable("TimeEntryActivity");
@@ -210,7 +210,7 @@ namespace ProjectManagementSystem.DatabaseMigrations
                 builder.Property(tea => tea.ConcurrencyStamp)
                     .IsConcurrencyToken();
             });
-            
+
             modelBuilder.Entity<TimeEntry>(builder =>
             {
                 builder.ToTable("TimeEntry");
@@ -252,6 +252,56 @@ namespace ProjectManagementSystem.DatabaseMigrations
                     .WithMany()
                     .HasForeignKey(te => te.ActivityId)
                     .HasPrincipalKey(p => p.TimeEntryActivityId);
+            });
+
+            modelBuilder.Entity<Role>(builder =>
+            {
+                builder.ToTable("Role");
+                builder.HasKey(r => r.RoleId);
+                builder.Property(r => r.RoleId)
+                    .ValueGeneratedNever();
+                builder.Property(r => r.Name)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<Permission>(builder =>
+            {
+                builder.ToTable("Permission");
+                builder.HasKey(p => p.PermissionId);
+                builder.Property(p => p.PermissionId)
+                    .ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<RolePermission>(builder =>
+            {
+                builder.ToTable("RolePermission");
+                builder.HasKey(rp => new {rp.RoleId, rp.PermissionId});
+                builder.HasOne(rp => rp.Role)
+                    .WithMany()
+                    .HasForeignKey(rp => rp.RoleId)
+                    .HasPrincipalKey(r => r.RoleId);
+                builder.HasOne(rp => rp.Permission)
+                    .WithMany()
+                    .HasForeignKey(rp => rp.PermissionId)
+                    .HasPrincipalKey(p => p.PermissionId);
+            });
+
+            modelBuilder.Entity<Member>(builder =>
+            {
+                builder.ToTable("Member");
+                builder.HasKey(m => new {m.UserId, m.ProjectId, m.RoleId});
+                builder.HasOne(m => m.User)
+                    .WithMany()
+                    .HasForeignKey(m => m.UserId)
+                    .HasPrincipalKey(u => u.UserId);
+                builder.HasOne(m => m.Project)
+                    .WithMany()
+                    .HasForeignKey(m => m.ProjectId)
+                    .HasPrincipalKey(p => p.ProjectId);
+                builder.HasOne(m => m.Role)
+                    .WithMany()
+                    .HasForeignKey(m => m.RoleId)
+                    .HasPrincipalKey(r => r.RoleId);
             });
         }
     }

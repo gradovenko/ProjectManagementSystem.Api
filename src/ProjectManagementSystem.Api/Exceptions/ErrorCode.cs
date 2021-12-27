@@ -28,5 +28,8 @@ namespace ProjectManagementSystem.Api.Exceptions
         public const string TimeEntryActivityAlreadyExists = "time_entry_activity_already_exists";
         public const string TimeEntryNotFound = "time_entry_not_found";
         public const string TimeEntryAlreadyExists = "time_entry_already_exists";
+        public const string PermissionNotFound = "permission_not_found";
+        public const string RoleNotFound = "role_not_found";
+        public const string RoleAlreadyExists = "role_activity_already_exists";
     }
 }
