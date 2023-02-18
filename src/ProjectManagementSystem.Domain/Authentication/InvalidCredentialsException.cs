@@ -1,9 +1,6 @@
-using System;
+namespace ProjectManagementSystem.Domain.Authentication;
 
-namespace ProjectManagementSystem.Domain.Authentication
+public sealed class InvalidCredentialsException : Exception
 {
-    public sealed class InvalidCredentialsException : Exception
-    {
-        public InvalidCredentialsException() { }
-    }
+    public InvalidCredentialsException() { }
 }

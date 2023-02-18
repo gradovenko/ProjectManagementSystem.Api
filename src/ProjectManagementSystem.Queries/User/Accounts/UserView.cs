@@ -1,15 +1,14 @@
-namespace ProjectManagementSystem.Queries.User.Accounts
+namespace ProjectManagementSystem.Queries.User.Accounts;
+
+public sealed record UserView
 {
-    public sealed class UserView
-    {
-        /// <summary>
-        /// Name
-        /// </summary>
-        public string Name { get; set; }
+    /// <summary>
+    /// Name
+    /// </summary>
+    public string Name { get; set; }
         
-        /// <summary>
-        /// Email
-        /// </summary>
-        public string Email { get; set; }
-    }
+    /// <summary>
+    /// Email
+    /// </summary>
+    public string Email { get; set; }
 }

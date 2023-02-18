@@ -19,6 +19,7 @@ ProjectSection(SolutionItems) = preProject
 	README.md = README.md
 	.gitignore = .gitignore
 	Dockerfile = Dockerfile
+	Directory.Packages.props = Directory.Packages.props
 EndProjectSection
 EndProject
 Global

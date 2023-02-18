@@ -1,9 +1,3 @@
-using System;
+namespace ProjectManagementSystem.Queries.User.TimeEntries;
 
-namespace ProjectManagementSystem.Queries.User.TimeEntries
-{
-    public sealed class TimeEntryListQuery : PageQuery<TimeEntryListItemView>
-    {
-        public TimeEntryListQuery(int offset, int limit) : base(offset, limit) { }
-    }
-}
+public sealed record TimeEntryListQuery(int Offset, int Limit) : PageQuery<TimeEntryListItemView>(Offset, Limit);

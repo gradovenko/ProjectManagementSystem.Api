@@ -1,12 +1,9 @@
-using System;
+namespace ProjectManagementSystem.Queries.User.Projects;
 
-namespace ProjectManagementSystem.Queries.User.Projects
+public sealed record ProjectView
 {
-    public sealed class ProjectView
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public bool IsPrivate { get; set; }
-    }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public bool IsPrivate { get; set; }
 }

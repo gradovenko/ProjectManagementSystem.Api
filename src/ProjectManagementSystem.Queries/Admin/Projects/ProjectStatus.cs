@@ -1,9 +1,8 @@
-namespace ProjectManagementSystem.Queries.Admin.Projects
+namespace ProjectManagementSystem.Queries.Admin.Projects;
+
+public enum ProjectStatus
 {
-    public enum ProjectStatus
-    {
-        Active,
-        Closed,
-        Archived
-    }
+    Active,
+    Closed,
+    Archived
 }

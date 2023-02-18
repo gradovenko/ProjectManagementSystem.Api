@@ -1,15 +1,5 @@
-using System;
 using MediatR;
 
-namespace ProjectManagementSystem.Queries.Admin.IssueStatuses
-{
-    public sealed class IssueStatusQuery : IRequest<IssueStatusView>
-    {
-        public Guid Id { get; }
-        
-        public IssueStatusQuery(Guid id)
-        {
-            Id = id;
-        }
-    }
-}
+namespace ProjectManagementSystem.Queries.Admin.IssueStatuses;
+
+public sealed record IssueStatusQuery(Guid Id) : IRequest<IssueStatusView>;

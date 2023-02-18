@@ -1,13 +1,8 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+namespace ProjectManagementSystem.Domain.Admin.TimeEntryActivities;
 
-namespace ProjectManagementSystem.Domain.Admin.TimeEntryActivities
+public interface ITimeEntryActivityRepository
 {
-    public interface ITimeEntryActivityRepository
-    {
-        Task<TimeEntryActivity> Get(Guid id, CancellationToken cancellationToken);
+    Task<TimeEntryActivity> Get(Guid id, CancellationToken cancellationToken);
 
-        Task Save(TimeEntryActivity timeEntryActivity);
-    }
+    Task Save(TimeEntryActivity timeEntryActivity);
 }

@@ -1,9 +1,6 @@
-using System;
+namespace ProjectManagementSystem.Domain.User.Projects;
 
-namespace ProjectManagementSystem.Domain.User.Projects
+public sealed class Tracker
 {
-    public sealed class Tracker
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

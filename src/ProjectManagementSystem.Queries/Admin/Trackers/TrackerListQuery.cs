@@ -1,7 +1,3 @@
-namespace ProjectManagementSystem.Queries.Admin.Trackers
-{
-    public sealed class TrackerListQuery : PageQuery<TrackerListItemView>
-    {
-        public TrackerListQuery(int offset, int limit) : base(offset, limit) { }
-    }
-}
+namespace ProjectManagementSystem.Queries.Admin.Trackers;
+
+public sealed record TrackerListQuery(int Offset, int Limit) : PageQuery<TrackerListItemView>(Offset, Limit);

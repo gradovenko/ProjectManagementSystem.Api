@@ -1,8 +1,7 @@
-namespace ProjectManagementSystem.Api.Models.Admin.Users
+namespace ProjectManagementSystem.Api.Models.Admin.Users;
+
+public enum UserRole
 {
-    public enum UserRole
-    {
-        Admin,
-        User
-    }
+    Admin,
+    User
 }

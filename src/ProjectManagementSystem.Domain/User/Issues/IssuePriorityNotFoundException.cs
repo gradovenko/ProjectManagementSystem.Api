@@ -1,6 +1,3 @@
-using System;
+namespace ProjectManagementSystem.Domain.User.Issues;
 
-namespace ProjectManagementSystem.Domain.User.Issues
-{
-    public class IssuePriorityNotFoundException : Exception { }
-}
+public class IssuePriorityNotFoundException : Exception { }

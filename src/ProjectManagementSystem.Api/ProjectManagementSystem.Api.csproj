@@ -1,39 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>ProjectManagementSystem.Api</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DocumentationFile>bin\Debug\netcoreapp3.0\ProjectManagementSystem.Api.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\net7.0\ProjectManagementSystem.Api.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <DocumentationFile>bin\Release\netcoreapp3.0\ProjectManagementSystem.Api.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\net7.0\ProjectManagementSystem.Api.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="8.6.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.18" />
-        <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.1.2" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
-        <PackageReference Include="Serilog" Version="2.9.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
-        <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
-        <PackageReference Include="Serilog.Filters.Expressions" Version="2.1.0" />
-        <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-        <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
-        <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-        <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
-        <PackageReference Include="System.Text.Json" Version="4.7.0" />
-        <PackageReference Include="MediatR" Version="8.0.0" />
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
-        <PackageReference Include="Polly" Version="7.2.0" />
+        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="FluentValidation.AspNetCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="prometheus-net" />
+        <PackageReference Include="prometheus-net.AspNetCore" />
+        <PackageReference Include="prometheus-net.AspNetCore.HealthChecks" />
+        <PackageReference Include="prometheus-net.DotNetRuntime" />
+        <PackageReference Include="prometheus-net.SystemMetrics" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+        <PackageReference Include="Swashbuckle.AspNetCore" />
+        <PackageReference Include="System.Text.Json" />
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
+        <PackageReference Include="Polly" />
     </ItemGroup>
 
     <ItemGroup>

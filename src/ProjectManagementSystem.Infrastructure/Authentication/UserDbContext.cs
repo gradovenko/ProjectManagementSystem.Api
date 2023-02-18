@@ -1,36 +1,33 @@
-using System;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Domain.Authentication;
 
-namespace ProjectManagementSystem.Infrastructure.Authentication
+namespace ProjectManagementSystem.Infrastructure.Authentication;
+
+public sealed class UserDbContext : DbContext
 {
-    public sealed class UserDbContext : DbContext
+    public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
+
+    internal DbSet<Domain.Authentication.User> Users { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
-
-        internal DbSet<Domain.Authentication.User> Users { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        modelBuilder.Entity<Domain.Authentication.User>(builder =>
         {
-            modelBuilder.Entity<Domain.Authentication.User>(builder =>
-            {
-                builder.ToTable("User");
-                builder.HasKey(u => u.Id);
-                builder.Property(u => u.Id)
-                    .HasColumnName("UserId")
-                    .ValueGeneratedNever();
-                builder.Property(u => u.Name)
-                    .HasMaxLength(256)
-                    .IsRequired();
-                builder.Property(u => u.Email)
-                    .HasMaxLength(256)
-                    .IsRequired();
-                builder.Property(u => u.PasswordHash)
-                    .HasMaxLength(1024);
-                builder.Property(u => u.Role)
-                    .HasConversion<string>()
-                    .IsRequired();
-            });
-        }
+            builder.ToTable("User");
+            builder.HasKey(u => u.Id);
+            builder.Property(u => u.Id)
+                .HasColumnName("UserId")
+                .ValueGeneratedNever();
+            builder.Property(u => u.Name)
+                .HasMaxLength(256)
+                .IsRequired();
+            builder.Property(u => u.Email)
+                .HasMaxLength(256)
+                .IsRequired();
+            builder.Property(u => u.PasswordHash)
+                .HasMaxLength(1024);
+            builder.Property(u => u.Role)
+                .HasConversion<string>()
+                .IsRequired();
+        });
     }
 }

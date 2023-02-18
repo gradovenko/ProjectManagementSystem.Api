@@ -1,10 +1,7 @@
-using System;
+namespace ProjectManagementSystem.Queries.Admin.Trackers;
 
-namespace ProjectManagementSystem.Queries.Admin.Trackers
+public sealed record TrackerListItemView
 {
-    public sealed class TrackerListItemView
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-    }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
 }

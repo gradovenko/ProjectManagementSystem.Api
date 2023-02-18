@@ -1,6 +1,3 @@
-using System;
+namespace ProjectManagementSystem.Domain.User.Issues;
 
-namespace ProjectManagementSystem.Domain.User.Issues
-{
-    public sealed class AssigneeNotFoundException : Exception { }
-}
+public sealed class AssigneeNotFoundException : Exception { }

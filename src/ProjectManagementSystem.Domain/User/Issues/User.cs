@@ -1,9 +1,6 @@
-using System;
+namespace ProjectManagementSystem.Domain.User.Issues;
 
-namespace ProjectManagementSystem.Domain.User.Issues
+public sealed class User
 {
-    public sealed class User
-    {
-        public Guid Id { get; private set; }
-    }
+    public Guid Id { get; private set; }
 }

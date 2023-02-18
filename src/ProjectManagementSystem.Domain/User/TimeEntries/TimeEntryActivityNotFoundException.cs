@@ -1,9 +1,6 @@
-using System;
+namespace ProjectManagementSystem.Domain.User.TimeEntries;
 
-namespace ProjectManagementSystem.Domain.User.TimeEntries
+public class TimeEntryActivityNotFoundException : Exception
 {
-    public class TimeEntryActivityNotFoundException : Exception
-    {
         
-    }
 }

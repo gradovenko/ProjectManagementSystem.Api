@@ -1,17 +1,5 @@
-using System;
 using MediatR;
 
-namespace ProjectManagementSystem.Queries.User.ProjectTimeEntries
-{
-    public sealed class TimeEntryQuery : IRequest<TimeEntryView>
-    {
-        public Guid ProjectId { get; }
-        public Guid TimeEntryId { get; }
+namespace ProjectManagementSystem.Queries.User.ProjectTimeEntries;
 
-        public TimeEntryQuery(Guid projectId, Guid timeEntryId)
-        {
-            ProjectId = projectId;
-            TimeEntryId = timeEntryId;
-        }
-    }
-}
+public sealed record TimeEntryQuery(Guid ProjectId, Guid TimeEntryId) : IRequest<TimeEntryView>;

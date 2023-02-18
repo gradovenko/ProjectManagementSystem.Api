@@ -1,7 +1,3 @@
-namespace ProjectManagementSystem.Queries.Admin.IssuePriorities
-{
-    public sealed class IssuePriorityListQuery : PageQuery<IssuePriorityListItemView>
-    {
-        public IssuePriorityListQuery(int offset, int limit) : base(offset, limit) { }
-    }
-}
+namespace ProjectManagementSystem.Queries.Admin.IssuePriorities;
+
+public sealed record IssuePriorityListQuery(int Offset, int Limit) : PageQuery<IssuePriorityListItemView>(Offset, Limit);

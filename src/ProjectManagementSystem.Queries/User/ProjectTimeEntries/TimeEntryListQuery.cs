@@ -1,14 +1,3 @@
-using System;
+namespace ProjectManagementSystem.Queries.User.ProjectTimeEntries;
 
-namespace ProjectManagementSystem.Queries.User.ProjectTimeEntries
-{
-    public sealed class TimeEntryListQuery : PageQuery<TimeEntryListItemView>
-    {
-        public Guid ProjectId { get; }
-
-        public TimeEntryListQuery(Guid projectId, int offset, int limit) : base(offset, limit)
-        {
-            ProjectId = projectId;
-        }
-    }
-}
+public sealed record TimeEntryListQuery(Guid ProjectId, int Offset, int Limit) : PageQuery<TimeEntryListItemView>(Offset, Limit);
