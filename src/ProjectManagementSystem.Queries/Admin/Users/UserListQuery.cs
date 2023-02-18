@@ -1,7 +1,3 @@
-namespace ProjectManagementSystem.Queries.Admin.Users
-{
-    public sealed class UserListQuery : PageQuery<UserListItemView>
-    {
-        public UserListQuery(int offset, int limit) : base(offset, limit) { }
-    }
-}
+namespace ProjectManagementSystem.Queries.Admin.Users;
+
+public sealed record UserListQuery(int Offset, int Limit) : PageQuery<UserListItemView>(Offset, Limit);

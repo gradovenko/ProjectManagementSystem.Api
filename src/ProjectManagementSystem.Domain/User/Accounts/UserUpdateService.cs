@@ -1,52 +1,47 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+namespace ProjectManagementSystem.Domain.User.Accounts;
 
-namespace ProjectManagementSystem.Domain.User.Accounts
+public sealed class UserUpdateService
 {
-    public sealed class UserUpdateService
+    private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher _passwordHasher;
+
+    public UserUpdateService(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IPasswordHasher _passwordHasher;
+        _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
+    }
 
-        public UserUpdateService(IUserRepository userRepository, IPasswordHasher passwordHasher)
-        {
-            _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
-        }
-
-        public async Task UpdateName(Guid id, string name, string password, CancellationToken cancellationToken)
-        {
-            var user = await _userRepository.Get(id, cancellationToken);
+    public async Task UpdateName(Guid id, string name, string password, CancellationToken cancellationToken)
+    {
+        var user = await _userRepository.Get(id, cancellationToken);
             
-            var existingUser = await _userRepository.GetByName(name, cancellationToken);
+        var existingUser = await _userRepository.GetByName(name, cancellationToken);
 
-            if (existingUser != null)
-                throw new NameAlreadyExistsException();
+        if (existingUser != null)
+            throw new NameAlreadyExistsException();
             
-            if (!_passwordHasher.VerifyHashedPassword(user.PasswordHash, password))
-                throw new InvalidPasswordException();
+        if (!_passwordHasher.VerifyHashedPassword(user.PasswordHash, password))
+            throw new InvalidPasswordException();
 
-            user.UpdateName(name);
+        user.UpdateName(name);
 
-            await _userRepository.Save(user);
-        }
+        await _userRepository.Save(user);
+    }
         
-        public async Task UpdateEmail(Guid id, string email, string password, CancellationToken cancellationToken)
-        {
-            var user = await _userRepository.Get(id, cancellationToken);
+    public async Task UpdateEmail(Guid id, string email, string password, CancellationToken cancellationToken)
+    {
+        var user = await _userRepository.Get(id, cancellationToken);
             
-            var existingUser = await _userRepository.GetByEmail(email, cancellationToken);
+        var existingUser = await _userRepository.GetByEmail(email, cancellationToken);
 
-            if (existingUser != null)
-                throw new EmailAlreadyExistsException();
+        if (existingUser != null)
+            throw new EmailAlreadyExistsException();
 
-            if (!_passwordHasher.VerifyHashedPassword(user.PasswordHash, password))
-                throw new InvalidPasswordException();
+        if (!_passwordHasher.VerifyHashedPassword(user.PasswordHash, password))
+            throw new InvalidPasswordException();
 
-            user.UpdateEmail(email);
+        user.UpdateEmail(email);
 
-            await _userRepository.Save(user);
-        }
+        await _userRepository.Save(user);
     }
 }

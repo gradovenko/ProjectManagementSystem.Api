@@ -1,9 +1,6 @@
-using System;
+namespace ProjectManagementSystem.Domain.User.Accounts;
 
-namespace ProjectManagementSystem.Domain.User.Accounts
+public sealed class EmailAlreadyExistsException : Exception
 {
-    public sealed class EmailAlreadyExistsException : Exception
-    {
-        public EmailAlreadyExistsException() { }
-    }
+    public EmailAlreadyExistsException() { }
 }

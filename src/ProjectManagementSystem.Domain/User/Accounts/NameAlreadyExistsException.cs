@@ -1,9 +1,6 @@
-using System;
+namespace ProjectManagementSystem.Domain.User.Accounts;
 
-namespace ProjectManagementSystem.Domain.User.Accounts
+public sealed class NameAlreadyExistsException : Exception
 {
-    public sealed class NameAlreadyExistsException : Exception
-    {
-        public NameAlreadyExistsException() { }
-    }
+    public NameAlreadyExistsException() { }
 }

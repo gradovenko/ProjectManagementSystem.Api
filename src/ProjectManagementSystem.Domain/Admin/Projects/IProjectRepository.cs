@@ -1,13 +1,8 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+namespace ProjectManagementSystem.Domain.Admin.Projects;
 
-namespace ProjectManagementSystem.Domain.Admin.Projects
+public interface IProjectRepository
 {
-    public interface IProjectRepository
-    {
-        Task<Project> Get(Guid id, CancellationToken cancellationToken);
+    Task<Project> Get(Guid id, CancellationToken cancellationToken);
 
-        Task Save(Project project);
-    }
+    Task Save(Project project);
 }

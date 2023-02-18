@@ -1,10 +1,6 @@
-using System.Threading;
-using System.Threading.Tasks;
+namespace ProjectManagementSystem.Domain.Authentication;
 
-namespace ProjectManagementSystem.Domain.Authentication
+public interface IJwtAccessTokenFactory
 {
-    public interface IJwtAccessTokenFactory
-    {
-        Task<AccessToken> Create(User user, CancellationToken cancellationToken);
-    }
+    Task<AccessToken> Create(User user, CancellationToken cancellationToken);
 }

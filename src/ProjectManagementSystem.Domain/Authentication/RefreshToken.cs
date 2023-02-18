@@ -1,17 +1,14 @@
-using System;
+namespace ProjectManagementSystem.Domain.Authentication;
 
-namespace ProjectManagementSystem.Domain.Authentication
+public sealed class RefreshToken
 {
-    public sealed class RefreshToken
+    public string Value { get; }
+
+    public Guid UserId { get; }
+
+    public RefreshToken(string value, Guid userId)
     {
-        public string Value { get; }
-
-        public Guid UserId { get; }
-
-        public RefreshToken(string value, Guid userId)
-        {
-            Value = value;
-            UserId = userId;
-        }
+        Value = value;
+        UserId = userId;
     }
 }

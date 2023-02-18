@@ -1,10 +1,7 @@
-using System;
+namespace ProjectManagementSystem.Queries.Infrastructure.User.IssueTimeEntries;
 
-namespace ProjectManagementSystem.Queries.Infrastructure.User.IssueTimeEntries
+internal sealed class TimeEntryActivity
 {
-    internal sealed class TimeEntryActivity
-    {
-        public Guid Id { get; }
-        public string Name { get; }
-    }
+    public Guid Id { get; }
+    public string Name { get; }
 }

@@ -1,8 +1,7 @@
-namespace ProjectManagementSystem.Domain.Admin.Users
+namespace ProjectManagementSystem.Domain.Admin.Users;
+
+public enum UserRole
 {
-    public enum UserRole
-    {
-        Admin,
-        User
-    }
+    Admin,
+    User
 }

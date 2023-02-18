@@ -1,28 +1,27 @@
 using FluentValidation;
 
-namespace ProjectManagementSystem.Api.Models.User.ProjectIssues
-{
-    public sealed class FindProjectIssuesBinding
-    {
-        /// <summary>
-        /// Offset
-        /// </summary>
-        public int Offset { get; set; } = 0;
-        
-        /// <summary>
-        /// Limit
-        /// </summary>
-        public int Limit { get; set; } = 10;
-    }
+namespace ProjectManagementSystem.Api.Models.User.ProjectIssues;
 
-    public sealed class FindProjectIssuesBindingValidator : AbstractValidator<FindProjectIssuesBinding>
+public sealed class FindProjectIssuesBinding
+{
+    /// <summary>
+    /// Offset
+    /// </summary>
+    public int Offset { get; set; } = 0;
+        
+    /// <summary>
+    /// Limit
+    /// </summary>
+    public int Limit { get; set; } = 10;
+}
+
+public sealed class FindProjectIssuesBindingValidator : AbstractValidator<FindProjectIssuesBinding>
+{
+    public FindProjectIssuesBindingValidator()
     {
-        public FindProjectIssuesBindingValidator()
-        {
-            RuleFor(b => b.Offset)
-                .GreaterThanOrEqualTo(0);
-            RuleFor(b => b.Limit)
-                .InclusiveBetween(2, 1000);
-        }
+        RuleFor(b => b.Offset)
+            .GreaterThanOrEqualTo(0);
+        RuleFor(b => b.Limit)
+            .InclusiveBetween(2, 1000);
     }
 }

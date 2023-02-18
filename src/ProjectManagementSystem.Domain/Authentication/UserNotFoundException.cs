@@ -1,9 +1,6 @@
-using System;
+namespace ProjectManagementSystem.Domain.Authentication;
 
-namespace ProjectManagementSystem.Domain.Authentication
+public sealed class UserNotFoundException : Exception
 {
-    public sealed class UserNotFoundException : Exception
-    {
-        public UserNotFoundException() { }
-    }
+    public UserNotFoundException() { }
 }

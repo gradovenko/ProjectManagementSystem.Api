@@ -1,20 +1,17 @@
-using System;
+namespace ProjectManagementSystem.Domain.Authentication;
 
-namespace ProjectManagementSystem.Domain.Authentication
+public sealed class Token
 {
-    public sealed class Token
-    {
-        public string AccessToken { get; }
+    public string AccessToken { get; }
 
-        public TimeSpan ExpiresIn { get; }
+    public TimeSpan ExpiresIn { get; }
 
-        public string RefreshToken { get; }
+    public string RefreshToken { get; }
         
-        public Token(string accessToken, TimeSpan expiresIn, string refreshToken)
-        {
-            AccessToken = accessToken ?? throw new ArgumentNullException(nameof(accessToken));
-            ExpiresIn = expiresIn;
-            RefreshToken = refreshToken;
-        }
+    public Token(string accessToken, TimeSpan expiresIn, string refreshToken)
+    {
+        AccessToken = accessToken ?? throw new ArgumentNullException(nameof(accessToken));
+        ExpiresIn = expiresIn;
+        RefreshToken = refreshToken;
     }
 }

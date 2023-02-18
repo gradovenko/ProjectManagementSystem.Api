@@ -1,7 +1,6 @@
-namespace ProjectManagementSystem.Domain.User.Accounts
+namespace ProjectManagementSystem.Domain.User.Accounts;
+
+public interface IPasswordHasher
 {
-    public interface IPasswordHasher
-    {
-        bool VerifyHashedPassword(string hashedPassword, string providedPassword);
-    }
+    bool VerifyHashedPassword(string hashedPassword, string providedPassword);
 }

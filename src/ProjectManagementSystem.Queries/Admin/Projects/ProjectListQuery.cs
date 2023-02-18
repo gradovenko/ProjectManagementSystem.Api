@@ -1,7 +1,3 @@
-namespace ProjectManagementSystem.Queries.Admin.Projects
-{
-    public sealed class ProjectListQuery : PageQuery<ProjectListItemView>
-    {
-        public ProjectListQuery(int offset, int limit) : base(offset, limit) { }
-    }
-}
+namespace ProjectManagementSystem.Queries.Admin.Projects;
+
+public sealed record ProjectListQuery(int Offset, int Limit) : PageQuery<ProjectListItemView>(Offset, Limit);

@@ -1,7 +1,6 @@
-namespace ProjectManagementSystem.Queries.User.ProjectIssues
+namespace ProjectManagementSystem.Queries.User.ProjectIssues;
+
+public sealed record AuthorView
 {
-    public sealed class AuthorView
-    {
         
-    }
 }

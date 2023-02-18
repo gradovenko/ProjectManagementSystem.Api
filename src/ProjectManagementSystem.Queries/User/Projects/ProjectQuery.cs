@@ -1,15 +1,5 @@
-using System;
 using MediatR;
 
-namespace ProjectManagementSystem.Queries.User.Projects
-{
-    public sealed class ProjectQuery : IRequest<ProjectView>
-    {
-        public Guid Id { get; }
+namespace ProjectManagementSystem.Queries.User.Projects;
 
-        public ProjectQuery(Guid id)
-        {
-            Id = id;
-        }
-    }
-}
+public sealed record ProjectQuery(Guid Id) : IRequest<ProjectView>;

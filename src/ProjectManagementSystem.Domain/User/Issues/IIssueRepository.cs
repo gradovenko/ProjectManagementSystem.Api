@@ -1,11 +1,6 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+namespace ProjectManagementSystem.Domain.User.Issues;
 
-namespace ProjectManagementSystem.Domain.User.Issues
+public interface IIssueRepository
 {
-    public interface IIssueRepository
-    {
-        Task<Issue> Get(Guid id, CancellationToken cancellationToken);
-    }
+    Task<Issue> Get(Guid id, CancellationToken cancellationToken);
 }

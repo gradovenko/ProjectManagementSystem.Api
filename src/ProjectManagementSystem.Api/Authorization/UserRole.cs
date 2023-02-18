@@ -1,8 +1,7 @@
-namespace ProjectManagementSystem.Api.Authorization
+namespace ProjectManagementSystem.Api.Authorization;
+
+public static class UserRole
 {
-    public class UserRole
-    {
-        public const string Admin = "Admin";
-        public const string User = "User";
-    }
+    public const string Admin = "Admin";
+    public const string User = "User";
 }

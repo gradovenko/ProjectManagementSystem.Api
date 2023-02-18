@@ -1,7 +1,6 @@
-namespace ProjectManagementSystem.Domain.Admin.Projects
+namespace ProjectManagementSystem.Domain.Admin.Projects;
+
+public enum ProjectStatus
 {
-    public enum ProjectStatus
-    {
-        Active
-    }
+    Active
 }

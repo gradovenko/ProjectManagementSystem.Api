@@ -1,9 +1,6 @@
-using System;
+namespace ProjectManagementSystem.Queries.Infrastructure.User.TimeEntries;
 
-namespace ProjectManagementSystem.Queries.Infrastructure.User.TimeEntries
+internal sealed class Project
 {
-    internal sealed class Project
-    {
-        public Guid Id { get; }
-    }
+    public Guid Id { get; }
 }

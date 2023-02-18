@@ -1,7 +1,6 @@
-namespace ProjectManagementSystem.Domain.Admin.Users
+namespace ProjectManagementSystem.Domain.Admin.Users;
+
+public interface IPasswordHasher
 {
-    public interface IPasswordHasher
-    {
-        string HashPassword(string password);
-    }
+    string HashPassword(string password);
 }

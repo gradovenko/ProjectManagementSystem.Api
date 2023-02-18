@@ -1,7 +1,3 @@
-namespace ProjectManagementSystem.Queries.Admin.IssueStatuses
-{
-    public sealed class IssueStatusListQuery : PageQuery<IssueStatusListItemView>
-    {
-        public IssueStatusListQuery(int offset, int limit) : base(offset, limit) { }
-    }
-}
+namespace ProjectManagementSystem.Queries.Admin.IssueStatuses;
+
+public sealed record IssueStatusListQuery(int Offset, int Limit) : PageQuery<IssueStatusListItemView>(Offset, Limit);
