@@ -4,7 +4,7 @@ using ProjectManagementSystem.Queries.Admin.Trackers;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Trackers;
 
-public sealed class TrackerListQueryHandler : IRequestHandler<TrackerListQuery, Page<TrackerListItemView>>
+public sealed class TrackerListQueryHandler : IRequestHandler<TrackerListQuery, PageViewModel<TrackerListItemView>>
 {
     private readonly TrackerDbContext _context;
 
@@ -13,7 +13,7 @@ public sealed class TrackerListQueryHandler : IRequestHandler<TrackerListQuery, 
         _context = context;
     }
         
-    public async Task<Page<TrackerListItemView>> Handle(TrackerListQuery query, CancellationToken cancellationToken)
+    public async Task<PageViewModel<TrackerListItemView>> Handle(TrackerListQuery query, CancellationToken cancellationToken)
     {
         var sql = _context.Trackers.AsNoTracking()
             .Select(project => new TrackerListItemView
@@ -22,7 +22,7 @@ public sealed class TrackerListQueryHandler : IRequestHandler<TrackerListQuery, 
                 Name = project.Name
             });
 
-        return new Page<TrackerListItemView>
+        return new PageViewModel<TrackerListItemView>
         {
             Limit = query.Limit,
             Offset = query.Offset,

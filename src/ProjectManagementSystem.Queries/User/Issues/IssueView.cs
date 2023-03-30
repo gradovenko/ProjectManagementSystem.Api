@@ -1,6 +1,6 @@
 namespace ProjectManagementSystem.Queries.User.Issues;
 
-public sealed record IssueView
+public sealed record IssueViewModel
 {
     /// <summary>
     /// Issue identifier

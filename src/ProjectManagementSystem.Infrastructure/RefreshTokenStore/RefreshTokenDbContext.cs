@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore;
 
-public sealed class RefreshTokenDbContext : DbContext
+public sealed class RefreshTokenStoreDbContext : DbContext
 {
-    public RefreshTokenDbContext(DbContextOptions<RefreshTokenDbContext> options) : base(options) { }
+    public RefreshTokenStoreDbContext(DbContextOptions<RefreshTokenStoreDbContext> options) : base(options) { }
 
     internal DbSet<RefreshToken> RefreshTokens { get; set; }
 
@@ -13,13 +13,14 @@ public sealed class RefreshTokenDbContext : DbContext
         modelBuilder.Entity<RefreshToken>(builder =>
         {
             builder.ToTable("RefreshToken");
-            builder.HasKey(rt => rt.Id);
-            builder.Property(rt => rt.Id)
+            builder.HasKey(refreshToken => refreshToken.Id);
+            builder.Property(refreshToken => refreshToken.Id)
                 .HasColumnName("RefreshTokenId")
-                .ValueGeneratedNever();
-            builder.Property(rt => rt.ExpireDate)
-                .IsRequired();
-            builder.Property(rt => rt.UserId)
+                .HasMaxLength(64);
+            builder.Property(refreshToken => refreshToken.UserId)
+                .IsRequired()
+                .HasMaxLength(32);
+            builder.Property(refreshToken => refreshToken.ExpireDate)
                 .IsRequired();
         });
     }

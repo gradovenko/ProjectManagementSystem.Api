@@ -26,37 +26,33 @@ public sealed class MigrationDbContext : DbContext
             builder.Property(u => u.PasswordHash)
                 .HasMaxLength(1024)
                 .IsRequired();
-            builder.Property(u => u.FirstName)
-                .IsRequired();
-            builder.Property(u => u.LastName)
-                .IsRequired();
             builder.Property(u => u.Role)
                 .IsRequired();
             builder.Property(u => u.CreateDate)
                 .IsRequired();
-            builder.Property(u => u.UpdateDate);
-            builder.Property(u => u.Status)
+            builder.Property(u => u.UpdateDate)
+                .IsRequired();
+            builder.Property(u => u.State)
                 .HasMaxLength(64)
                 .IsRequired();
-            builder.Property(u => u.ConcurrencyStamp)
+            builder.Property(u => u.ConcurrencyToken)
                 .IsConcurrencyToken();
-            builder.HasIndex(u => u.Name)
-                .IsUnique();
-            builder.HasIndex(u => u.Email)
-                .IsUnique();
-                
+            
+            builder.HasMany(u => u.TimeEntries)
+                .WithOne(te => te.User)
+                .HasForeignKey(te => te.UserId)
+                .HasPrincipalKey(i => i.UserId);
+
             builder.HasData(new User
             {
                 UserId = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d"),
                 Name = "Admin",
                 Email = "admin@projectms.local",
                 PasswordHash = "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
-                FirstName = "Admin",
-                LastName = "Admin",
                 Role = "Admin",
                 CreateDate = DateTime.UnixEpoch,
-                Status = "Active",
-                ConcurrencyStamp = Guid.NewGuid()
+                State = "Active",
+                ConcurrencyToken = Guid.NewGuid()
             });
         });
             
@@ -69,33 +65,10 @@ public sealed class MigrationDbContext : DbContext
             builder.Property(rt => rt.ExpireDate)
                 .IsRequired();
             builder.Property(rt => rt.UserId)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(32);
         });
-            
-        modelBuilder.Entity<IssuePriority>(builder =>
-        {
-            builder.ToTable("IssuePriority");
-            builder.HasKey(ip => ip.IssuePriorityId);
-            builder.Property(ip => ip.IssuePriorityId)
-                .ValueGeneratedNever();
-            builder.Property(ip => ip.Name)
-                .IsRequired();
-            builder.Property(ip => ip.IsActive)
-                .IsRequired();
-        });
-            
-        modelBuilder.Entity<IssueStatus>(builder =>
-        {
-            builder.ToTable("IssueStatus");
-            builder.HasKey(@is => @is.IssueStatusId);
-            builder.Property(@is => @is.IssueStatusId)
-                .ValueGeneratedNever();
-            builder.Property(@is => @is.Name)
-                .IsRequired();
-            builder.Property(@is => @is.IsActive)
-                .IsRequired();
-        });
-            
+
         modelBuilder.Entity<Project>(builder =>
         {
             builder.ToTable("Project");
@@ -106,110 +79,75 @@ public sealed class MigrationDbContext : DbContext
                 .IsRequired();
             builder.Property(p => p.Description)
                 .IsRequired();
-            builder.Property(p => p.IsPrivate)
+            builder.Property(p => p.Path)
                 .IsRequired();
-            builder.Property(p => p.Status)
+            builder.Property(p => p.Visibility)
+                .HasMaxLength(64)
                 .IsRequired();
             builder.Property(p => p.CreateDate)
                 .IsRequired();
-            builder.Property(u => u.ConcurrencyStamp)
-                .IsConcurrencyToken();
-        });
-            
-        modelBuilder.Entity<Tracker>(builder =>
-        {
-            builder.ToTable("Tracker");
-            builder.HasKey(t => t.TrackerId);
-            builder.Property(t => t.TrackerId)
-                .ValueGeneratedNever();
-            builder.Property(t => t.Name)
+            builder.Property(p => p.UpdateDate)
                 .IsRequired();
-            builder.Property(t => t.ConcurrencyStamp)
+            builder.Property(u => u.ConcurrencyToken)
                 .IsConcurrencyToken();
-        });
-            
-        modelBuilder.Entity<ProjectTracker>(builder =>
-        {
-            builder.ToTable("ProjectTracker");
-            builder.HasKey(pt => new { pt.ProjectId, pt.TrackerId });
-            builder.HasOne(pt => pt.Project)
-                .WithMany()
-                .HasForeignKey(pt => pt.ProjectId)
+            builder.HasMany(p => p.Issues)
+                .WithOne(i => i.Project)
+                .HasForeignKey(i => i.ProjectId)
                 .HasPrincipalKey(p => p.ProjectId);
-            builder.HasOne(pt => pt.Tracker)
-                .WithMany()
-                .HasForeignKey(pt => pt.TrackerId)
-                .HasPrincipalKey(t => t.TrackerId);
         });
-            
+
         modelBuilder.Entity<Issue>(builder =>
         {
             builder.ToTable("Issue");
             builder.HasKey(i => i.IssueId);
             builder.Property(i => i.IssueId)
                 .ValueGeneratedNever();
-            builder.Property(i => i.Number)
-                .IsRequired();
             builder.Property(i => i.Title)
                 .IsRequired();
             builder.Property(i => i.Description)
-                .IsRequired();
+                .IsRequired(false);
             builder.Property(i => i.CreateDate)
                 .IsRequired();
-            builder.Property(i => i.UpdateDate);
-            builder.Property(i => i.StartDate);
-            builder.Property(i => i.DueDate);
-            builder.Property(i => i.TrackerId)
+            builder.Property(i => i.UpdateDate)
                 .IsRequired();
-            builder.Property(i => i.StatusId)
-                .IsRequired();
-            builder.Property(i => i.PriorityId)
-                .IsRequired();
-            builder.Property(i => i.AuthorId)
-                .IsRequired();
-            builder.Property(i => i.AssigneeId);
-            builder.Property(i => i.ConcurrencyStamp)
+            builder.Property(i => i.DueDate)
+                .IsRequired(false);
+            builder.Property(i => i.ConcurrencyToken)
                 .IsConcurrencyToken();
             builder.HasOne(i => i.Project)
-                .WithMany()
+                .WithMany(p => p.Issues)
                 .HasForeignKey(i => i.ProjectId)
                 .HasPrincipalKey(p => p.ProjectId);
-            builder.HasOne(i => i.Tracker)
-                .WithMany()
-                .HasForeignKey(i => i.TrackerId)
-                .HasPrincipalKey(t => t.TrackerId);
-            builder.HasOne(i => i.Status)
-                .WithMany()
-                .HasForeignKey(i => i.StatusId)
-                .HasPrincipalKey(@is => @is.IssueStatusId);
-            builder.HasOne(i => i.Priority)
-                .WithMany()
-                .HasForeignKey(i => i.PriorityId)
-                .HasPrincipalKey(ip => ip.IssuePriorityId);
             builder.HasOne(i => i.Author)
-                .WithMany()
+                .WithMany(u => u.Issues)
                 .HasForeignKey(i => i.AuthorId)
-                .HasPrincipalKey(a => a.UserId);
-            builder.HasOne(i => i.Assignee)
-                .WithMany()
-                .HasForeignKey(i => i.AssigneeId)
-                .HasPrincipalKey(p => p.UserId);
+                .HasPrincipalKey(u => u.UserId);
+            builder.HasOne(i => i.ClosedByUser)
+                .WithMany(u => u.Issues)
+                .HasForeignKey(i => i.ClosedByUserId)
+                .HasPrincipalKey(u => u.UserId);
+
+            builder.HasMany(i => i.TimeEntries)
+                .WithOne(te => te.Issue)
+                .HasForeignKey(te => te.IssueId)
+                .HasPrincipalKey(i => i.IssueId);
+
+            builder.HasMany(i => i.Assignees)
+                .WithMany(u => u.Issues);
+            builder.HasMany(i => i.Labels)
+                .WithMany(l => l.Issues);
+            builder.HasMany(i => i.Reactions)
+                .WithMany(r => r.Issues);
         });
-            
-        modelBuilder.Entity<TimeEntryActivity>(builder =>
+
+        modelBuilder.Entity<Reaction>(builder =>
         {
-            builder.ToTable("TimeEntryActivity");
-            builder.HasKey(tea => tea.TimeEntryActivityId);
-            builder.Property(tea => tea.TimeEntryActivityId)
+            builder.ToTable("Reaction");
+            builder.HasKey(r => r.ReactionId);
+            builder.Property(r => r.ReactionId)
                 .ValueGeneratedNever();
-            builder.Property(tea => tea.Name)
-                .IsRequired();
-            builder.Property(tea => tea.IsActive)
-                .IsRequired();
-            builder.Property(tea => tea.ConcurrencyStamp)
-                .IsConcurrencyToken();
         });
-            
+
         modelBuilder.Entity<TimeEntry>(builder =>
         {
             builder.ToTable("TimeEntry");
@@ -219,26 +157,15 @@ public sealed class MigrationDbContext : DbContext
             builder.Property(te => te.Hours)
                 .IsRequired();
             builder.Property(te => te.Description)
-                .IsRequired();
+                .IsRequired(false);
             builder.Property(te => te.DueDate)
-                .IsRequired();
+                .IsRequired(false);
             builder.Property(te => te.CreateDate)
                 .IsRequired();
-            builder.Property(te => te.UpdateDate);
-            builder.Property(te => te.ProjectId)
+            builder.Property(te => te.IsDeleted)
                 .IsRequired();
-            builder.Property(te => te.IssueId)
-                .IsRequired();
-            builder.Property(te => te.UserId)
-                .IsRequired();
-            builder.Property(te => te.ActivityId)
-                .IsRequired();
-            builder.Property(te => te.ConcurrencyStamp)
+            builder.Property(te => te.ConcurrencyToken)
                 .IsConcurrencyToken();
-            builder.HasOne(te => te.Project)
-                .WithMany()
-                .HasForeignKey(te => te.ProjectId)
-                .HasPrincipalKey(p => p.ProjectId);
             builder.HasOne(te => te.Issue)
                 .WithMany()
                 .HasForeignKey(te => te.IssueId)
@@ -247,10 +174,28 @@ public sealed class MigrationDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(te => te.UserId)
                 .HasPrincipalKey(p => p.UserId);
-            builder.HasOne(te => te.Activity)
-                .WithMany()
-                .HasForeignKey(te => te.ActivityId)
-                .HasPrincipalKey(p => p.TimeEntryActivityId);
+        });
+
+        modelBuilder.Entity<Label>(builder =>
+        {
+            builder.ToTable("Label");
+            builder.HasKey(l => l.LabelId);
+            builder.Property(l => l.LabelId)
+                .ValueGeneratedNever();
+            builder.Property(l => l.Title)
+                .IsRequired();
+            builder.Property(l => l.Description)
+                .IsRequired(false);
+            builder.Property(l => l.BackgroundColor)
+                .IsRequired();
+            builder.Property(l => l.IsDeleted)
+                .IsRequired();
+            builder.Property(l => l.CreateDate)
+                .IsRequired();
+            builder.Property(l => l.UpdateDate)
+                .IsRequired();
+            builder.Property(te => te.ConcurrencyToken)
+                .IsConcurrencyToken();
         });
     }
 }

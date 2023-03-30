@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace ProjectManagementSystem.DatabaseMigrations;
 
-public class DesignTimeMigrationDbContextFactory : IDesignTimeDbContextFactory<MigrationDbContext>
+public sealed class DesignTimeMigrationDbContextFactory : IDesignTimeDbContextFactory<MigrationDbContext>
 {
     public MigrationDbContext CreateDbContext(string[] args)
     {

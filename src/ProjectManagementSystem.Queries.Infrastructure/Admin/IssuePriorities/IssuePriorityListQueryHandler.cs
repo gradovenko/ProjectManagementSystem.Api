@@ -4,7 +4,7 @@ using ProjectManagementSystem.Queries.Admin.IssuePriorities;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssuePriorities;
 
-public class IssuePriorityListQueryHandler : IRequestHandler<IssuePriorityListQuery, Page<IssuePriorityListItemView>>
+public class IssuePriorityListQueryHandler : IRequestHandler<IssuePriorityListQuery, PageViewModel<IssuePriorityListItemView>>
 {
     private readonly IssuePriorityDbContext _context;
 
@@ -13,7 +13,7 @@ public class IssuePriorityListQueryHandler : IRequestHandler<IssuePriorityListQu
         _context = context;
     }
 
-    public async Task<Page<IssuePriorityListItemView>> Handle(IssuePriorityListQuery query,
+    public async Task<PageViewModel<IssuePriorityListItemView>> Handle(IssuePriorityListQuery query,
         CancellationToken cancellationToken)
     {
         var sql = _context.IssuePriorities.AsNoTracking()
@@ -24,7 +24,7 @@ public class IssuePriorityListQueryHandler : IRequestHandler<IssuePriorityListQu
                 IsActive = issuePriority.IsActive
             });
 
-        return new Page<IssuePriorityListItemView>
+        return new PageViewModel<IssuePriorityListItemView>
         {
             Limit = query.Limit,
             Offset = query.Offset,

@@ -4,7 +4,7 @@ using ProjectManagementSystem.Queries.Admin.Users;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.Users;
 
-public sealed class UserListQueryHandler : IRequestHandler<UserListQuery, Page<UserListItemView>>
+public sealed class UserListQueryHandler : IRequestHandler<UserListQuery, PageViewModel<UserListItemViewModel>>
 {
     private readonly UserDbContext _context;
 
@@ -13,10 +13,10 @@ public sealed class UserListQueryHandler : IRequestHandler<UserListQuery, Page<U
         _context = context;
     }
         
-    public async Task<Page<UserListItemView>> Handle(UserListQuery query, CancellationToken cancellationToken)
+    public async Task<PageViewModel<UserListItemViewModel>> Handle(UserListQuery query, CancellationToken cancellationToken)
     {
         var sql = _context.Users.AsNoTracking()
-            .Select(user => new UserListItemView
+            .Select(user => new UserListItemViewModel
             {
                 Id = user.Id,
                 Name = user.Name,
@@ -25,7 +25,7 @@ public sealed class UserListQueryHandler : IRequestHandler<UserListQuery, Page<U
                 LastName = user.LastName,
             });
 
-        return new Page<UserListItemView>
+        return new PageViewModel<UserListItemViewModel>
         {
             Limit = query.Limit,
             Offset = query.Offset,

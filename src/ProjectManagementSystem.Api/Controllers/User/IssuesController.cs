@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Exceptions;
 using ProjectManagementSystem.Api.Extensions;
-using ProjectManagementSystem.Api.Models.User.Issues;
-using ProjectManagementSystem.Domain.User.Issues;
+using ProjectManagementSystem.Api.Models.User.ProjectIssues;
+using ProjectManagementSystem.Domain.Issues.Commands;
+using ProjectManagementSystem.Domain.Labels.Commands;
 using ProjectManagementSystem.Queries;
 using ProjectManagementSystem.Queries.User.Issues;
 
@@ -16,92 +17,145 @@ namespace ProjectManagementSystem.Api.Controllers.User;
 [ProducesResponseType(401)]
 public sealed class IssuesController : ControllerBase
 {
-    /// <summary>
-    /// Create issue
-    /// </summary>
-    /// <param name="binding">Input model</param>
-    /// <response code="201">Created issue</response>
-    /// <response code="400">Validation failed</response>
-    /// <response code="409">Issue already exists with other parameters</response>
-    /// <response code="422">Project/tracker/issue status/issue priority/assignee not found</response>
-    [HttpPost("issues")]
-    [ProducesResponseType(201)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(typeof(ProblemDetails), 409)]
-    [ProducesResponseType(typeof(ProblemDetails), 422)]
-    public async Task<IActionResult> CreateIssue(
-        CancellationToken cancellationToken,
-        [FromBody] CreateIssueBinding binding,
-        [FromServices] IssueCreationService issueCreationService)
-    {
-        try
-        {
-            await issueCreationService.CreateIssue(binding.Id, binding.Title, binding.Description, binding.StartDate,
-                binding.DueDate, binding.ProjectId, binding.TrackerId, binding.StatusId, binding.PriorityId, User.GetId(),
-                binding.AssigneeId, cancellationToken);
-        }
-        catch (ProjectNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.ProjectNotFound, "Project not found");
-        }
-        catch (TrackerNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.TrackerNotFound, "Tracker not found");
-        }
-        catch (IssueStatusNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.IssueStatusNotFound, "Issue status not found");
-        }
-        catch (IssuePriorityNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.IssuePriorityNotFound, "Issue priority not found");
-        }
-        catch (AssigneeNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.UnprocessableEntity, ErrorCode.AssigneeNotFound, "Assignee not found");
-        }
-        catch (IssueAlreadyExistsException)
-        {
-            throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists, "Issue already exists with other parameters");
-        }
+    private readonly IMediator _mediator;
 
-        return CreatedAtRoute("GetIssueRoute", new {issueId = binding.Id}, null);
+    public IssuesController(IMediator mediator)
+    {
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
     /// <summary>
-    /// Find issues
+    /// Get the list of issues
     /// </summary>
-    /// <param name="binding">Input model</param>
-    /// <response code="200">Issue list page</response>
-    [HttpGet("issues", Name = "GetIssuesRoute")]
-    [ProducesResponseType(typeof(Page<IssueListItemView>), 200)]
-    public async Task<IActionResult> FindIssues(
+    /// <param name="model">Input model</param>
+    [HttpGet("/issues", Name = "GetIssueList")]
+    [ProducesResponseType(typeof(PageViewModel<IssueListItemView>), 200)]
+    public async Task<IActionResult> GetList(
         CancellationToken cancellationToken,
-        [FromQuery] FindIssuesBinding binding,
-        [FromServices] IMediator mediator)
+        [FromQuery] GetIssueListBindingModel model)
     {
-        return Ok(await mediator.Send(new IssueListQuery(binding.Offset, binding.Limit), cancellationToken));
+        return Ok(await _mediator.Send(new IssueListQuery(model.Offset, model.Limit), cancellationToken));
     }
-
+    
     /// <summary>
     /// Get the issue
     /// </summary>
     /// <param name="id">Issue identifier</param>
-    /// <response code="200">Issue</response>
-    /// <response code="404">Issue not found</response>
-    [HttpGet("issues/{id}", Name = "GetIssueRoute")]
-    [ProducesResponseType(typeof(IssueView), 200)]
+    /// <response code="200">Project view model</response>
+    [HttpGet("/issues/{id:guid}", Name = "GetIssue")]
+    [ProducesResponseType(typeof(IssueViewModel), 200)]
     [ProducesResponseType(typeof(ProblemDetails), 404)]
-    public async Task<IActionResult> GetIssue(
+    public async Task<IActionResult> Get(
+        CancellationToken cancellationToken,
+        [FromRoute] Guid id)
+    {
+        IssueViewModel? viewModel = await _mediator.Send(new IssueQuery(id), cancellationToken);
+
+        if (viewModel == null)
+            return this.StatusCode(HttpStatusCode.NotFound, ErrorCode.IssueNotFound.Title, ErrorCode.IssueNotFound.Detail,
+                HttpContext.Request.Path);
+
+        return Ok(viewModel);
+    }
+
+    /// <summary>
+    /// Update the issue
+    /// </summary>
+    /// <param name="id">Issue identifier</param>
+    /// <response code="204">Issue updated</response>
+    /// <response code="400">Validation failed</response>
+    /// <response code="404">Issue not found </response>
+    /// <response code="422">User not found</response>
+    [HttpPut("/issues/{id:guid}")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(typeof(ProblemDetails), 400)]
+    [ProducesResponseType(typeof(ProblemDetails), 404)]
+    [ProducesResponseType(typeof(ProblemDetails), 422)]
+    public async Task<IActionResult> Update(
         CancellationToken cancellationToken,
         [FromRoute] Guid id,
-        [FromServices] IMediator mediator)
+        [FromBody] UpdateIssueBindingModel model)
     {
-        var issue = await mediator.Send(new IssueQuery(id), cancellationToken);
+        UpdateIssueCommandResultState commandResult = await _mediator.Send(new UpdateIssueCommand
+        {
+            IssueId = id,
+            Title = model.Title,
+            Description = model.Description,
+            UserId = User.GetId()
+        }, cancellationToken);
 
-        if (issue == null)
-            throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueNotFound, "Issue not found");
+        return commandResult switch
+        {
+            UpdateIssueCommandResultState.UserNotFound => this.StatusCode(HttpStatusCode.UnprocessableEntity, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+                HttpContext.Request.Path),
+            UpdateIssueCommandResultState.IssueNotFound => this.StatusCode(HttpStatusCode.NotFound, ErrorCode.IssueNotFound.Title, ErrorCode.IssueNotFound.Detail,
+                HttpContext.Request.Path),
+            UpdateIssueCommandResultState.IssueUpdated => NoContent(),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
 
-        return Ok(issue);
+    /// <summary>
+    /// Close the issue
+    /// </summary>
+    /// <param name="id">Issue identifier</param>
+    /// <response code="204">Issue closed</response>
+    /// <response code="404">Issue not found </response>
+    /// <response code="422">User not found</response>
+    [HttpPut("/issues/{id:guid}/close")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(typeof(ProblemDetails), 404)]
+    [ProducesResponseType(typeof(ProblemDetails), 422)]
+    public async Task<IActionResult> Close(
+        CancellationToken cancellationToken,
+        [FromRoute] Guid id)
+    {
+        CloseIssueCommandResultState commandResult = await _mediator.Send(new CloseIssueCommand
+        {
+            IssueId = id,
+            UserId = User.GetId()
+        }, cancellationToken);
+
+        return commandResult switch
+        {
+            CloseIssueCommandResultState.UserNotFound => this.StatusCode(HttpStatusCode.UnprocessableEntity, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+                HttpContext.Request.Path),
+            CloseIssueCommandResultState.IssueNotFound => this.StatusCode(HttpStatusCode.NotFound, ErrorCode.IssueNotFound.Title, ErrorCode.IssueNotFound.Detail,
+                HttpContext.Request.Path),
+            CloseIssueCommandResultState.IssueClosed => NoContent(),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    /// <summary>
+    /// Reopen the issue
+    /// </summary>
+    /// <param name="id">Issue identifier</param>
+    /// <response code="204">Issue reopened</response>
+    /// <response code="404">Issue not found </response>
+    /// <response code="422">User not found</response>
+    [HttpPut("/issues/{id:guid}/reopen")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(typeof(ProblemDetails), 404)]
+    [ProducesResponseType(typeof(ProblemDetails), 422)]
+    public async Task<IActionResult> Reopen(
+        CancellationToken cancellationToken,
+        [FromRoute] Guid id)
+    {
+        ReopenIssueCommandResultState commandResult = await _mediator.Send(new ReopenIssueCommand
+        {
+            IssueId = id,
+            UserId = User.GetId()
+        }, cancellationToken);
+
+        return commandResult switch
+        {
+            ReopenIssueCommandResultState.UserNotFound => this.StatusCode(HttpStatusCode.UnprocessableEntity, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+                HttpContext.Request.Path),
+            ReopenIssueCommandResultState.IssueNotFound => this.StatusCode(HttpStatusCode.NotFound, ErrorCode.IssueNotFound.Title, ErrorCode.IssueNotFound.Detail,
+                HttpContext.Request.Path),
+            ReopenIssueCommandResultState.IssueReopened => NoContent(),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 }

@@ -4,7 +4,7 @@ using ProjectManagementSystem.Queries.Admin.IssueStatuses;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Admin.IssueStatuses;
 
-public sealed class IssueStatusListQueryHandler : IRequestHandler<IssueStatusListQuery, Page<IssueStatusListItemView>>
+public sealed class IssueStatusListQueryHandler : IRequestHandler<IssueStatusListQuery, PageViewModel<IssueStatusListItemView>>
 {
     private readonly IssueStatusDbContext _context;
 
@@ -13,7 +13,7 @@ public sealed class IssueStatusListQueryHandler : IRequestHandler<IssueStatusLis
         _context = context;
     }
 
-    public async Task<Page<IssueStatusListItemView>> Handle(IssueStatusListQuery query, CancellationToken cancellationToken)
+    public async Task<PageViewModel<IssueStatusListItemView>> Handle(IssueStatusListQuery query, CancellationToken cancellationToken)
     {
         var sql = _context.IssueStatuses.AsNoTracking()
             .Select(issuePriority => new IssueStatusListItemView
@@ -23,7 +23,7 @@ public sealed class IssueStatusListQueryHandler : IRequestHandler<IssueStatusLis
                 IsActive = issuePriority.IsActive
             });
 
-        return new Page<IssueStatusListItemView>
+        return new PageViewModel<IssueStatusListItemView>
         {
             Limit = query.Limit,
             Offset = query.Offset,

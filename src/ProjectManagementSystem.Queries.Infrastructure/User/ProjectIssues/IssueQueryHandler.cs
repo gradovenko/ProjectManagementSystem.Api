@@ -4,7 +4,7 @@ using ProjectManagementSystem.Queries.User.ProjectIssues;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.User.ProjectIssues;
 
-public sealed class IssueQueryHandler : IRequestHandler<IssueQuery, IssueView>
+public sealed class IssueQueryHandler : IRequestHandler<IssueQuery, IssueViewModel>
 {
     private readonly IssueDbContext _context;
 
@@ -13,7 +13,7 @@ public sealed class IssueQueryHandler : IRequestHandler<IssueQuery, IssueView>
         _context = context;
     }
 
-    public async Task<IssueView> Handle(IssueQuery query, CancellationToken cancellationToken)
+    public async Task<IssueViewModel> Handle(IssueQuery query, CancellationToken cancellationToken)
     {
         return await _context.Issues
             .Include(i => i.Project)
@@ -24,7 +24,7 @@ public sealed class IssueQueryHandler : IRequestHandler<IssueQuery, IssueView>
             .Include(i => i.Assignee)
             .AsNoTracking()
             .Where(i => i.ProjectId == query.ProjectId && i.Id == query.IssueId)
-            .Select(i => new IssueView
+            .Select(i => new IssueViewModel
             {
                 Id = i.Id,
                 Number = i.Number,

@@ -1,13 +1,15 @@
 namespace ProjectManagementSystem.DatabaseMigrations.Entities;
 
-public sealed class Project
+internal sealed record Project
 {
-    public Guid ProjectId { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public bool IsPrivate { get; set; }
-    public string Status { get; set; }
-    public DateTime CreateDate { get; set; }
-    public DateTime? UpdateDate { get; set; }
-    public Guid ConcurrencyStamp { get; set; }
+    public Guid ProjectId { get; init; }
+    public string Name { get; init; } = null!;
+    public string? Description { get; init; }
+    public string Path { get; init; } = null!;
+    public string Visibility { get; init; } = null!;
+    public bool IsDeleted { get; init; }
+    public DateTime CreateDate { get; init; }
+    public DateTime UpdateDate { get; init; }
+    public IEnumerable<Issue> Issues { get; init; } = null!;
+    public Guid ConcurrencyToken { get; init; }
 }

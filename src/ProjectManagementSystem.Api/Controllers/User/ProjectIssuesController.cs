@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Exceptions;
 using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Models.User.ProjectIssues;
-using ProjectManagementSystem.Domain.User.Issues;
+using ProjectManagementSystem.Domain.Issues.Commands;
+using ProjectManagementSystem.Domain.Labels.Commands;
 using ProjectManagementSystem.Queries;
 using ProjectManagementSystem.Queries.User.ProjectIssues;
 
@@ -16,104 +17,208 @@ namespace ProjectManagementSystem.Api.Controllers.User;
 [ProducesResponseType(401)]
 public sealed class ProjectIssuesController : ControllerBase
 {
+    private readonly IMediator _mediator;
+
+    public ProjectIssuesController(IMediator mediator)
+    {
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    }
+
     /// <summary>
-    /// Create project issue
+    /// Create the project issue
     /// </summary>
     /// <param name="id">Project identifier</param>
-    /// <param name="binding">Input model</param>
+    /// <param name="model">Input model</param>
     /// <response code="400">Validation failed</response>
-    [HttpPost("projects/{id}/issues")]
+    [HttpPost("/projects/{id:guid}/issues")]
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(typeof(ProblemDetails), 409)]
     public async Task<IActionResult> CreateIssue(
         CancellationToken cancellationToken,
         [FromRoute] Guid id,
-        [FromBody] CreateIssueBinding binding,
-        [FromServices] IssueCreationService issueCreationService)
+        [FromBody] CreateIssueBindingModel model)
     {
-        try
+        CreateIssueCommandResultState commandResult = await _mediator.Send(new CreateIssueCommand
         {
-            await issueCreationService.CreateIssue(binding.Id, binding.Title, binding.Description, binding.StartDate,
-                binding.DueDate, id, binding.TrackerId, binding.StatusId, binding.PriorityId, User.GetId(),
-                binding.AssigneeId, cancellationToken);
-        }
-        catch (ProjectNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.NotFound, ErrorCode.ProjectNotFound, "Project not found");
-        }
-        catch (TrackerNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Tracker not found");
-        }
-        catch (IssueStatusNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueStatusNotFound, "Issue status not found");
-        }
-        catch (IssuePriorityNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.NotFound, ErrorCode.TrackerNotFound, "Issue priority not found");
-        }
-        catch (AssigneeNotFoundException)
-        {
-            throw new ApiException(HttpStatusCode.NotFound, ErrorCode.AssigneeNotFound, "Assignee not found");
-        }
-        catch (IssueAlreadyExistsException)
-        {
-            throw new ApiException(HttpStatusCode.Conflict, ErrorCode.IssueAlreadyExists, "Issue already exists with other parameters");
-        }
+            IssueId = model.Id,
+            Title = model.Title,
+            Description = model.Description,
+            ProjectId = id,
+            AuthorId = model.AuthorId,
+            AssigneeIds = model.AssigneeIds,
+            LabelIds = model.LabelIds,
+            DueDate = model.DueDate
+        }, cancellationToken);
 
-        return CreatedAtRoute("GetProjectIssueRoute", new {projectId = id, issueId = binding.Id}, null);
+        return commandResult switch
+        {
+            CreateIssueCommandResultState.IssueAlreadyExists => this.StatusCode(HttpStatusCode.NotFound, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+                HttpContext.Request.Path),
+            CreateIssueCommandResultState.ProjectNotFound => this.StatusCode(HttpStatusCode.NotFound, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+                HttpContext.Request.Path),
+            CreateIssueCommandResultState.AuthorNotFound => this.StatusCode(HttpStatusCode.NotFound, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+                HttpContext.Request.Path),
+            CreateIssueCommandResultState.AssigneeNotFound => this.StatusCode(HttpStatusCode.NotFound, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+                HttpContext.Request.Path),
+            CreateIssueCommandResultState.IssueCreated => CreatedAtRoute(nameof(Get), new { id = model.Id }, null),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
     /// <summary>
-    /// Find project issues
+    /// Get the list of project issues
     /// </summary>
     /// <param name="id">Project identifier</param>
-    /// <param name="binding">Input model</param>
-    [HttpGet("projects/{id}/issues", Name = "GetProjectIssuesRoute")]
-    [ProducesResponseType(typeof(Page<IssueListItemView>), 200)]
-    public async Task<IActionResult> FindIssues(
+    /// <param name="model">Input model</param>
+    [HttpGet("/projects/{id:guid}/issues", Name = "GetProjectIssueList")]
+    [ProducesResponseType(typeof(PageViewModel<IssueListItemViewModel>), 200)]
+    public async Task<IActionResult> GetList(
         CancellationToken cancellationToken,
         [FromRoute] Guid id,
-        [FromQuery] FindProjectIssuesBinding binding,
-        [FromServices] IProjectRepository projectRepository,
-        [FromServices] IMediator mediator)
+        [FromQuery] GetIssueListBindingModel model)
     {
-        var project = await projectRepository.Get(id, cancellationToken);
-
-        if (project == null)
-            throw new ApiException(HttpStatusCode.NotFound, ErrorCode.ProjectNotFound, "Project not found");
-
-        return Ok(await mediator.Send(new IssueListQuery(id, binding.Offset, binding.Limit), cancellationToken));
+        return Ok(await _mediator.Send(new IssueListQuery(id, model.Offset, model.Limit), cancellationToken));
     }
-
 
     /// <summary>
     /// Get the project issue
     /// </summary>
     /// <param name="projectId">Project identifier</param>
     /// <param name="issueId">Issue identifier</param>
-    [HttpGet("projects/{projectId}/issues/{issueId}", Name = "GetProjectIssueRoute")]
-    [ProducesResponseType(typeof(IssueView), 200)]
+    /// <response code="200">Issue view model</response>
+    [HttpGet("/projects/{projectId:guid}/issues{issueId:guid}", Name = "GetProjectIssue")]
+    [ProducesResponseType(typeof(IssueViewModel), 200)]
     [ProducesResponseType(typeof(ProblemDetails), 404)]
-    public async Task<IActionResult> GetIssue(
+    public async Task<IActionResult> Get(
         CancellationToken cancellationToken,
         [FromRoute] Guid projectId,
-        [FromRoute] Guid issueId,
-        [FromServices] IProjectRepository projectRepository,
-        [FromServices] IMediator mediator)
+        [FromRoute] Guid issueId)
     {
-        var project = await projectRepository.Get(projectId, cancellationToken);
+        IssueViewModel? viewModel = await _mediator.Send(new IssueQuery(projectId, issueId), cancellationToken);
 
-        if (project == null)
-            throw new ApiException(HttpStatusCode.NotFound, ErrorCode.ProjectNotFound, "Project not found");
+        if (viewModel == null)
+            return this.StatusCode(HttpStatusCode.NotFound, ErrorCode.IssueNotFound.Title, ErrorCode.IssueNotFound.Detail,
+                HttpContext.Request.Path);
 
-        var issue = await mediator.Send(new IssueQuery(projectId, issueId), cancellationToken);
-
-        if (issue == null)
-            throw new ApiException(HttpStatusCode.NotFound, ErrorCode.IssueNotFound, "Issue not found");
-
-        return Ok(issue);
+        return Ok(viewModel);
     }
+
+    // /// <summary>
+    // /// Get the project issue
+    // /// </summary>
+    // /// <param name="projectId">Project identifier</param>
+    // /// <param name="issueId">Issue identifier</param>
+    // [HttpGet("/projects/{projectId:guid}/issues/{issueId:guid}", Name = "GetProjectIssue")]
+    // [ProducesResponseType(typeof(IssueView), 200)]
+    // [ProducesResponseType(typeof(ProblemDetails), 404)]
+    // public async Task<IActionResult> Get(
+    //     CancellationToken cancellationToken,
+    //     [FromRoute] Guid projectId,
+    //     [FromRoute] Guid issueId)
+    // {
+    //     IssueView? issue = await _mediator.Send(new IssueQuery(projectId, issueId), cancellationToken);
+    //
+    //     if (issue == null)
+    //         return this.StatusCode(HttpStatusCode.NotFound, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+    //             HttpContext.Request.Path);
+    //
+    //     return Ok(issue);
+    // }
+    //
+    // /// <summary>
+    // /// Update the issue
+    // /// </summary>
+    // /// <param name="projectId">Project identifier</param>
+    // /// <param name="issueId">Issue identifier</param>
+    // [HttpPut("/projects/{projectId:guid}/issues/{issueId:guid}")]
+    // [ProducesResponseType(204)]
+    // [ProducesResponseType(typeof(ProblemDetails), 404)]
+    // public async Task<IActionResult> Update(
+    //     CancellationToken cancellationToken,
+    //     [FromRoute] Guid projectId,
+    //     [FromRoute] Guid issueId,
+    //     [FromBody] UpdateIssueBindingModel model)
+    // {
+    //     UpdateProjectLabelCommandResultState commandResult = await _mediator.Send(new UpdateProjectLabelCommand
+    //     {
+    //         LabelId = labelId,
+    //         ProjectId = projectId,
+    //         Title = model.Title,
+    //         Description = model.Description,
+    //         BackgroundColor = model.BackgroundColor
+    //     }, cancellationToken);
+    //
+    //     return commandResult switch
+    //     {
+    //         UpdateProjectLabelCommandResultState.ProjectNotFound => this.StatusCode(HttpStatusCode.UnprocessableEntity, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+    //             HttpContext.Request.Path),
+    //         UpdateProjectLabelCommandResultState.LabelWithSameTitleAlreadyExists => this.StatusCode(HttpStatusCode.Conflict, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+    //             HttpContext.Request.Path),
+    //         UpdateProjectLabelCommandResultState.LabelWithSameIdButOtherParamsAlreadyExists => this.StatusCode(HttpStatusCode.Conflict, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+    //             HttpContext.Request.Path),
+    //         UpdateProjectLabelCommandResultState.LabelUpdated => NoContent(),
+    //         _ => throw new ArgumentOutOfRangeException()
+    //     };
+    // }
+    //
+    // /// <summary>
+    // /// Close the issue
+    // /// </summary>
+    // /// <param name="projectId">Project identifier</param>
+    // /// <param name="issueId">Issue identifier</param>
+    // [HttpPut("/projects/{projectId:guid}/issues/{issueId:guid}/close")]
+    // [ProducesResponseType(204)]
+    // [ProducesResponseType(typeof(ProblemDetails), 404)]
+    // public async Task<IActionResult> Close(
+    //     CancellationToken cancellationToken,
+    //     [FromRoute] Guid projectId,
+    //     [FromRoute] Guid issueId)
+    // {
+    //     CloseIssueCommandResultState commandResult = await _mediator.Send(new CloseIssueCommand
+    //     {
+    //         IssueId = issueId,
+    //         ProjectId = projectId
+    //     }, cancellationToken);
+    //
+    //     return commandResult switch
+    //     {
+    //         CloseIssueCommandResultState.ProjectNotFound => this.StatusCode(HttpStatusCode.FailedDependency, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+    //             HttpContext.Request.Path),
+    //         CloseIssueCommandResultState.IssueNotFound => this.StatusCode(HttpStatusCode.FailedDependency, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+    //             HttpContext.Request.Path),
+    //         CloseIssueCommandResultState.IssueClosed => NoContent(),
+    //         _ => throw new ArgumentOutOfRangeException()
+    //     };
+    // }
+    //
+    // /// <summary>
+    // /// Reopen the issue
+    // /// </summary>
+    // /// <param name="projectId">Project identifier</param>
+    // /// <param name="issueId">Issue identifier</param>
+    // [HttpPut("/projects/{projectId:guid}/issues/{issueId:guid}/reopen")]
+    // [ProducesResponseType(204)]
+    // [ProducesResponseType(typeof(ProblemDetails), 404)]
+    // public async Task<IActionResult> Reopen(
+    //     CancellationToken cancellationToken,
+    //     [FromRoute] Guid projectId,
+    //     [FromRoute] Guid issueId)
+    // {
+    //     ReopenIssueCommandResultState commandResult = await _mediator.Send(new ReopenIssueCommand
+    //     {
+    //         IssueId = issueId,
+    //         ProjectId = projectId
+    //     }, cancellationToken);
+    //
+    //     return commandResult switch
+    //     {
+    //         ReopenIssueCommandResultState.ProjectNotFound => this.StatusCode(HttpStatusCode.FailedDependency, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+    //             HttpContext.Request.Path),
+    //         ReopenIssueCommandResultState.IssueNotFound => this.StatusCode(HttpStatusCode.FailedDependency, ErrorCode.UserNotFound.Title, ErrorCode.UserNotFound.Detail,
+    //             HttpContext.Request.Path),
+    //         ReopenIssueCommandResultState.IssueReopened => NoContent(),
+    //         _ => throw new ArgumentOutOfRangeException()
+    //     };
+    // }
 }

@@ -1,10 +1,10 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Queries.User.Accounts;
+using ProjectManagementSystem.Queries.User.Profiles;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.User.Accounts;
 
-public sealed class UserQueryHandler : IRequestHandler<UserQuery, UserView>
+public sealed class UserQueryHandler : IRequestHandler<UserQuery, UserViewModel>
 {
     private readonly UserDbContext _context;
 
@@ -13,11 +13,11 @@ public sealed class UserQueryHandler : IRequestHandler<UserQuery, UserView>
         _context = context;
     }
 
-    public async Task<UserView> Handle(UserQuery query, CancellationToken cancellationToken)
+    public async Task<UserViewModel> Handle(UserQuery query, CancellationToken cancellationToken)
     {
         return await _context.Users.AsNoTracking()
             .Where(user => user.Id == query.Id)
-            .Select(user => new UserView
+            .Select(user => new UserViewModel
             {
                 Name = user.Name,
                 Email = user.Email,

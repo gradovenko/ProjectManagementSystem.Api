@@ -1,26 +1,24 @@
 namespace ProjectManagementSystem.DatabaseMigrations.Entities;
 
-public sealed class Issue
+internal sealed record Issue
 {
-    public Guid IssueId { get; set; }
-    public long Number { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public DateTime CreateDate { get; set; }
-    public DateTime? UpdateDate { get; set; }
-    public DateTime? StartDate { get; set; }
-    public DateTime? DueDate { get; set; }
-    public Guid ProjectId { get; set; }
-    public Project Project { get; set; }
-    public Guid TrackerId { get; set; }
-    public Tracker Tracker { get; set; }
-    public Guid StatusId { get; set; }
-    public IssueStatus Status { get; set; }
-    public Guid PriorityId { get; set; }
-    public IssuePriority Priority { get; set; }
-    public Guid AuthorId { get; set; }
-    public User Author { get; set; }
-    public Guid? AssigneeId { get; set; }
-    public User Assignee { get; set; }
-    public Guid ConcurrencyStamp { get; set; }
+    public Guid IssueId { get; init; }
+    public string Title { get; init; } = null!;
+    public string? Description { get; init; }
+    public string State { get; init; } = null!;
+    public DateTime CreateDate { get; init; }
+    public DateTime UpdateDate { get; init; }
+    public DateTime? DueDate { get; init; }
+    //public DateTime? CloseDate { get; init; }
+    public User? ClosedByUser { get; init; }
+    public Guid? ClosedByUserId { get; init; }
+    public Guid ProjectId { get; init; }
+    public Project Project { get; init; } = null!;
+    public User Author { get; init; } = null!;
+    public Guid AuthorId { get; init; }
+    public IEnumerable<TimeEntry> TimeEntries { get; init; } = null!;
+    public IEnumerable<User> Assignees { get; init; } = null!;
+    public IEnumerable<Label> Labels { get; init; } = null!;
+    public IEnumerable<Reaction> Reactions { get; init; } = null!;
+    public Guid ConcurrencyToken { get; init; }
 }

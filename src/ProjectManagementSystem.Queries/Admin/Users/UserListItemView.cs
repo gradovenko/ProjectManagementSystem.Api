@@ -1,6 +1,6 @@
 namespace ProjectManagementSystem.Queries.Admin.Users;
 
-public sealed record UserListItemView
+public sealed record UserListItemViewModel
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

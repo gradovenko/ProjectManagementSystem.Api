@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ProjectManagementSystem.Domain.Authentication;
 
 namespace ProjectManagementSystem.Infrastructure.Authentication;
 
@@ -6,11 +7,11 @@ public sealed class UserDbContext : DbContext
 {
     public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
-    internal DbSet<Domain.Authentication.User> Users { get; set; }
+    internal DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Domain.Authentication.User>(builder =>
+        modelBuilder.Entity<User>(builder =>
         {
             builder.ToTable("User");
             builder.HasKey(u => u.Id);
@@ -18,13 +19,11 @@ public sealed class UserDbContext : DbContext
                 .HasColumnName("UserId")
                 .ValueGeneratedNever();
             builder.Property(u => u.Name)
-                .HasMaxLength(256)
                 .IsRequired();
             builder.Property(u => u.Email)
-                .HasMaxLength(256)
                 .IsRequired();
             builder.Property(u => u.PasswordHash)
-                .HasMaxLength(1024);
+                .IsRequired();
             builder.Property(u => u.Role)
                 .HasConversion<string>()
                 .IsRequired();

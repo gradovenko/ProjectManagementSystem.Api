@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Identity;
-using ProjectManagementSystem.Domain.Admin.Users;
 
 namespace ProjectManagementSystem.Infrastructure.PasswordHasher;
 
 public sealed class PasswordHasher :
     Domain.Authentication.IPasswordHasher, 
-    IPasswordHasher, 
-    Domain.User.Accounts.IPasswordHasher
+    Domain.Users.IPasswordHasher
 {
     private sealed class User { }
         
@@ -14,9 +12,8 @@ public sealed class PasswordHasher :
 
     public bool VerifyHashedPassword(string hashedPassword, string providedPassword)
     {
-        var passwordVerificationResult = _hasher.VerifyHashedPassword(new User(), hashedPassword, providedPassword);
-        return passwordVerificationResult == PasswordVerificationResult.Success ||
-               passwordVerificationResult == PasswordVerificationResult.SuccessRehashNeeded;
+        PasswordVerificationResult passwordVerificationResult = _hasher.VerifyHashedPassword(new User(), hashedPassword, providedPassword);
+        return passwordVerificationResult is PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded;
     }
 
     public string HashPassword(string password)

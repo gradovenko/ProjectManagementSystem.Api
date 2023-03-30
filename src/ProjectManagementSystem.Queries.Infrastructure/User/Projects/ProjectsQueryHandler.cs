@@ -4,7 +4,7 @@ using ProjectManagementSystem.Queries.User.Projects;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.User.Projects;
 
-public sealed class ProjectsQueryHandler : IRequestHandler<ProjectListQuery, Page<ProjectListItemView>>
+public sealed class ProjectsQueryHandler : IRequestHandler<ProjectListQuery, PageViewModel<ProjectListItemView>>
 {
     private readonly ProjectDbContext _context;
 
@@ -13,7 +13,7 @@ public sealed class ProjectsQueryHandler : IRequestHandler<ProjectListQuery, Pag
         _context = context;
     }
         
-    public async Task<Page<ProjectListItemView>> Handle(ProjectListQuery query, CancellationToken cancellationToken)
+    public async Task<PageViewModel<ProjectListItemView>> Handle(ProjectListQuery query, CancellationToken cancellationToken)
     {
         var sql = _context.Projects.AsNoTracking()
             .Select(project => new ProjectListItemView
@@ -24,7 +24,7 @@ public sealed class ProjectsQueryHandler : IRequestHandler<ProjectListQuery, Pag
                 IsPrivate = project.IsPrivate,
             });
 
-        return new Page<ProjectListItemView>
+        return new PageViewModel<ProjectListItemView>
         {
             Limit = query.Limit,
             Offset = query.Offset,
