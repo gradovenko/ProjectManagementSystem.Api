@@ -13,6 +13,7 @@ public sealed class ErrorCode
     public static (string Title, string Detail) NameAlreadyExists = ("name_already_exists", "n");
     public static (string Title, string Detail) EmailAlreadyExists = ("email_already_exists", "n");
     public static (string Title, string Detail) InvalidPassword = ("invalid_password", "n");
+    public static (string Title, string Detail) OldUserPasswordWrong = ("old_user_password_wrong", "n");
     public static (string Title, string Detail) IssuePriorityNotFound = ("issue_priority_not_found", "n");
     public static (string Title, string Detail) IssuePriorityAlreadyExists = ("issue_priority_already_exists", "n");
     public static (string Title, string Detail) IssueStatusNotFound = ("issue_status_not_found", "n");

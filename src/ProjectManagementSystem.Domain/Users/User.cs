@@ -30,4 +30,11 @@ public sealed class User
         UpdateDate = DateTime.UtcNow;
         _concurrencyToken = Guid.NewGuid();
     }
+
+    public void ChangePasswordHash(string newPasswordHash)
+    {
+        PasswordHash = newPasswordHash;
+        UpdateDate = DateTime.UtcNow;
+        _concurrencyToken = Guid.NewGuid();
+    }
 }

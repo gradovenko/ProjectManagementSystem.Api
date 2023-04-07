@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Extensions;
-using ProjectManagementSystem.Queries.User.Profiles;
+using ProjectManagementSystem.Queries.Profiles;
 
 namespace ProjectManagementSystem.Api.Controllers.User;
 

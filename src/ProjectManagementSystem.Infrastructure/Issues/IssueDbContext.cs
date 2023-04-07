@@ -25,15 +25,6 @@ public sealed class IssueDbContext : DbContext
                 .HasColumnName("ProjectId");
         });
 
-            
-        modelBuilder.Entity<User>(builder =>
-        {
-            builder.ToTable("User");
-            builder.HasKey(u => u.Id);
-            builder.Property(u => u.Id)
-                .HasColumnName("UserId");
-        });
-            
         modelBuilder.Entity<Issue>(builder =>
         {
             builder.ToTable("Issue");
@@ -60,12 +51,53 @@ public sealed class IssueDbContext : DbContext
             builder.Property("_concurrencyToken")
                 .HasColumnName("ConcurrencyToken")
                 .IsConcurrencyToken();
-            // builder.HasMany(i => i.Assignees)
-            //     .WithMany(u => u.Issues);
-            // builder.HasMany(i => i.Labels)
-            //     .WithMany(l => l.Issues);
-            // builder.HasMany(i => i.Reactions)
-            //     .WithMany(r => r.Issues);
+
+            // builder.HasOne(i => i.Project)
+            //     .WithMany(p => p.Issues)
+            //     .HasForeignKey(i => i.ProjectId)
+            //     .HasPrincipalKey(p => p.ProjectId);
+            // builder.HasOne(i => i.ClosedByUser)
+            //     .WithMany()
+            //     .HasForeignKey(i => i.ClosedByUserId)
+            //     .HasPrincipalKey(u => u.UserId);
+            // builder.HasOne(i => i.Author)
+            //     .WithMany()
+            //     .HasForeignKey(i => i.AuthorId)
+            //     .HasPrincipalKey(u => u.UserId);
+            
+            builder.HasMany(i => i.Assignees)
+                .WithMany(u => u.Issues);
+            builder.HasMany(i => i.Labels)
+                .WithMany(l => l.Issues);
+            builder.HasMany(i => i.Reactions)
+                .WithMany(r => r.Issues);
+        });
+        
+        modelBuilder.Entity<User>(builder =>
+        {
+            builder.ToTable("User");
+            builder.HasKey(u => u.Id);
+            builder.Property(u => u.Id)
+                .HasColumnName("UserId")
+                .ValueGeneratedNever();
+        });
+        
+        modelBuilder.Entity<Label>(builder =>
+        {
+            builder.ToTable("Label");
+            builder.HasKey(l => l.Id);
+            builder.Property(l => l.Id)
+                .HasColumnName("LabelId")
+                .ValueGeneratedNever();
+        });
+        
+        modelBuilder.Entity<Reaction>(builder =>
+        {
+            builder.ToTable("Reaction");
+            builder.HasKey(r => r.Id);
+            builder.Property(r => r.Id)
+                .HasColumnName("ReactionId")
+                .ValueGeneratedNever();
         });
     }
 }

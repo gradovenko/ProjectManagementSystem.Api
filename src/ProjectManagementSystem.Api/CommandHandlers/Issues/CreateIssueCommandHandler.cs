@@ -27,7 +27,7 @@ public sealed class CreateIssueCommandHandler : IRequestHandler<CreateIssueComma
         if (project == null)
             return CreateIssueCommandResultState.ProjectNotFound;
         
-        User? author = await _userGetter.Get(request.AuthorId, cancellationToken);
+        User? author = await _userGetter.Get(request.ProjectId, cancellationToken);
 
         if (author == null)
             return CreateIssueCommandResultState.AuthorNotFound;

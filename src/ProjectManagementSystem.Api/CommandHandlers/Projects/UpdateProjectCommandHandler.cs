@@ -20,11 +20,21 @@ public sealed class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectC
         if (project == null)
             return UpdateProjectCommandResultState.ProjectNotFound;
 
-        if (request.Name == project.Name)
-            return UpdateProjectCommandResultState.ProjectWithSameNameAlreadyExists;
+        if (request.Name != project.Name)
+        {
+            Project? projectWithSameName = await _projectRepository.GetByName(request.Name, cancellationToken);
 
-        if (request.Path == project.Path)
-            return UpdateProjectCommandResultState.ProjectWithSamePathAlreadyExists;
+            if (projectWithSameName != null)
+                return UpdateProjectCommandResultState.ProjectWithSameNameAlreadyExists;
+        }
+
+        if (request.Path != project.Path)
+        {
+            Project? projectWithSamePath = await _projectRepository.GetByPath(request.Path, cancellationToken);
+
+            if (projectWithSamePath != null)
+                return UpdateProjectCommandResultState.ProjectWithSamePathAlreadyExists;
+        }
 
         project.Update(request.Name, request.Description, request.Path, request.Visibility);
 

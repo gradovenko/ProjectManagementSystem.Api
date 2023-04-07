@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManagementSystem.Infrastructure.RefreshTokenStore;
 
-public sealed class RefreshTokenStore : Domain.Authentication.IRefreshTokenStore
+public sealed class RefreshTokenStore : Domain.Authentication.IRefreshTokenStore, Domain.Users.IRefreshTokenStore
 {
     private readonly TimeSpan _lifeTime = TimeSpan.FromDays(1);
     private readonly RefreshTokenStoreDbContext _context;
@@ -41,5 +41,18 @@ public sealed class RefreshTokenStore : Domain.Authentication.IRefreshTokenStore
         await _context.SaveChangesAsync(cancellationToken);
 
         return new ValueTuple<string, Guid>(newRefreshToken.Id, newRefreshToken.UserId);
+    }
+
+    public async Task ExpireAllTokens(Guid userId, CancellationToken cancellationToken)
+    {
+        var activeRefreshTokens = await _context.RefreshTokens
+            .Where(rt => rt.UserId == userId)
+            .Where(rt => rt.ExpireDate > DateTime.UtcNow)
+            .ToListAsync(cancellationToken);
+
+        foreach (var activeRefreshToken in activeRefreshTokens)
+            activeRefreshToken.Terminate();
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

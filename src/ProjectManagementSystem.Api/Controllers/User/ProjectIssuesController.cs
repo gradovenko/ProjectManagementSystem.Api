@@ -6,9 +6,8 @@ using ProjectManagementSystem.Api.Exceptions;
 using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Models.User.ProjectIssues;
 using ProjectManagementSystem.Domain.Issues.Commands;
-using ProjectManagementSystem.Domain.Labels.Commands;
 using ProjectManagementSystem.Queries;
-using ProjectManagementSystem.Queries.User.ProjectIssues;
+using ProjectManagementSystem.Queries.ProjectIssues;
 
 namespace ProjectManagementSystem.Api.Controllers.User;
 
@@ -72,13 +71,13 @@ public sealed class ProjectIssuesController : ControllerBase
     /// <param name="id">Project identifier</param>
     /// <param name="model">Input model</param>
     [HttpGet("/projects/{id:guid}/issues", Name = "GetProjectIssueList")]
-    [ProducesResponseType(typeof(PageViewModel<IssueListItemViewModel>), 200)]
+    [ProducesResponseType(typeof(PageViewModel<ProjectIssueListItemViewModel>), 200)]
     public async Task<IActionResult> GetList(
         CancellationToken cancellationToken,
         [FromRoute] Guid id,
         [FromQuery] GetIssueListBindingModel model)
     {
-        return Ok(await _mediator.Send(new IssueListQuery(id, model.Offset, model.Limit), cancellationToken));
+        return Ok(await _mediator.Send(new ProjectIssueListQuery(id, model.Offset, model.Limit), cancellationToken));
     }
 
     /// <summary>
@@ -87,15 +86,15 @@ public sealed class ProjectIssuesController : ControllerBase
     /// <param name="projectId">Project identifier</param>
     /// <param name="issueId">Issue identifier</param>
     /// <response code="200">Issue view model</response>
-    [HttpGet("/projects/{projectId:guid}/issues{issueId:guid}", Name = "GetProjectIssue")]
-    [ProducesResponseType(typeof(IssueViewModel), 200)]
+    [HttpGet("/projects/{projectId:guid}/issues/{issueId:guid}", Name = "GetProjectIssue")]
+    [ProducesResponseType(typeof(ProjectIssueViewModel), 200)]
     [ProducesResponseType(typeof(ProblemDetails), 404)]
     public async Task<IActionResult> Get(
         CancellationToken cancellationToken,
         [FromRoute] Guid projectId,
         [FromRoute] Guid issueId)
     {
-        IssueViewModel? viewModel = await _mediator.Send(new IssueQuery(projectId, issueId), cancellationToken);
+        ProjectIssueViewModel? viewModel = await _mediator.Send(new ProjectIssueQuery(projectId, issueId), cancellationToken);
 
         if (viewModel == null)
             return this.StatusCode(HttpStatusCode.NotFound, ErrorCode.IssueNotFound.Title, ErrorCode.IssueNotFound.Detail,

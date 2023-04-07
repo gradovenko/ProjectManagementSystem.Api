@@ -18,6 +18,18 @@ public sealed class ProjectRepository : IProjectRepository
             .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
+    public async Task<Project?> GetByName(string name, CancellationToken cancellationToken)
+    {
+        return await _context.Projects.AsNoTracking()
+            .SingleOrDefaultAsync(p => p.Name == name, cancellationToken);
+    }
+
+    public async Task<Project?> GetByPath(string path, CancellationToken cancellationToken)
+    {
+        return await _context.Projects.AsNoTracking()
+            .SingleOrDefaultAsync(p => p.Path == path, cancellationToken);
+    }
+
     public async Task Save(Project project, CancellationToken cancellationToken)
     {
         if (_context.Entry(project).State == EntityState.Detached)

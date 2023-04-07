@@ -37,11 +37,6 @@ public sealed class MigrationDbContext : DbContext
                 .IsRequired();
             builder.Property(u => u.ConcurrencyToken)
                 .IsConcurrencyToken();
-            
-            builder.HasMany(u => u.TimeEntries)
-                .WithOne(te => te.User)
-                .HasForeignKey(te => te.UserId)
-                .HasPrincipalKey(i => i.UserId);
 
             builder.HasData(new User
             {
@@ -51,6 +46,7 @@ public sealed class MigrationDbContext : DbContext
                 PasswordHash = "AQAAAAEAACcQAAAAEDcxbCGbTbY1rUJBVafqc/qaL1rWXro6aoahEwrPF5zHb8DB11apWESUm5UyMRF3mA==",
                 Role = "Admin",
                 CreateDate = DateTime.UnixEpoch,
+                UpdateDate = DateTime.UnixEpoch,
                 State = "Active",
                 ConcurrencyToken = Guid.NewGuid()
             });
@@ -84,16 +80,14 @@ public sealed class MigrationDbContext : DbContext
             builder.Property(p => p.Visibility)
                 .HasMaxLength(64)
                 .IsRequired();
+            builder.Property(p => p.IsDeleted)
+                .IsRequired();
             builder.Property(p => p.CreateDate)
                 .IsRequired();
             builder.Property(p => p.UpdateDate)
                 .IsRequired();
             builder.Property(u => u.ConcurrencyToken)
                 .IsConcurrencyToken();
-            builder.HasMany(p => p.Issues)
-                .WithOne(i => i.Project)
-                .HasForeignKey(i => i.ProjectId)
-                .HasPrincipalKey(p => p.ProjectId);
         });
 
         modelBuilder.Entity<Issue>(builder =>
@@ -114,17 +108,18 @@ public sealed class MigrationDbContext : DbContext
                 .IsRequired(false);
             builder.Property(i => i.ConcurrencyToken)
                 .IsConcurrencyToken();
+
             builder.HasOne(i => i.Project)
                 .WithMany(p => p.Issues)
                 .HasForeignKey(i => i.ProjectId)
                 .HasPrincipalKey(p => p.ProjectId);
-            builder.HasOne(i => i.Author)
-                .WithMany(u => u.Issues)
-                .HasForeignKey(i => i.AuthorId)
-                .HasPrincipalKey(u => u.UserId);
             builder.HasOne(i => i.ClosedByUser)
-                .WithMany(u => u.Issues)
+                .WithMany()
                 .HasForeignKey(i => i.ClosedByUserId)
+                .HasPrincipalKey(u => u.UserId);
+            builder.HasOne(i => i.Author)
+                .WithMany()
+                .HasForeignKey(i => i.AuthorId)
                 .HasPrincipalKey(u => u.UserId);
 
             builder.HasMany(i => i.TimeEntries)
@@ -166,14 +161,6 @@ public sealed class MigrationDbContext : DbContext
                 .IsRequired();
             builder.Property(te => te.ConcurrencyToken)
                 .IsConcurrencyToken();
-            builder.HasOne(te => te.Issue)
-                .WithMany()
-                .HasForeignKey(te => te.IssueId)
-                .HasPrincipalKey(p => p.IssueId);
-            builder.HasOne(te => te.User)
-                .WithMany()
-                .HasForeignKey(te => te.UserId)
-                .HasPrincipalKey(p => p.UserId);
         });
 
         modelBuilder.Entity<Label>(builder =>

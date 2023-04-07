@@ -7,7 +7,6 @@ public sealed class LabelDbContext : DbContext
 {
     public LabelDbContext(DbContextOptions<LabelDbContext> options) : base(options) { }
 
-    internal DbSet<Project> Projects { get; init; }
     internal DbSet<Label> Labels { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,15 +35,6 @@ public sealed class LabelDbContext : DbContext
             builder.Property("_concurrencyToken")
                 .HasColumnName("ConcurrencyToken")
                 .IsConcurrencyToken();
-        });
-
-        modelBuilder.Entity<Project>(builder =>
-        {
-            builder.ToTable("Project");
-            builder.HasKey(p => p.Id);
-            builder.Property(p => p.Id)
-                .HasColumnName("ProjectId")
-                .ValueGeneratedNever();
         });
     }
 }

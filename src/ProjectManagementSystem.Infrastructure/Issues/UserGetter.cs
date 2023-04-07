@@ -16,6 +16,6 @@ public sealed class UserGetter : IUserGetter
     {
         return await _context.Users
             .AsNoTracking()
-            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
+            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 }

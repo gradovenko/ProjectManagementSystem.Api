@@ -6,13 +6,13 @@ namespace ProjectManagementSystem.Api.CommandHandlers.Users;
 
 public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserCommandResultState>
 {
-    private readonly UserCreator _userCreator;
     private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public CreateUserCommandHandler(UserCreator userCreator, IUserRepository userRepository)
+    public CreateUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
-        _userCreator = userCreator ?? throw new ArgumentNullException(nameof(userCreator));
         _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
     }
 
     public async Task<CreateUserCommandResultState> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand
                 return CreateUserCommandResultState.UserCreated;
             return CreateUserCommandResultState.UserWithSameNameAlreadyExists;
         }
-        
+
         user = await _userRepository.GetByEmail(request.Email, cancellationToken);
 
         if (user != null)
@@ -44,9 +44,9 @@ public sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand
             return CreateUserCommandResultState.UserWithSameEmailAlreadyExists;
         }
 
-        user = _userCreator.CreateUser(request.UserId, request.Name, request.Email, request.Password, request.Role);
+        string passwordHash = _passwordHasher.HashPassword(request.Password);
 
-        await _userRepository.Save(user, cancellationToken);
+        await _userRepository.Save(new User(request.UserId, request.Name, request.Email, passwordHash, request.Role), cancellationToken);
 
         return CreateUserCommandResultState.UserCreated;
     }

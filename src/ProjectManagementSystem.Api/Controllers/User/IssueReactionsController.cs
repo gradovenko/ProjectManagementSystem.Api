@@ -37,7 +37,6 @@ public sealed class IssueReactionsController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), 422)]
     public async Task<IActionResult> AddReactionToIssue(
         CancellationToken cancellationToken,
-        [FromRoute] Guid projectId,
         [FromRoute] Guid issueId,
         [FromBody] AddReactionToIssueBindingModel model)
     {

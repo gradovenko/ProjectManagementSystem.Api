@@ -7,7 +7,7 @@ using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Models.User.Projects;
 using ProjectManagementSystem.Domain.Projects.Commands;
 using ProjectManagementSystem.Queries;
-using ProjectManagementSystem.Queries.User.Projects;
+using ProjectManagementSystem.Queries.Projects;
 
 namespace ProjectManagementSystem.Api.Controllers.User;
 
@@ -57,7 +57,7 @@ public sealed class ProjectsController : ControllerBase
                 this.StatusCode(HttpStatusCode.Conflict, ErrorCode.ProjectWithSamePathAlreadyExists.Title, ErrorCode.ProjectWithSamePathAlreadyExists.Detail, HttpContext.Request.Path),
             CreateProjectCommandResultState.ProjectWithSameIdButOtherParamsAlreadyExists => 
                 this.StatusCode(HttpStatusCode.Conflict, ErrorCode.ProjectWithSameIdButOtherParamsAlreadyExists.Title, ErrorCode.ProjectWithSameIdButOtherParamsAlreadyExists.Detail, HttpContext.Request.Path),
-            CreateProjectCommandResultState.ProjectCreated => CreatedAtRoute(nameof(Get), new { id = model.Id }, null),
+            CreateProjectCommandResultState.ProjectCreated => CreatedAtRoute("GetProject", new { id = model.Id }, null),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -68,7 +68,7 @@ public sealed class ProjectsController : ControllerBase
     /// <param name="binding">Input model</param>
     /// <response code="200">Project list page</response>
     [HttpGet("/projects", Name = "GetProjectList")]
-    [ProducesResponseType(typeof(PageViewModel<ProjectListItemView>), 200)]
+    [ProducesResponseType(typeof(PageViewModel<ProjectListItemViewModel>), 200)]
     public async Task<IActionResult> GetList(
         CancellationToken cancellationToken,
         [FromQuery] GetProjectListBindingModel binding)

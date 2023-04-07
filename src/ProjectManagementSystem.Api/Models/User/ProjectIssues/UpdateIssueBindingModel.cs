@@ -1,5 +1,4 @@
 using FluentValidation;
-using ProjectManagementSystem.Api.Models.User.Labels;
 
 namespace ProjectManagementSystem.Api.Models.User.ProjectIssues;
 

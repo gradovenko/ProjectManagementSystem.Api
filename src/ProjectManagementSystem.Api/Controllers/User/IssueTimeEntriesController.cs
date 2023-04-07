@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Exceptions;
 using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Models.User.IssueTimeEntries;
-using ProjectManagementSystem.Domain.Issues.Commands;
 using ProjectManagementSystem.Domain.TimeEntries.Commands;
 
 namespace ProjectManagementSystem.Api.Controllers.User;

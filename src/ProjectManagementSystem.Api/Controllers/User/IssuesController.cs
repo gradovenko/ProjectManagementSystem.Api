@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Exceptions;
 using ProjectManagementSystem.Api.Extensions;
-using ProjectManagementSystem.Api.Models.User.ProjectIssues;
+using ProjectManagementSystem.Api.Models.User.Issues;
 using ProjectManagementSystem.Domain.Issues.Commands;
-using ProjectManagementSystem.Domain.Labels.Commands;
 using ProjectManagementSystem.Queries;
-using ProjectManagementSystem.Queries.User.Issues;
+using ProjectManagementSystem.Queries.Issues;
 
 namespace ProjectManagementSystem.Api.Controllers.User;
 
@@ -29,7 +28,7 @@ public sealed class IssuesController : ControllerBase
     /// </summary>
     /// <param name="model">Input model</param>
     [HttpGet("/issues", Name = "GetIssueList")]
-    [ProducesResponseType(typeof(PageViewModel<IssueListItemView>), 200)]
+    [ProducesResponseType(typeof(PageViewModel<IssueListItemViewModel>), 200)]
     public async Task<IActionResult> GetList(
         CancellationToken cancellationToken,
         [FromQuery] GetIssueListBindingModel model)
