@@ -10,6 +10,6 @@ internal sealed record Project
     public bool IsDeleted { get; init; }
     public DateTime CreateDate { get; init; }
     public DateTime UpdateDate { get; init; }
-    public Guid ConcurrencyToken { get; init; }
     public IEnumerable<Issue> Issues { get; init; } = null!;
+    public Guid ConcurrencyToken { get; init; }
 }

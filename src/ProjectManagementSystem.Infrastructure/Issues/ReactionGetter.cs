@@ -12,7 +12,7 @@ public sealed class ReactionGetter : IReactionGetter
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<Reaction?> Get(string id, CancellationToken cancellationToken)
+    public async Task<Reaction?> Get(Guid id, CancellationToken cancellationToken)
     {
         return await _context.Reactions
             .AsNoTracking()

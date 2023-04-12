@@ -20,8 +20,8 @@ public sealed class Issue
     private List<Label> _labels = new();
     public IReadOnlyCollection<Label> Labels => _labels.AsReadOnly();
 
-    private List<Reaction> _reactions = new();
-    public IReadOnlyCollection<Reaction> Reactions => _reactions.AsReadOnly();
+    private List<IssueUserReaction> _issueUserReactions = new();
+    public IReadOnlyCollection<IssueUserReaction> IssueUserReactions => _issueUserReactions.AsReadOnly();
 
     private Guid _concurrencyToken;
 
@@ -66,31 +66,25 @@ public sealed class Issue
         _concurrencyToken = Guid.NewGuid();
     }
 
-    public void AddReaction(Reaction reaction)
+    public void AddReaction(User user, Reaction reaction)
     {
-        _reactions.Add(reaction);
+        if (_issueUserReactions.Any(o => o.UserId == user.Id && o.ReactionId == reaction.Id))
+            throw new InvalidOperationException("User already added this reaction to the issue");
+        _issueUserReactions.Add(new IssueUserReaction(Id, user.Id, reaction.Id));
+        
         UpdateDate = DateTime.UtcNow;
         _concurrencyToken = Guid.NewGuid();
     }
 
-    public void RemoveReaction(Reaction reaction)
+    public void RemoveReaction(User user, Reaction reaction)
     {
-        _reactions.Remove(reaction);
+        var reactionToRemove =
+            _issueUserReactions.SingleOrDefault(o => o.UserId == user.Id && o.ReactionId == reaction.Id);
+        if (reactionToRemove == null)
+            throw new InvalidOperationException("User has already removed this reaction from the issue, or the issue user reaction does not exist");
+        _issueUserReactions.Remove(reactionToRemove);
+
         UpdateDate = DateTime.UtcNow;
         _concurrencyToken = Guid.NewGuid();
     }
-    
-    // public void AddTimeEntry(TimeEntry timeEntry)
-    // {
-    //     _timeEntries.Add(timeEntry);
-    //     UpdateDate = DateTime.UtcNow;
-    //     _concurrencyToken = Guid.NewGuid();
-    // }
-    //
-    // public void RemoveTimeEntry(TimeEntry timeEntry)
-    // {
-    //     _timeEntries.Add(timeEntry);
-    //     UpdateDate = DateTime.UtcNow;
-    //     _concurrencyToken = Guid.NewGuid();
-    // }
 }

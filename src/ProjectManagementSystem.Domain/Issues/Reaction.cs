@@ -1,9 +1,9 @@
+
 namespace ProjectManagementSystem.Domain.Issues;
 
-public sealed record Reaction
+public sealed class Reaction
 {
-    public string Id { get; private set; } = null!;
-    public IEnumerable<Issue> Issues { get; private set; } = null!;
-
-    private Reaction() { }
+    public Guid Id { get; init; }
+    public string Unicode { get; init; } = null!;
+    public string Description { get; init; } = null!;
 }

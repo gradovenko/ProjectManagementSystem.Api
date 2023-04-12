@@ -1,4 +1,4 @@
-namespace ProjectManagementSystem.DatabaseMigrations.Entities;
+namespace ProjectManagementSystem.Domain.Issues;
 
 internal sealed record IssueLabel
 {

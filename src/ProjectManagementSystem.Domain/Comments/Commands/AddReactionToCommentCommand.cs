@@ -4,13 +4,15 @@ namespace ProjectManagementSystem.Domain.Comments.Commands;
 
 public sealed record AddReactionToCommentCommand : IRequest<AddReactionToCommentCommandResultState>
 {
-    public string Name { get; init; }
+    public Guid ReactionId { get; init; }
     public Guid CommentId { get; init; }
+    public Guid UserId { get; init; }
 }
 
 public enum AddReactionToCommentCommandResultState
 {
-    ReactionToCommentAdded,
+    UserNotFound,
     CommentNotFound,
-    ReactionNotFound
+    ReactionNotFound,
+    ReactionToCommentAdded
 }

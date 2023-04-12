@@ -10,7 +10,12 @@ internal sealed record User
     public string State { get; init; } = null!;
     public DateTime CreateDate { get; init; }
     public DateTime UpdateDate { get; init; }
-    public IEnumerable<Issue> Issues { get; init; } = null!;
+    public IEnumerable<Issue> CreatedIssues { get; init; } = null!;
+    public IEnumerable<Issue> ClosedIssues { get; init; } = null!;
     public IEnumerable<TimeEntry> TimeEntries { get; init; } = null!;
+    public IEnumerable<Comment> Comments { get; init; } = null!;
+    public IEnumerable<IssueAssignee> IssueAssignees { get; init; } = null!;
+    public IEnumerable<IssueUserReaction> IssueUserReactions { get; init; } = null!;
+    public IEnumerable<CommentUserReaction> CommentUserReactions { get; init; } = null!;
     public Guid ConcurrencyToken { get; init; }
 }

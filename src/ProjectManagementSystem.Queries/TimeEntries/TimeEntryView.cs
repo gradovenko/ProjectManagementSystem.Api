@@ -1,6 +1,6 @@
 namespace ProjectManagementSystem.Queries.TimeEntries;
 
-public sealed record TimeEntryView
+public sealed record TimeEntryViewModel
 {
     public Guid Id { get; set; }
     public decimal Hours { get; set; }

@@ -9,6 +9,6 @@ internal sealed record Label
     public bool IsDeleted { get; init; }
     public DateTime CreateDate { get; init; }
     public DateTime UpdateDate { get; init; }
-    public IEnumerable<Issue> Issues { get; init; } = null!;
+    public IEnumerable<IssueLabel> IssueLabels { get; init; } = null!;
     public Guid ConcurrencyToken { get; init; }
 }

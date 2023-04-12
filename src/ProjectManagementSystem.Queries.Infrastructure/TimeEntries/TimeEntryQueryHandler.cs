@@ -4,7 +4,7 @@ using ProjectManagementSystem.Queries.TimeEntries;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.TimeEntries;
 
-public sealed class TimeEntryQueryHandler : IRequestHandler<TimeEntryQuery, TimeEntryView>
+public sealed class TimeEntryQueryHandler : IRequestHandler<TimeEntryQuery, TimeEntryViewModel?>
 {
     private readonly TimeEntryDbContext _context;
 
@@ -13,7 +13,7 @@ public sealed class TimeEntryQueryHandler : IRequestHandler<TimeEntryQuery, Time
         _context = context;
     }
 
-    public async Task<TimeEntryView> Handle(TimeEntryQuery query, CancellationToken cancellationToken)
+    public async Task<TimeEntryViewModel?> Handle(TimeEntryQuery query, CancellationToken cancellationToken)
     {
         return await _context.TimeEntries
             .Include(i => i.Project)
@@ -22,7 +22,7 @@ public sealed class TimeEntryQueryHandler : IRequestHandler<TimeEntryQuery, Time
             .Include(i => i.Activity)
             .AsNoTracking()
             .Where(te => te.Id == query.Id)
-            .Select(te => new TimeEntryView
+            .Select(te => new TimeEntryViewModel
             {
                 Id = te.Id,
                 Hours = te.Hours,

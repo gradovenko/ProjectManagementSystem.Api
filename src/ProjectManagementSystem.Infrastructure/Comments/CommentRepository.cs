@@ -18,7 +18,7 @@ public sealed class CommentRepository : ICommentRepository
     public async Task<Comment?> Get(Guid id, CancellationToken cancellationToken)
     {
         return await _context.Comments
-            .SingleOrDefaultAsync(_ => _.Id == id, cancellationToken);
+            .SingleOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
     public async Task Save(Comment comment, CancellationToken cancellationToken)
@@ -28,7 +28,7 @@ public sealed class CommentRepository : ICommentRepository
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        foreach (var domainEvent in comment.DomainEvents)
-            await _mediator.Publish(domainEvent, cancellationToken);
+        // foreach (var domainEvent in comment.DomainEvents)
+        //     await _mediator.Publish(domainEvent, cancellationToken);
     }
 }
