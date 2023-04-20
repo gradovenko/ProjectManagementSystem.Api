@@ -13,7 +13,7 @@ internal static class DatabaseMigrationsRunner
         var context = serviceScope.ServiceProvider.GetService<MigrationDbContext>();
         var loggerFactory = serviceScope.ServiceProvider.GetService<ILoggerFactory>();
 
-        var logger = loggerFactory.CreateLogger("DatabaseMigrations");
+        var logger = loggerFactory!.CreateLogger("DatabaseMigrations");
 
         logger.LogInformation("Starting migrations");
 
@@ -24,7 +24,7 @@ internal static class DatabaseMigrationsRunner
                 .WaitAndRetry(10,
                     (tryNumber) => TimeSpan.FromSeconds(tryNumber),
                     (ex, delayTime) => logger.LogWarning(ex, $"Connection to database server failed. Try after {delayTime.Seconds} seconds."))
-                .Execute(() => context.Database.Migrate());
+                .Execute(() => context!.Database.Migrate());
 
             logger.LogInformation("Migrations ended");
         }

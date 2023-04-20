@@ -99,11 +99,6 @@ builder.Host.ConfigureServices((context, services) =>
         options.DefaultPolicy = authorizationPolicyBuilder.Build();
     });
 
-    // services.AddScoped<IRequestHandler<ProjectManagementSystem.Domain.Authentication.Commands.AuthenticateUserByPasswordCommand, 
-    //         ProjectManagementSystem.Domain.CommandResult<ProjectManagementSystem.Domain.Authentication.Token, 
-    //             ProjectManagementSystem.Domain.Authentication.Commands.AuthenticateUserByPasswordCommandResultState>>, 
-    //     ProjectManagementSystem.Api.Handlers.AuthenticateUserByPasswordCommandHandler>();
-
     #endregion
 
     #region Commands
