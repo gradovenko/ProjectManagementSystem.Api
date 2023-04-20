@@ -28,9 +28,6 @@ public sealed class LabelQueryDbContext : DbContext
                 .IsRequired();
             builder.Property(l => l.UpdateDate)
                 .IsRequired();
-            builder.Property("_concurrencyToken")
-                .HasColumnName("ConcurrencyToken")
-                .IsConcurrencyToken();
         });
     }
 }

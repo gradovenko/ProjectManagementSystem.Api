@@ -27,13 +27,16 @@ public sealed class MigrationDbContext : DbContext
                 .HasMaxLength(1024)
                 .IsRequired();
             builder.Property(o => o.Role)
+                .HasMaxLength(64)
+                .IsRequired();
+            builder.Property(o => o.State) 
+                .HasMaxLength(64)
+                .IsRequired();
+            builder.Property(o => o.IsDeleted)
                 .IsRequired();
             builder.Property(o => o.CreateDate)
                 .IsRequired();
             builder.Property(o => o.UpdateDate)
-                .IsRequired();
-            builder.Property(o => o.State)
-                .HasMaxLength(64)
                 .IsRequired();
             builder.Property(o => o.ConcurrencyToken)
                 .IsConcurrencyToken();
@@ -54,8 +57,8 @@ public sealed class MigrationDbContext : DbContext
                 .HasPrincipalKey(o => o.UserId);
 
             builder.HasMany(o => o.TimeEntries)
-                .WithOne(o => o.User)
-                .HasForeignKey(o => o.UserId)
+                .WithOne(o => o.Author)
+                .HasForeignKey(o => o.AuthorId)
                 .HasPrincipalKey(o => o.UserId);
 
             builder.HasMany(o => o.IssueUserReactions)
@@ -78,7 +81,7 @@ public sealed class MigrationDbContext : DbContext
                 CreateDate = DateTime.UnixEpoch,
                 UpdateDate = DateTime.UnixEpoch,
                 State = "Active",
-                ConcurrencyToken = Guid.NewGuid()
+                ConcurrencyToken = new Guid("0ae12bbd-58ef-4c2e-87a6-2c2cb3f9592d")
             });
         });
             
@@ -135,6 +138,8 @@ public sealed class MigrationDbContext : DbContext
                 .IsRequired();
             builder.Property(o => o.Description)
                 .IsRequired(false);
+            builder.Property(o => o.State)
+                .IsRequired();
             builder.Property(o => o.CreateDate)
                 .IsRequired();
             builder.Property(o => o.UpdateDate)
@@ -191,10 +196,16 @@ public sealed class MigrationDbContext : DbContext
             builder.HasKey(r => r.ReactionId);
             builder.Property(r => r.ReactionId)
                 .ValueGeneratedNever();
-            builder.Property(r => r.Unicode)
+            builder.Property(r => r.Emoji)
                 .IsRequired();
-            builder.Property(r => r.Description)
+            builder.Property(r => r.Name)
                 .IsRequired();
+            builder.Property(r => r.Category)
+                .IsRequired();
+            builder.Property(o => o.IsDeleted)
+                .IsRequired();
+            builder.Property(o => o.ConcurrencyToken)
+                .IsConcurrencyToken();
             
             builder.HasMany(o => o.IssueUserReactions)
                 .WithOne(o => o.Reaction)
@@ -231,9 +242,9 @@ public sealed class MigrationDbContext : DbContext
                 .HasForeignKey(o => o.IssueId)
                 .HasPrincipalKey(o => o.IssueId);
 
-            builder.HasOne(o => o.User)
+            builder.HasOne(o => o.Author)
                 .WithMany(o => o.TimeEntries)
-                .HasForeignKey(o => o.UserId)
+                .HasForeignKey(o => o.AuthorId)
                 .HasPrincipalKey(o => o.UserId);
         });
 
@@ -295,7 +306,6 @@ public sealed class MigrationDbContext : DbContext
                 .WithMany(o => o.ChildComments)
                 .HasForeignKey(o => o.ParentCommentId)
                 .HasPrincipalKey(o => o.CommentId);
-            // .OnDelete(DeleteBehavior.Cascade); // optional
             
             builder.HasMany(o => o.CommentUserReactions)
                 .WithOne(o => o.Comment)
@@ -306,7 +316,7 @@ public sealed class MigrationDbContext : DbContext
         modelBuilder.Entity<CommentUserReaction>(builder =>
         {
             builder.ToTable("CommentUserReaction");
-            builder.HasKey(o => o.CommentUserReactionId);
+            builder.HasKey(o => new {o.CommentId, o.UserId, o.ReactionId});
 
             builder.HasOne(o => o.Comment)
                 .WithMany(o => o.CommentUserReactions)
@@ -359,7 +369,7 @@ public sealed class MigrationDbContext : DbContext
         modelBuilder.Entity<IssueUserReaction>(builder =>
         {
             builder.ToTable("IssueUserReaction");
-            builder.HasKey(o => o.IssueUserReactionId);
+            builder.HasKey(o => new {o.IssueId, o.UserId, o.ReactionId});
 
             builder.HasOne(o => o.Issue)
                 .WithMany(o => o.IssueUserReactions)

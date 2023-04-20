@@ -1,9 +1,8 @@
 namespace ProjectManagementSystem.Domain.Issues;
 
-public sealed record User
+public sealed class User
 {
     public Guid Id { get; private set; }
-    public IEnumerable<Issue> Issues { get; private set; } = null!;
 
     private User() { }
 }

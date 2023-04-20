@@ -5,9 +5,9 @@ namespace ProjectManagementSystem.Api.Models.User.IssueReactions;
 public sealed record AddReactionToIssueBindingModel
 {
     /// <summary>
-    /// 
+    /// Reaction id
     /// </summary>
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 }
 
 public sealed class AddReactionToIssueBindingModelValidator : AbstractValidator<AddReactionToIssueBindingModel>

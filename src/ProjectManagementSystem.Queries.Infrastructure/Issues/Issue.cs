@@ -9,15 +9,15 @@ internal sealed record Issue
     public DateTime CreateDate { get; init; }
     public DateTime UpdateDate { get; init; }
     public DateTime? DueDate { get; init; }
-    //public DateTime? CloseDate { get; init; }
-    //public User? ClosedByUser { get; init; }
-    //public Guid? ClosedByUserId { get; init; }
     public Guid ProjectId { get; init; }
     public Project Project { get; init; } = null!;
-    public User Author { get; init; } = null!;
     public Guid AuthorId { get; init; }
-    //public IEnumerable<TimeEntry> TimeEntries { get; init; } = null!;
+    public User Author { get; init; } = null!;
+    public Guid? UserIdWhoClosed { get; init; }
+    public User? UserWhoClosed { get; init; }
+    // public IEnumerable<TimeEntry> TimeEntries { get; init; } = null!;
+    // public IEnumerable<Comment> Comments { get; init; } = null!;
     public IEnumerable<User> Assignees { get; init; } = null!;
-    // public IEnumerable<Label> Labels { get; init; } = null!;
-    // public IEnumerable<Reaction> Reactions { get; init; } = null!;
+    // public IEnumerable<IssueLabel> IssueLabels { get; init; } = null!;
+    // public IEnumerable<IssueUserReaction> IssueUserReactions { get; init; } = null!;
 }

@@ -1,6 +1,3 @@
-using MediatR;
-using ProjectManagementSystem.Domain.Comments.DomainEvents;
-
 namespace ProjectManagementSystem.Domain.Comments;
 
 public sealed class Comment
@@ -16,12 +13,10 @@ public sealed class Comment
     public Comment? ParentComment { get; init; }
     private List<Comment> _childComments = new();
     public IReadOnlyCollection<Comment> ChildComments => _childComments.AsReadOnly();
-    private List<CommentUserReaction> _commentUserReactions = new();
 
+    private List<CommentUserReaction> _commentUserReactions = new();
     public IReadOnlyCollection<CommentUserReaction> CommentUserReactions => _commentUserReactions.AsReadOnly();
 
-    // private List<INotification> _domainEvents = new();
-    // public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
     private Guid _concurrencyToken;
 
     public Comment(Guid id, string content, Guid authorId, Guid issueId, Guid? parentCommentId)
@@ -33,12 +28,6 @@ public sealed class Comment
         AuthorId = authorId;
         IssueId = issueId;
         ParentCommentId = parentCommentId;
-
-        // _domainEvents.Add(new CommentCreatedDomainEvent
-        // {
-        //     CommentId = id,
-        //     Content = content
-        // });
 
         _concurrencyToken = Guid.NewGuid();
     }
@@ -59,6 +48,9 @@ public sealed class Comment
 
     public void AddChildComment(Comment childComment)
     {
+        if (childComment.ParentComment != null)
+            throw new InvalidOperationException("The comment is already a child comment");
+
         _childComments.Add(childComment);
         UpdateDate = DateTime.UtcNow;
         _concurrencyToken = Guid.NewGuid();
@@ -71,19 +63,28 @@ public sealed class Comment
     //     _concurrencyToken = Guid.NewGuid();
     // }
 
-    public void AddReaction(User user, Reaction reaction)
+    public void AddUserReaction(Guid userId, Guid reactionId)
     {
-        if (_commentUserReactions.Any(o => o.UserId == user.Id && o.ReactionId == reaction.Id))
-            throw new InvalidOperationException("User already added this reaction to the comment");
-        _commentUserReactions.Add(new CommentUserReaction(Id, user.Id, reaction.Id));
+        if (_commentUserReactions.Any(o => o.UserId == userId && o.ReactionId == reactionId))
+            throw new InvalidOperationException($"User {userId} already added this reaction {reactionId} to the issue {Id}");
+
+        _commentUserReactions.Add(new CommentUserReaction(Id, userId, reactionId));
+
+        UpdateDate = DateTime.UtcNow;
+        _concurrencyToken = Guid.NewGuid();
     }
 
-    public void RemoveReaction(User user, Reaction reaction)
+    public void RemoveUserReaction(Guid userId, Guid reactionId)
     {
-        var reactionToRemove =
-            _commentUserReactions.SingleOrDefault(o => o.UserId == user.Id && o.ReactionId == reaction.Id);
-        if (reactionToRemove == null)
-            throw new InvalidOperationException("User has already removed this reaction from the comment, or the comment user reaction does not exist");
-        _commentUserReactions.Remove(reactionToRemove);
+        CommentUserReaction? commentUserReaction =
+            _commentUserReactions.Single(o => o.UserId == userId && o.ReactionId == reactionId);
+
+        if (commentUserReaction == null)
+            throw new InvalidOperationException($"User {userId} has already removed this reaction {reactionId} from the issue, or the issue user reaction {reactionId} does not exist");
+
+        _commentUserReactions.Remove(commentUserReaction);
+
+        UpdateDate = DateTime.UtcNow;
+        _concurrencyToken = Guid.NewGuid();
     }
 }

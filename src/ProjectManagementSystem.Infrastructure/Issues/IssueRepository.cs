@@ -9,14 +9,16 @@ public sealed class IssueRepository : IIssueRepository
 
     public IssueRepository(IssueDbContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public async Task<Issue?> Get(Guid id, CancellationToken cancellationToken)
     {
         return await _context.Issues
-            .AsNoTracking()
-            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
+            .Include(o => o.IssueAssignees)
+            .Include(o => o.IssueLabels)
+            .Include(o => o.IssueUserReactions)
+            .SingleOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
     public async Task Save(Issue issue, CancellationToken cancellationToken)

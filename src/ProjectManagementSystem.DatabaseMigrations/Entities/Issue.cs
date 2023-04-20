@@ -10,7 +10,7 @@ internal sealed record Issue
     public DateTime UpdateDate { get; init; }
     public DateTime? DueDate { get; init; }
     public Guid? UserIdWhoClosed { get; init; }
-    public User? UserWhoClosed { get; init; } = null!;
+    public User? UserWhoClosed { get; init; }
     public Guid ProjectId { get; init; }
     public Project Project { get; init; } = null!;
     public User Author { get; init; } = null!;

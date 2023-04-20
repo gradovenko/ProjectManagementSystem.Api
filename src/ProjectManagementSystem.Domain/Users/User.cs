@@ -8,6 +8,7 @@ public sealed class User
     public string PasswordHash { get; private set; }
     public UserRole Role { get; private set; }
     public UserState State { get; private set; }
+    public bool IsDeleted { get; private set; }
     public DateTime CreateDate { get; private set; }
     public DateTime UpdateDate { get; private set; }
     private Guid _concurrencyToken;
@@ -34,6 +35,13 @@ public sealed class User
     public void ChangePasswordHash(string newPasswordHash)
     {
         PasswordHash = newPasswordHash;
+        UpdateDate = DateTime.UtcNow;
+        _concurrencyToken = Guid.NewGuid();
+    }
+    
+    public void Delete()
+    {
+        IsDeleted = true;
         UpdateDate = DateTime.UtcNow;
         _concurrencyToken = Guid.NewGuid();
     }

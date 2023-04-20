@@ -16,27 +16,32 @@ public sealed class UserDbContext : DbContext
         modelBuilder.Entity<User>(builder =>
         {
             builder.ToTable("User");
-            builder.HasKey(u => u.Id);
-            builder.Property(u => u.Id)
+            builder.HasKey(o => o.Id);
+            builder.Property(o => o.Id)
                 .HasColumnName("UserId")
                 .ValueGeneratedNever();
-            builder.Property(u => u.Name)
+            builder.Property(o => o.Name)
                 .HasMaxLength(256)
                 .IsRequired();
-            builder.Property(u => u.Email)
+            builder.Property(o => o.Email)
                 .HasMaxLength(256)
                 .IsRequired();
-            builder.Property(u => u.PasswordHash)
-                .HasMaxLength(1024);
-            builder.Property(u => u.Role)
+            builder.Property(o => o.PasswordHash)
+                .HasMaxLength(1024)
+                .IsRequired();
+            builder.Property(o => o.Role)
+                .HasMaxLength(64)
                 .HasConversion<string>()
                 .IsRequired();
-            builder.Property(u => u.CreateDate)
-                .IsRequired();
-            builder.Property(u => u.UpdateDate)
-                .IsRequired();
-            builder.Property(u => u.State)
+            builder.Property(o => o.State)
+                .HasMaxLength(64)
                 .HasConversion<string>()
+                .IsRequired();
+            builder.Property(o => o.IsDeleted)
+                .IsRequired();
+            builder.Property(o => o.CreateDate)
+                .IsRequired();
+            builder.Property(o => o.UpdateDate)
                 .IsRequired();
             builder.Property("_concurrencyToken")
                 .HasColumnName("ConcurrencyToken")

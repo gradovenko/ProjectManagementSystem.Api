@@ -15,7 +15,8 @@ public enum CreateCommentForIssueCommandResultState
 {
     AuthorNotFound,
     IssueNotFound,
-    CommentWithSameIdButOtherParamsAlreadyExists,
     ParentCommentNotFound,
+    ParentCommentAlreadyChildCommentOfAnotherComment,
+    CommentWithSameIdButOtherParamsAlreadyExists,
     CommentCreated
 }

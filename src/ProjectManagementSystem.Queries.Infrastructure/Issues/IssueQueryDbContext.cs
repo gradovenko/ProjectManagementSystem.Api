@@ -27,25 +27,65 @@ public sealed class IssueQueryDbContext : DbContext
         modelBuilder.Entity<Issue>(builder =>
         {
             builder.ToTable("Issue");
-            builder.HasKey(i => i.IssueId);
-            builder.Property(i => i.Title)
+            builder.HasKey(o => o.IssueId);
+            builder.Property(o => o.Title)
                 .IsRequired();
-            builder.Property(i => i.Description)
+            builder.Property(o => o.Description)
                 .IsRequired(false);
-            builder.Property(i => i.CreateDate)
+            builder.Property(o => o.State)
                 .IsRequired();
-            builder.Property(i => i.UpdateDate)
+            builder.Property(o => o.CreateDate)
                 .IsRequired();
-            builder.Property(i => i.DueDate)
+            builder.Property(o => o.UpdateDate)
+                .IsRequired();
+            builder.Property(o => o.DueDate)
                 .IsRequired(false);
-            
-            builder.HasOne(i => i.Author)
-                .WithMany()
-                .HasForeignKey(i => i.AuthorId)
-                .HasPrincipalKey(u => u.UserId);
 
-            builder.HasMany(i => i.Assignees)
-                .WithMany(u => u.Issues);
+            builder.HasOne(o => o.Project)
+                .WithMany()
+                .HasForeignKey(o => o.ProjectId)
+                .HasPrincipalKey(o => o.ProjectId);
+            
+            builder.HasOne(o => o.Author)
+                .WithMany()
+                .HasForeignKey(o => o.AuthorId)
+                .HasPrincipalKey(o => o.UserId);
+
+            builder.HasOne(o => o.UserWhoClosed)
+                .WithMany()
+                .HasForeignKey(o => o.UserIdWhoClosed)
+                .HasPrincipalKey(o => o.UserId);
+
+            builder.HasMany(o => o.Assignees)
+                .WithMany(o => o.Issues)
+                .UsingEntity<IssueAssignee>(
+                    l => l.HasOne<User>().WithMany().HasForeignKey(e => e.AssigneeId),
+                    r => r.HasOne<Issue>().WithMany().HasForeignKey(e => e.IssueId));
+
+            // builder.HasMany(o => o.TimeEntries)
+            //     .WithOne(o => o.Issue)
+            //     .HasForeignKey(o => o.IssueId)
+            //     .HasPrincipalKey(o => o.IssueId);
+            //
+            // builder.HasMany(o => o.Comments)
+            //     .WithOne(o => o.Issue)
+            //     .HasForeignKey(o => o.IssueId)
+            //     .HasPrincipalKey(o => o.IssueId);
+            //
+            // builder.HasMany(o => o.IssueAssignees)
+            //     .WithOne(o => o.Issue)
+            //     .HasForeignKey(o => o.IssueId)
+            //     .HasPrincipalKey(o => o.IssueId);
+            //
+            // builder.HasMany(o => o.IssueLabels)
+            //     .WithOne(o => o.Issue)
+            //     .HasForeignKey(o => o.IssueId)
+            //     .HasPrincipalKey(o => o.IssueId);
+            //
+            // builder.HasMany(o => o.IssueUserReactions)
+            //     .WithOne(o => o.Issue)
+            //     .HasForeignKey(o => o.IssueId)
+            //     .HasPrincipalKey(o => o.IssueId);
         });
     }
 }

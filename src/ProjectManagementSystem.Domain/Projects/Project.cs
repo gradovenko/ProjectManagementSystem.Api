@@ -11,6 +11,8 @@ public sealed class Project
     public DateTime CreateDate { get; private set; }
     public DateTime UpdateDate { get; private set; }
     private Guid _concurrencyToken;
+    
+    private Project() { }
 
     public Project(Guid id, string name, string? description, string path, ProjectVisibility visibility)
     {

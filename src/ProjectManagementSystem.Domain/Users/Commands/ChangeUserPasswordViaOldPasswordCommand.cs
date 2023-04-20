@@ -2,7 +2,7 @@ using MediatR;
 
 namespace ProjectManagementSystem.Domain.Users.Commands;
 
-public sealed class ChangeUserPasswordViaOldPasswordCommand : IRequest<ChangeUserPasswordViaOldPasswordCommandResultState>
+public sealed record ChangeUserPasswordViaOldPasswordCommand : IRequest<ChangeUserPasswordViaOldPasswordCommandResultState>
 {
     public Guid UserId { get; init; }
     public string OldPassword { get; init; } = null!;

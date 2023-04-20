@@ -42,4 +42,8 @@
         <ProjectReference Include="..\ProjectManagementSystem.Queries\ProjectManagementSystem.Queries.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\User\Reactions" />
+    </ItemGroup>
+
 </Project>

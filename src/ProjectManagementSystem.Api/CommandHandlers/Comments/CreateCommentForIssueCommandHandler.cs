@@ -4,8 +4,7 @@ using ProjectManagementSystem.Domain.Comments.Commands;
 
 namespace ProjectManagementSystem.Api.CommandHandlers.Comments;
 
-public sealed class CreateCommentForIssueCommandHandler : IRequestHandler<CreateCommentForIssueCommand,
-        CreateCommentForIssueCommandResultState>
+public sealed class CreateCommentForIssueCommandHandler : IRequestHandler<CreateCommentForIssueCommand, CreateCommentForIssueCommandResultState>
 {
     private readonly IUserGetter _userGetter;
     private readonly IIssueGetter _issueGetter;
@@ -43,6 +42,9 @@ public sealed class CreateCommentForIssueCommandHandler : IRequestHandler<Create
 
             if (parentComment == null)
                 return CreateCommentForIssueCommandResultState.ParentCommentNotFound;
+            
+            if (parentComment.ParentCommentId != null)
+                return CreateCommentForIssueCommandResultState.ParentCommentAlreadyChildCommentOfAnotherComment;
         }
 
         await _commentRepository.Save(

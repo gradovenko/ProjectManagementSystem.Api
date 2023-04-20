@@ -2,5 +2,5 @@ namespace ProjectManagementSystem.Domain.Comments;
 
 public interface IReactionGetter
 {
-    Task<Reaction?> Get(string name, CancellationToken cancellationToken);
+    Task<Reaction?> Get(Guid id, CancellationToken cancellationToken);
 }

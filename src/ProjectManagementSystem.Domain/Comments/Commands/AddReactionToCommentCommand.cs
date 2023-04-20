@@ -11,8 +11,9 @@ public sealed record AddReactionToCommentCommand : IRequest<AddReactionToComment
 
 public enum AddReactionToCommentCommandResultState
 {
-    UserNotFound,
     CommentNotFound,
+    UserNotFound,
     ReactionNotFound,
+    CommentUserReactionAlreadyExists,
     ReactionToCommentAdded
 }

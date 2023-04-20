@@ -1,15 +1,15 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Queries.Issues;
-using ProjectManagementSystem.Queries.ProjectIssues;
+using ProjectManagementSystem.Queries.User.Issues;
+using ProjectManagementSystem.Queries.User.ProjectIssues;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Issues;
 
 public sealed class IssueQueryHandler : 
     IRequestHandler<IssueQuery, IssueViewModel?>,  
-    IRequestHandler<IssueListQuery, PageViewModel<IssueListItemViewModel>>,
+    IRequestHandler<IssueListQuery, Page<IssueListItemViewModel>>,
     IRequestHandler<ProjectIssueQuery, ProjectIssueViewModel?>,
-    IRequestHandler<ProjectIssueListQuery, PageViewModel<ProjectIssueListItemViewModel>>
+    IRequestHandler<ProjectIssueListQuery, Page<ProjectIssueListItemViewModel>>
 {
     private readonly IssueQueryDbContext _context;
 
@@ -21,56 +21,61 @@ public sealed class IssueQueryHandler :
     public async Task<IssueViewModel?> Handle(IssueQuery query, CancellationToken cancellationToken)
     {
         return await _context.Issues.AsNoTracking()
-            //.Include(i => i.Project)
-            .Include(i => i.Author)
-            .Include(i => i.Assignees)
-            //.Include(i => i.ClosedByUser)
-            .Where(i => i.IssueId == query.IssueId)
-            .Select(i => new IssueViewModel
+            .Include(o => o.Project)
+            .Include(o => o.Author)
+            .Include(o => o.UserWhoClosed)
+            .Where(o => o.IssueId == query.IssueId)
+            .Select(o => new IssueViewModel
             {
-                Id = i.IssueId,
-                Title = i.Title,
-                Description = i.Description,
-                CreateDate = i.CreateDate,
-                UpdateDate = i.UpdateDate,
-                DueDate = i.DueDate,
+                Id = o.IssueId,
+                Title = o.Title,
+                Description = o.Description,
+                State = o.State,
+                CreateDate = o.CreateDate,
+                UpdateDate = o.UpdateDate,
+                DueDate = o.DueDate,
+                Project = new ProjectViewModel
+                {
+                    Id = o.Project.ProjectId,
+                    Name = o.Project.Name,
+                },
                 Author = new AuthorViewModel
                 {
-                    Id = i.Author.UserId,
-                    Name = i.Author.Name
+                    Id = o.Author.UserId,
+                    Name = o.Author.Name
                 },
-                Assignees = i.Assignees.Select(a => new AssigneeViewModel
+                Assignees = o.Assignees.Select(a => new AssigneeViewModel
                 {
-                    Id = i.Author.UserId,
-                    Name = i.Author.Name
+                    Id = o.Author.UserId,
+                    Name = o.Author.Name
                 })
             })
             .SingleOrDefaultAsync(cancellationToken);
     }
     
-    public async Task<PageViewModel<IssueListItemViewModel>> Handle(IssueListQuery query, CancellationToken cancellationToken)
+    public async Task<Page<IssueListItemViewModel>> Handle(IssueListQuery query, CancellationToken cancellationToken)
     {
         var sql = _context.Issues.AsNoTracking()
-            .Include(i => i.Author)
-            .Include(i => i.Assignees)
+            .Include(o => o.Author)
+            .Include(o => o.Assignees)
             .OrderBy(p => p.CreateDate)
-            .Select(i => new IssueListItemViewModel
+            .Select(o => new IssueListItemViewModel
             {
-                Id = i.IssueId,
-                Title = i.Title,
-                Description = i.Description,
-                CreateDate = i.CreateDate,
-                UpdateDate = i.UpdateDate,
-                DueDate = i.DueDate,
+                Id = o.IssueId,
+                Title = o.Title,
+                Description = o.Description,
+                CreateDate = o.CreateDate,
+                UpdateDate = o.UpdateDate,
+                DueDate = o.DueDate,
                 Author = new AuthorViewModel
                 {
-                    Id = i.Author.UserId,
-                    Name = i.Author.Name
+                    Id = o.Author.UserId,
+                    Name = o.Author.Name
                 },
             })
             .AsQueryable();
 
-        return new PageViewModel<IssueListItemViewModel>
+        return new Page<IssueListItemViewModel>
         {
             Limit = query.Limit,
             Offset = query.Offset,
@@ -82,57 +87,57 @@ public sealed class IssueQueryHandler :
     public async Task<ProjectIssueViewModel?> Handle(ProjectIssueQuery request, CancellationToken cancellationToken)
     {
         return await _context.Issues.AsNoTracking()
-            //.Include(i => i.Project)
-            .Include(i => i.Author)
-            .Include(i => i.Assignees)
-            //.Include(i => i.ClosedByUser)
-            .Where(i => i.IssueId == request.IssueId)
-            .Select(i => new ProjectIssueViewModel
+            //.Include(o => o.Project)
+            .Include(o => o.Author)
+            .Include(o => o.Assignees)
+            //.Include(o => o.ClosedByUser)
+            .Where(o => o.IssueId == request.IssueId)
+            .Select(o => new ProjectIssueViewModel
             {
-                Id = i.IssueId,
-                Title = i.Title,
-                Description = i.Description,
-                CreateDate = i.CreateDate,
-                UpdateDate = i.UpdateDate,
-                DueDate = i.DueDate,
+                Id = o.IssueId,
+                Title = o.Title,
+                Description = o.Description,
+                CreateDate = o.CreateDate,
+                UpdateDate = o.UpdateDate,
+                DueDate = o.DueDate,
                 Author = new ProjectAuthorViewModel
                 {
-                    Id = i.Author.UserId,
-                    Name = i.Author.Name
+                    Id = o.Author.UserId,
+                    Name = o.Author.Name
                 },
-                Assignees = i.Assignees.Select(a => new ProjectAssigneeViewModel
+                Assignees = o.Assignees.Select(a => new ProjectAssigneeViewModel
                 {
-                    Id = i.Author.UserId,
-                    Name = i.Author.Name
+                    Id = o.Author.UserId,
+                    Name = o.Author.Name
                 })
             })
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<PageViewModel<ProjectIssueListItemViewModel>> Handle(ProjectIssueListQuery request, CancellationToken cancellationToken)
+    public async Task<Page<ProjectIssueListItemViewModel>> Handle(ProjectIssueListQuery request, CancellationToken cancellationToken)
     {
         var sql = _context.Issues.AsNoTracking()
-            .Where(i => i.ProjectId == request.ProjectId)
-            .Include(i => i.Author)
-            .Include(i => i.Assignees)
+            .Where(o => o.ProjectId == request.ProjectId)
+            .Include(o => o.Author)
+            .Include(o => o.Assignees)
             .OrderBy(p => p.CreateDate)
-            .Select(i => new ProjectIssueListItemViewModel
+            .Select(o => new ProjectIssueListItemViewModel
             {
-                Id = i.IssueId,
-                Title = i.Title,
-                Description = i.Description,
-                CreateDate = i.CreateDate,
-                UpdateDate = i.UpdateDate,
-                DueDate = i.DueDate,
+                Id = o.IssueId,
+                Title = o.Title,
+                Description = o.Description,
+                CreateDate = o.CreateDate,
+                UpdateDate = o.UpdateDate,
+                DueDate = o.DueDate,
                 Author = new ProjectAuthorViewModel
                 {
-                    Id = i.Author.UserId,
-                    Name = i.Author.Name
+                    Id = o.Author.UserId,
+                    Name = o.Author.Name
                 },
             })
             .AsQueryable();
 
-        return new PageViewModel<ProjectIssueListItemViewModel>
+        return new Page<ProjectIssueListItemViewModel>
         {
             Limit = request.Limit,
             Offset = request.Offset,

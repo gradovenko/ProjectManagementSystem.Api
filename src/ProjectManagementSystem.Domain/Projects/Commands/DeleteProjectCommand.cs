@@ -9,6 +9,6 @@ public sealed record DeleteProjectCommand : IRequest<DeleteProjectCommandResultS
 
 public enum DeleteProjectCommandResultState
 {
-    ProjectDeleted,
-    ProjectNotFound
+    ProjectNotFound,
+    ProjectDeleted
 }

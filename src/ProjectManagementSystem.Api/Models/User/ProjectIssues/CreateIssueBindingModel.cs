@@ -2,20 +2,20 @@ using FluentValidation;
 
 namespace ProjectManagementSystem.Api.Models.User.ProjectIssues;
 
-public sealed class CreateIssueBindingModel
+public sealed record CreateIssueBindingModel
 {
     public Guid Id { get; init; }
     public string Title { get; init; }
     public string? Description { get; init; }
     public Guid AuthorId { get; init; }
-    public IEnumerable<Guid> AssigneeIds { get; init; } = null!;
-    public IEnumerable<Guid> LabelIds { get; init; } = null!;
+    public IEnumerable<Guid>? AssigneeIds { get; init; } = null!;
+    public IEnumerable<Guid>? LabelIds { get; init; } = null!;
     public DateTime? DueDate { get; init; }
 }
 
-public sealed class CreateIssueBindingValidatorModel : AbstractValidator<CreateIssueBindingModel>
+public sealed class CreateIssueBindingModelValidatorModel : AbstractValidator<CreateIssueBindingModel>
 {
-    public CreateIssueBindingValidatorModel()
+    public CreateIssueBindingModelValidatorModel()
     {
         RuleFor(b => b.Id)
             .NotEmpty();

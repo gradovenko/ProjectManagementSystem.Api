@@ -1,6 +1,8 @@
 namespace ProjectManagementSystem.Domain.Issues;
 
-public sealed record Project
+public sealed class Project
 {
     public Guid Id { get; private set; }
+    
+    private Project() { }
 }

@@ -12,10 +12,6 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.IdentityModel.Tokens;
 using ProjectManagementSystem.Api;
 using ProjectManagementSystem.Api.Extensions;
-using ProjectManagementSystem.Queries;
-using ProjectManagementSystem.Queries.Profiles;
-using ProjectManagementSystem.Queries.ProjectIssues;
-using ProjectManagementSystem.Queries.Projects;
 using Prometheus;
 using Prometheus.DotNetRuntime;
 using Prometheus.SystemMetrics;
@@ -42,7 +38,7 @@ builder.Host.ConfigureServices((context, services) =>
     
     services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
     services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ProjectManagementSystem.Queries.Infrastructure.Issues.IssueQueryHandler>());
-    services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ProjectIssueQuery>());
+    services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ProjectManagementSystem.Queries.User.Issues.IssueQuery>());
 
     #endregion
 
@@ -98,8 +94,7 @@ builder.Host.ConfigureServices((context, services) =>
     {
         var authorizationPolicyBuilder = new AuthorizationPolicyBuilder(
             JwtBearerDefaults.AuthenticationScheme
-        ).RequireAuthenticatedUser();
-           // .RequireRole(ProjectManagementSystem.Api.Authorization.UserRole.Admin, ProjectManagementSystem.Api.Authorization.UserRole.User);
+        ).RequireAuthenticatedUser().RequireRole(ProjectManagementSystem.Api.Authorization.UserRole.Admin, ProjectManagementSystem.Api.Authorization.UserRole.User);
 
         options.DefaultPolicy = authorizationPolicyBuilder.Build();
     });
@@ -135,6 +130,9 @@ builder.Host.ConfigureServices((context, services) =>
     services.AddScoped<ProjectManagementSystem.Domain.Issues.IProjectGetter, ProjectManagementSystem.Infrastructure.Issues.ProjectGetter>();
     services.AddScoped<ProjectManagementSystem.Domain.Issues.IReactionGetter, ProjectManagementSystem.Infrastructure.Issues.ReactionGetter>();
     services.AddScoped<ProjectManagementSystem.Domain.Issues.IUserGetter, ProjectManagementSystem.Infrastructure.Issues.UserGetter>();
+    services.AddScoped<ProjectManagementSystem.Domain.Issues.IIssueAssigneeGetter, ProjectManagementSystem.Infrastructure.Issues.IssueAssigneeGetter>();
+    services.AddScoped<ProjectManagementSystem.Domain.Issues.IIssueLabelGetter, ProjectManagementSystem.Infrastructure.Issues.IssueLabelGetter>();
+    services.AddScoped<ProjectManagementSystem.Domain.Issues.IIssueUserReactionGetter, ProjectManagementSystem.Infrastructure.Issues.IssueUserReactionGetter>();
 
     #endregion
     
@@ -170,12 +168,21 @@ builder.Host.ConfigureServices((context, services) =>
 
     #endregion
     
-    #region Comment
+    #region Comments
     
     services.AddNpgsqlDbContextPool<ProjectManagementSystem.Infrastructure.Comments.CommentDbContext>(npgsqlConnectionString);
     services.AddScoped<ProjectManagementSystem.Domain.Comments.ICommentRepository, ProjectManagementSystem.Infrastructure.Comments.CommentRepository>();
     services.AddScoped<ProjectManagementSystem.Domain.Comments.IIssueGetter, ProjectManagementSystem.Infrastructure.Comments.IssueGetter>();
+    services.AddScoped<ProjectManagementSystem.Domain.Comments.IReactionGetter, ProjectManagementSystem.Infrastructure.Comments.ReactionGetter>();
+    services.AddScoped<ProjectManagementSystem.Domain.Comments.ICommentUserReactionGetter, ProjectManagementSystem.Infrastructure.Comments.CommentUserReactionGetter>();
     services.AddScoped<ProjectManagementSystem.Domain.Comments.IUserGetter, ProjectManagementSystem.Infrastructure.Comments.UserGetter>();
+
+    #endregion
+    
+    #region Reactions
+    
+    services.AddNpgsqlDbContextPool<ProjectManagementSystem.Infrastructure.Reactions.ReactionDbContext>(npgsqlConnectionString);
+    services.AddScoped<ProjectManagementSystem.Domain.Reactions.IReactionRepository, ProjectManagementSystem.Infrastructure.Reactions.ReactionRepository>();
 
     #endregion
 
@@ -189,7 +196,9 @@ builder.Host.ConfigureServices((context, services) =>
 
     services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.Users.UserDbContext>(npgsqlConnectionString);
 
-    services.AddScoped<IRequestHandler<UserQuery, UserViewModel>, ProjectManagementSystem.Queries.Infrastructure.Users.UserQueryHandler>();
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.Profiles.UserQuery, 
+            ProjectManagementSystem.Queries.User.Profiles.UserViewModel>, 
+        ProjectManagementSystem.Queries.Infrastructure.Users.UserQueryHandler>();
 
     #endregion
 
@@ -197,7 +206,8 @@ builder.Host.ConfigureServices((context, services) =>
     
     services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.Projects.ProjectQueryDbContext>(npgsqlConnectionString);
 
-    services.AddScoped<IRequestHandler<ProjectListQuery, PageViewModel<ProjectListItemViewModel>>, 
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.Projects.ProjectListQuery, 
+            ProjectManagementSystem.Queries.Page<ProjectManagementSystem.Queries.User.Projects.ProjectListItemViewModel>>, 
         ProjectManagementSystem.Queries.Infrastructure.Projects.ProjectQueryHandler>();
 
     #endregion
@@ -205,24 +215,24 @@ builder.Host.ConfigureServices((context, services) =>
     #region Issues
 
     services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.Issues.IssueQueryDbContext>(npgsqlConnectionString);
-    
-    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.Issues.IssueQuery, ProjectManagementSystem.Queries.Issues.IssueViewModel?>, 
+
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.Issues.IssueQuery, 
+            ProjectManagementSystem.Queries.User.Issues.IssueViewModel?>, 
         ProjectManagementSystem.Queries.Infrastructure.Issues.IssueQueryHandler>();
-    
-    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.Issues.IssueListQuery, PageViewModel<ProjectManagementSystem.Queries.Issues.IssueListItemViewModel>>, 
+
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.Issues.IssueListQuery, 
+            ProjectManagementSystem.Queries.Page<ProjectManagementSystem.Queries.User.Issues.IssueListItemViewModel>>, 
         ProjectManagementSystem.Queries.Infrastructure.Issues.IssueQueryHandler>();
 
     #endregion
 
     #region TimeEntries
 
-    services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.TimeEntries.TimeEntryDbContext>(npgsqlConnectionString);
+    services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.IssueTimeEntries.TimeEntryQueryDbContext>(npgsqlConnectionString);
 
-    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.TimeEntries.TimeEntryQuery, ProjectManagementSystem.Queries.TimeEntries.TimeEntryViewModel?>, 
-        ProjectManagementSystem.Queries.Infrastructure.TimeEntries.TimeEntryQueryHandler>();
-    
-    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.TimeEntries.TimeEntryListQuery, PageViewModel<ProjectManagementSystem.Queries.TimeEntries.TimeEntryListItemViewModel>>, 
-        ProjectManagementSystem.Queries.Infrastructure.TimeEntries.TimeEntryListQueryHandler>();
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.IssueTimeEntries.TimeEntryListQuery, 
+            IEnumerable<ProjectManagementSystem.Queries.User.IssueTimeEntries.TimeEntryListItemViewModel>>, 
+        ProjectManagementSystem.Queries.Infrastructure.IssueTimeEntries.TimeEntryQueryHandler>();
 
     #endregion
     
@@ -230,8 +240,49 @@ builder.Host.ConfigureServices((context, services) =>
 
     services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.Labels.LabelQueryDbContext>(npgsqlConnectionString);
 
-    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.Labels.LabelListQuery, PageViewModel<ProjectManagementSystem.Queries.Labels.LabelListItemViewModel>>, 
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.Labels.LabelListQuery, 
+            ProjectManagementSystem.Queries.Page<ProjectManagementSystem.Queries.User.Labels.LabelListItemViewModel>>, 
         ProjectManagementSystem.Queries.Infrastructure.Labels.LabelQueryHandler>();
+
+    #endregion
+    
+    #region Reactions
+
+    services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.Reactions.ReactionQueryDbContext>(npgsqlConnectionString);
+
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.Reactions.ReactionListQuery, 
+            IEnumerable<ProjectManagementSystem.Queries.User.Reactions.ReactionListItemViewModel>>, 
+        ProjectManagementSystem.Queries.Infrastructure.Reactions.ReactionQueryHandler>();
+
+    #endregion
+    
+    #region IssueComments
+
+    services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.IssueComments.CommentQueryDbContext>(npgsqlConnectionString);
+
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.IssueComments.CommentListQuery, 
+            ProjectManagementSystem.Queries.Page<ProjectManagementSystem.Queries.User.IssueComments.CommentListItemViewModel>>, 
+        ProjectManagementSystem.Queries.Infrastructure.IssueComments.CommentQueryHandler>();
+
+    #endregion
+
+    #region IssueLabels
+
+    services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.IssueLabels.LabelQueryDbContext>(npgsqlConnectionString);
+
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.IssueLabels.LabelListQuery, 
+            IEnumerable<ProjectManagementSystem.Queries.User.IssueLabels.LabelListItemViewModel>>, 
+        ProjectManagementSystem.Queries.Infrastructure.IssueLabels.LabelQueryHandler>();
+
+    #endregion
+
+    #region IssueReactions
+
+    services.AddNpgsqlDbContextPool<ProjectManagementSystem.Queries.Infrastructure.IssueReactions.ReactionQueryDbContext>(npgsqlConnectionString);
+
+    services.AddScoped<IRequestHandler<ProjectManagementSystem.Queries.User.IssueReactions.ReactionListQuery, 
+            IEnumerable<ProjectManagementSystem.Queries.User.IssueReactions.ReactionListItemViewModel>>, 
+        ProjectManagementSystem.Queries.Infrastructure.IssueReactions.ReactionQueryHandler>();
 
     #endregion
 

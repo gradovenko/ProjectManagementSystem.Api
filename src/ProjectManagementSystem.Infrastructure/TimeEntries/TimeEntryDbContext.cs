@@ -32,7 +32,7 @@ public sealed class TimeEntryDbContext : DbContext
                 .IsRequired();
             builder.Property(te => te.IssueId)
                 .IsRequired();
-            builder.Property(te => te.UserId)
+            builder.Property(te => te.AuthorId)
                 .IsRequired();
             builder.Property(te => te.IsDeleted)
                 .IsRequired();

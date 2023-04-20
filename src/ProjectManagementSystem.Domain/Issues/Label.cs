@@ -1,9 +1,11 @@
 namespace ProjectManagementSystem.Domain.Issues;
 
-public sealed record Label
+public sealed class Label
 {
     public Guid Id { get; private set; }
-    public IEnumerable<Issue> Issues { get; private set; } = null!;
+    //
+    // private List<IssueLabel> _issueLabels = new();
+    // public IReadOnlyCollection<IssueLabel> IssueLabels => _issueLabels.AsReadOnly();
 
     private Label() { }
 }

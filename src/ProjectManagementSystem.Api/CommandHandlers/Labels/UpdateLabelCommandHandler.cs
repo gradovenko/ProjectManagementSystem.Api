@@ -20,8 +20,13 @@ public sealed class UpdateLabelCommandHandler : IRequestHandler<UpdateLabelComma
         if (label == null)
             return UpdateLabelCommandResultState.LabelNotFound;
 
-        if (request.Title == label.Title)
-            return UpdateLabelCommandResultState.LabelWithSameTitleAlreadyExists;
+        if (request.Title != label.Title)
+        {
+            Label? labelWithSameTitle = await _labelRepository.GetByName(request.Title, cancellationToken);
+
+            if (labelWithSameTitle != null)
+                return UpdateLabelCommandResultState.LabelWithSameTitleAlreadyExists;
+        }
 
         label.Update(request.Title, request.Description, request.BackgroundColor);
 

@@ -8,6 +8,7 @@ internal sealed record User
     public string PasswordHash { get; init; } = null!;
     public string Role { get; init; } = null!;
     public string State { get; init; } = null!;
+    public bool IsDeleted { get; init; }
     public DateTime CreateDate { get; init; }
     public DateTime UpdateDate { get; init; }
     public IEnumerable<Issue> CreatedIssues { get; init; } = null!;

@@ -10,14 +10,20 @@ public sealed class CreateIssueCommandHandler : IRequestHandler<CreateIssueComma
     private readonly IProjectGetter _projectGetter;
     private readonly IUserGetter _userGetter;
     private readonly ILabelGetter _labelGetter;
+    private readonly IIssueAssigneeGetter _issueAssigneeRepository;
+    private readonly IIssueLabelGetter _issueLabelRepository;
 
     public CreateIssueCommandHandler(IIssueRepository issueRepository, IProjectGetter projectGetter,
-        IUserGetter userGetter, ILabelGetter labelGetter)
+        IUserGetter userGetter, ILabelGetter labelGetter, IIssueAssigneeGetter issueAssigneeRepository,
+        IIssueLabelGetter issueLabelRepository)
     {
         _issueRepository = issueRepository ?? throw new ArgumentNullException(nameof(issueRepository));
         _projectGetter = projectGetter ?? throw new ArgumentNullException(nameof(projectGetter));
         _userGetter = userGetter ?? throw new ArgumentNullException(nameof(userGetter));
         _labelGetter = labelGetter ?? throw new ArgumentNullException(nameof(labelGetter));
+        _issueAssigneeRepository =
+            issueAssigneeRepository ?? throw new ArgumentNullException(nameof(issueAssigneeRepository));
+        _issueLabelRepository = issueLabelRepository ?? throw new ArgumentNullException(nameof(issueLabelRepository));
     }
 
     public async Task<CreateIssueCommandResultState> Handle(CreateIssueCommand request, CancellationToken cancellationToken)
@@ -26,15 +32,15 @@ public sealed class CreateIssueCommandHandler : IRequestHandler<CreateIssueComma
 
         if (project == null)
             return CreateIssueCommandResultState.ProjectNotFound;
-        
-        User? author = await _userGetter.Get(request.ProjectId, cancellationToken);
+         
+        User? author = await _userGetter.Get(request.AuthorId, cancellationToken);
 
         if (author == null)
             return CreateIssueCommandResultState.AuthorNotFound;
 
-        var assignees = new List<User>();
+        var issueAssignees = new List<IssueAssignee>();
 
-        if (request.AssigneeIds.Any())
+        if (request.AssigneeIds != null && request.AssigneeIds.Any())
         {
             foreach (Guid assigneeId in request.AssigneeIds)
             {
@@ -43,13 +49,19 @@ public sealed class CreateIssueCommandHandler : IRequestHandler<CreateIssueComma
                 if (assignee == null)
                     return CreateIssueCommandResultState.AssigneeNotFound;
 
-                assignees.Add(assignee);
+                IssueAssignee? issueAssignee =
+                    await _issueAssigneeRepository.Get(request.IssueId, assignee.Id, cancellationToken);
+                
+                if (issueAssignee != null)
+                    return CreateIssueCommandResultState.IssueAssigneeAlreadyExists;
+
+                issueAssignees.Add(new IssueAssignee(request.IssueId, assigneeId));
             }
         }
         
-        var labels = new List<Label>();
+        var issueLabels = new List<IssueLabel>();
 
-        if (request.LabelIds.Any())
+        if (request.LabelIds != null && request.LabelIds.Any())
         {
             foreach (Guid labelId in request.LabelIds)
             {
@@ -58,7 +70,13 @@ public sealed class CreateIssueCommandHandler : IRequestHandler<CreateIssueComma
                 if (label == null)
                     return CreateIssueCommandResultState.LabelNotFound;
 
-                labels.Add(label);
+                IssueLabel? issueLabel =
+                    await _issueLabelRepository.Get(request.IssueId, label.Id, cancellationToken);
+                
+                if (issueLabel != null)
+                    return CreateIssueCommandResultState.IssueAssigneeAlreadyExists;
+
+                issueLabels.Add(new IssueLabel(request.IssueId, labelId));
             }
         }
 
@@ -68,7 +86,7 @@ public sealed class CreateIssueCommandHandler : IRequestHandler<CreateIssueComma
             return CreateIssueCommandResultState.IssueAlreadyExists;
 
         issue = new Issue(request.IssueId, request.Title, request.Description, request.DueDate, request.ProjectId,
-            request.AuthorId, assignees, labels);
+            request.AuthorId, issueAssignees, issueLabels);
 
         await _issueRepository.Save(issue, cancellationToken);
 

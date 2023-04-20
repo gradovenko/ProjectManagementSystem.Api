@@ -2,7 +2,6 @@ namespace ProjectManagementSystem.DatabaseMigrations.Entities;
 
 internal sealed record CommentUserReaction
 {
-    public Guid CommentUserReactionId { get; init; }
     public Guid CommentId { get; init; }
     public Comment Comment { get; init; } = null!;
     public Guid UserId { get; init; }

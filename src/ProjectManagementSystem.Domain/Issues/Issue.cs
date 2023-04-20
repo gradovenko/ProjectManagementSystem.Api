@@ -9,16 +9,15 @@ public sealed class Issue
     public DateTime CreateDate { get; private set; }
     public DateTime UpdateDate { get; private set; }
     public DateTime? DueDate { get; private set; }
-    //public DateTime? CloseDate { get; private set; }
-    public Guid? ClosedByUserId { get; private set; }
+    public Guid? UserIdWhoClosed { get; private set; }
     public Guid ProjectId { get; private set; }
     public Guid AuthorId { get; private set; }
 
-    private List<User> _assignees = new();
-    public IReadOnlyCollection<User> Assignees => _assignees.AsReadOnly();
+    private List<IssueAssignee> _issueAssignees = new();
+    public IReadOnlyCollection<IssueAssignee> IssueAssignees => _issueAssignees.AsReadOnly();
 
-    private List<Label> _labels = new();
-    public IReadOnlyCollection<Label> Labels => _labels.AsReadOnly();
+    private List<IssueLabel> _issueLabels = new();
+    public IReadOnlyCollection<IssueLabel> IssueLabels => _issueLabels.AsReadOnly();
 
     private List<IssueUserReaction> _issueUserReactions = new();
     public IReadOnlyCollection<IssueUserReaction> IssueUserReactions => _issueUserReactions.AsReadOnly();
@@ -28,7 +27,7 @@ public sealed class Issue
     private Issue() { }
 
     public Issue(Guid id, string title, string? description, DateTime? dueDate, 
-        Guid projectId, Guid authorId, IEnumerable<User> assignees, IEnumerable<Label> labels)
+        Guid projectId, Guid authorId, IEnumerable<IssueAssignee> assignees, IEnumerable<IssueLabel> labels)
     {
         Id = id;
         Title = title;
@@ -38,8 +37,8 @@ public sealed class Issue
         DueDate = dueDate;
         ProjectId = projectId;
         AuthorId = authorId;
-        _assignees.AddRange(assignees);
-        _labels.AddRange(labels);
+        _issueAssignees.AddRange(assignees);
+        _issueLabels.AddRange(labels);
         _concurrencyToken = Guid.NewGuid();
     }
 
@@ -50,11 +49,11 @@ public sealed class Issue
         _concurrencyToken = Guid.NewGuid();
     }
 
-    public void Close(Guid closedByUserId)
+    public void Close(Guid userIdWhoClosed)
     {
         State = IssueState.Closed;
         UpdateDate = DateTime.UtcNow;
-        ClosedByUserId = closedByUserId;
+        UserIdWhoClosed = userIdWhoClosed;
         _concurrencyToken = Guid.NewGuid();
     }
 
@@ -62,27 +61,55 @@ public sealed class Issue
     {
         State = IssueState.Open;
         UpdateDate = DateTime.UtcNow;
-        ClosedByUserId = null;
+        UserIdWhoClosed = null;
         _concurrencyToken = Guid.NewGuid();
     }
 
-    public void AddReaction(User user, Reaction reaction)
+    public void AddLabel(Guid userId, Guid labelId)
     {
-        if (_issueUserReactions.Any(o => o.UserId == user.Id && o.ReactionId == reaction.Id))
-            throw new InvalidOperationException("User already added this reaction to the issue");
-        _issueUserReactions.Add(new IssueUserReaction(Id, user.Id, reaction.Id));
+        if (_issueLabels.Any(o => o.LabelId == labelId))
+            throw new InvalidOperationException();
+
+        _issueLabels.Add(new IssueLabel(Id, labelId));
+
+        UpdateDate = DateTime.UtcNow;
+        _concurrencyToken = Guid.NewGuid();
+    }
+    
+    public void RemoveLabel(Guid userId, Guid labelId)
+    {
+        IssueLabel? issueLabel =
+            _issueLabels.Single(o => o.LabelId == labelId);
+
+        if (issueLabel == null)
+            throw new InvalidOperationException();
+
+        _issueLabels.Remove(issueLabel);
+
+        UpdateDate = DateTime.UtcNow;
+        _concurrencyToken = Guid.NewGuid();
+    }
+
+    public void AddUserReaction(Guid userId, Guid reactionId)
+    {
+        if (_issueUserReactions.Any(o => o.UserId == userId && o.ReactionId == reactionId))
+            throw new InvalidOperationException($"User {userId} already added this reaction {reactionId} to the issue {Id}");
+
+        _issueUserReactions.Add(new IssueUserReaction(Id, userId, reactionId));
         
         UpdateDate = DateTime.UtcNow;
         _concurrencyToken = Guid.NewGuid();
     }
 
-    public void RemoveReaction(User user, Reaction reaction)
+    public void RemoveUserReaction(Guid userId, Guid reactionId)
     {
-        var reactionToRemove =
-            _issueUserReactions.SingleOrDefault(o => o.UserId == user.Id && o.ReactionId == reaction.Id);
-        if (reactionToRemove == null)
-            throw new InvalidOperationException("User has already removed this reaction from the issue, or the issue user reaction does not exist");
-        _issueUserReactions.Remove(reactionToRemove);
+        IssueUserReaction? issueUserReaction =
+            _issueUserReactions.Single(o => o.UserId == userId && o.ReactionId == reactionId);
+
+        if (issueUserReaction == null)
+            throw new InvalidOperationException($"User {userId} has already removed this reaction {reactionId} from the issue, or the issue user reaction {reactionId} does not exist");
+
+        _issueUserReactions.Remove(issueUserReaction);
 
         UpdateDate = DateTime.UtcNow;
         _concurrencyToken = Guid.NewGuid();

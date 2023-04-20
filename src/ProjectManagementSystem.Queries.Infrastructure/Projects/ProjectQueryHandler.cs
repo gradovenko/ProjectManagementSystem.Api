@@ -1,11 +1,11 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Queries.Projects;
+using ProjectManagementSystem.Queries.User.Projects;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Projects;
 
 public sealed class ProjectQueryHandler : 
-    IRequestHandler<ProjectListQuery, PageViewModel<ProjectListItemViewModel>>,
+    IRequestHandler<ProjectListQuery, Page<ProjectListItemViewModel>>,
     IRequestHandler<ProjectQuery, ProjectViewModel?>
 {
     private readonly ProjectQueryDbContext _context;
@@ -15,7 +15,7 @@ public sealed class ProjectQueryHandler :
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<PageViewModel<ProjectListItemViewModel>> Handle(ProjectListQuery query, CancellationToken cancellationToken)
+    public async Task<Page<ProjectListItemViewModel>> Handle(ProjectListQuery request, CancellationToken cancellationToken)
     {
         var sql = _context.Projects.AsNoTracking()
             .Select(p => new ProjectListItemViewModel
@@ -30,12 +30,12 @@ public sealed class ProjectQueryHandler :
                 UpdateDate = p.UpdateDate
             });
 
-        return new PageViewModel<ProjectListItemViewModel>
+        return new Page<ProjectListItemViewModel>
         {
-            Limit = query.Limit,
-            Offset = query.Offset,
+            Limit = request.Limit,
+            Offset = request.Offset,
             Total = await sql.CountAsync(cancellationToken),
-            Items = await sql.Skip(query.Offset).Take(query.Limit).ToListAsync(cancellationToken)
+            Items = await sql.Skip(request.Offset).Take(request.Limit).ToListAsync(cancellationToken)
         };
     }
 

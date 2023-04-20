@@ -27,7 +27,7 @@ public sealed class ReopenIssueCommandHandler : IRequestHandler<ReopenIssueComma
         if (issue == null)
             return ReopenIssueCommandResultState.IssueNotFound;
 
-        issue.Close(request.UserId);
+        issue.Reopen();
 
         await _issueRepository.Save(issue, cancellationToken);
 

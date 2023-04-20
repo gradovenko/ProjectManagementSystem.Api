@@ -13,8 +13,8 @@ public sealed class UserDbContext : DbContext
         modelBuilder.Entity<User>(builder =>
         {
             builder.ToTable("User");
-            builder.HasKey(u => u.Id);
-            builder.Property(u => u.Id)
+            builder.HasKey(u => u.UserId);
+            builder.Property(u => u.UserId)
                 .HasColumnName("UserId");
             builder.Property(u => u.Name);
             builder.Property(u => u.Email);

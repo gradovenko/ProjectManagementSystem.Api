@@ -1,10 +1,10 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagementSystem.Queries.Labels;
+using ProjectManagementSystem.Queries.User.Labels;
 
 namespace ProjectManagementSystem.Queries.Infrastructure.Labels;
 
-public sealed class LabelQueryHandler : IRequestHandler<LabelListQuery, PageViewModel<LabelListItemViewModel>>
+public sealed class LabelQueryHandler : IRequestHandler<LabelListQuery, Page<LabelListItemViewModel>>
 {
     private readonly LabelQueryDbContext _context;
 
@@ -13,7 +13,7 @@ public sealed class LabelQueryHandler : IRequestHandler<LabelListQuery, PageView
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<PageViewModel<LabelListItemViewModel>> Handle(LabelListQuery request, CancellationToken cancellationToken)
+    public async Task<Page<LabelListItemViewModel>> Handle(LabelListQuery request, CancellationToken cancellationToken)
     {
         var sql = _context.Labels.AsNoTracking()
             .OrderBy(p => p.CreateDate)
@@ -29,7 +29,7 @@ public sealed class LabelQueryHandler : IRequestHandler<LabelListQuery, PageView
             })
             .AsQueryable();
 
-        return new PageViewModel<LabelListItemViewModel>
+        return new Page<LabelListItemViewModel>
         {
             Limit = request.Limit,
             Offset = request.Offset,

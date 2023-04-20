@@ -1,4 +1,5 @@
 using FluentValidation;
+using ProjectManagementSystem.Domain.Users;
 
 namespace ProjectManagementSystem.Api.Models.Admin.Users;
 

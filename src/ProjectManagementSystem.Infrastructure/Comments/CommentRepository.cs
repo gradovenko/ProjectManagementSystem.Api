@@ -1,4 +1,3 @@
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Domain.Comments;
 
@@ -7,12 +6,10 @@ namespace ProjectManagementSystem.Infrastructure.Comments;
 public sealed class CommentRepository : ICommentRepository
 {
     private readonly CommentDbContext _context;
-    private readonly IMediator _mediator;
 
-    public CommentRepository(CommentDbContext context, IMediator mediator)
+    public CommentRepository(CommentDbContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
     public async Task<Comment?> Get(Guid id, CancellationToken cancellationToken)
@@ -27,8 +24,5 @@ public sealed class CommentRepository : ICommentRepository
             await _context.Comments.AddAsync(comment, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
-
-        // foreach (var domainEvent in comment.DomainEvents)
-        //     await _mediator.Publish(domainEvent, cancellationToken);
     }
 }
