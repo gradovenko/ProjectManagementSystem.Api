@@ -1,8 +1,8 @@
 namespace ProjectManagementSystem.DatabaseMigrations.Entities;
 
-public sealed class RefreshToken
+internal sealed record RefreshToken
 {
-    public string RefreshTokenId { get; set; }
-    public DateTime ExpireDate { get; set; }
-    public Guid UserId { get; set; }
+    public string RefreshTokenId { get; init; } = null!;
+    public DateTime ExpireDate { get; init; }
+    public Guid UserId { get; init; }
 }

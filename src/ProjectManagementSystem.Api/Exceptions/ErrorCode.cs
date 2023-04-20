@@ -2,30 +2,36 @@ namespace ProjectManagementSystem.Api.Exceptions;
 
 public sealed class ErrorCode
 {
-    public const string InternalServerError = "internal_server_error";
-    public const string InvalidRequest = "invalid_request";
-    public const string InvalidGrant = "invalid_grant";
-    public const string UnauthorizedClient = "unauthorized_client";
-    public const string UnsupportedGrantType = "unsupported_grant_type";
-    public const string Forbidden = "forbidden";
-    public const string UserNotFound = "user_not_found";
-    public const string UserAlreadyExists = "user_already_exists";
-    public const string NameAlreadyExists = "name_already_exists";
-    public const string EmailAlreadyExists = "email_already_exists";
-    public const string InvalidPassword = "invalid_password";
-    public const string IssuePriorityNotFound = "issue_priority_not_found";
-    public const string IssuePriorityAlreadyExists = "issue_priority_already_exists";
-    public const string IssueStatusNotFound = "issue_status_not_found";
-    public const string IssueStatusAlreadyExists = "issue_status_already_exists";
-    public const string ProjectNotFound = "project_not_found";
-    public const string ProjectAlreadyExists = "project_already_exists";
-    public const string TrackerNotFound = "tracker_not_found";
-    public const string TrackerAlreadyExists = "tracker_already_exists";
-    public const string IssueAlreadyExists = "issue_already_exists";
-    public const string IssueNotFound = "issue_not_found";
-    public const string AssigneeNotFound = "assignee_not_found";
-    public const string TimeEntryActivityNotFound = "time_entry_activity_not_found";
-    public const string TimeEntryActivityAlreadyExists = "time_entry_activity_already_exists";
-    public const string TimeEntryNotFound = "time_entry_not_found";
-    public const string TimeEntryAlreadyExists = "time_entry_already_exists";
+    public static (string Title, string Detail) UserNotFound = ("Not found", "User with this identifier not found");
+    public static (string Title, string Detail) UserWithSameNameAlreadyExists = ("Conflict", "User with same name already exists");
+    public static (string Title, string Detail) UserWithSameEmailAlreadyExists = ("Conflict", "User with same email already exists");
+    public static (string Title, string Detail) UserWithSameIdButDifferentParamsAlreadyExists = ("Conflict", "User with same id but different params already exists");
+
+    public static (string Title, string Detail) InvalidPassword = ("invalid_password", "n");
+    public static (string Title, string Detail) OldUserPasswordWrong = ("old_user_password_wrong", "n");
+
+    
+    public static (string Title, string Detail) ProjectNotFound = ("Not found", "Project with this identifier not found");
+    public static (string Title, string Detail) ProjectWithSameIdAlreadyExists = ("Conflict", "Project with same name already exists");
+    public static (string Title, string Detail) ProjectWithSameNameAlreadyExists = ("Conflict", "Project with same name already exists");
+    public static (string Title, string Detail) ProjectWithSamePathAlreadyExists = ("Conflict", "Project with same path already exists");
+
+    public static (string Title, string Detail) IssueNotFound = ("issue_not_found", "n");
+    public static (string Title, string Detail) AuthorNotFound = ("author_not_found", "n");
+    
+    public static (string Title, string Detail) TimeEntryNotFound = ("time_entry_not_found", "n");
+    public static (string Title, string Detail) TimeEntryAlreadyExists = ("time_entry_already_exists", "n");
+    
+    public static (string Title, string Detail) LabelNotFound = ("Not found", "Label with this identifier not found");
+    public static (string Title, string Detail) LabelWithSameTitleAlreadyExists = ("Conflict", "Label with same title already exists");
+    public static (string Title, string Detail) LabelWithSameIdButDifferentParamsAlreadyExists = ("Conflict", "Label with same identifier but different params already exists");
+    
+    public static (string Title, string Detail) ReactionNotFound = ("Not found", "Reaction with this identifier not found");
+    public static (string Title, string Detail) ReactionWithSameEmojiAlreadyExists = ("Conflict", "Reaction with same emoji already exists");
+    public static (string Title, string Detail) ReactionWithSameIdButDifferentParamsAlreadyExists = ("Conflict", "Reaction with same identifier but different params already exists");
+    
+    public static (string Title, string Detail) CommentNotFound = ("comment_not_found", "n");
+    public static (string Title, string Detail) ParentCommentNotFound = ("parent_comment_not_found", "n");
+    public static (string Title, string Detail) ParentCommentAlreadyChildCommentOfAnotherComment = ("parent_comment_already_child_comment_of_another_comment", "n");
+    public static (string Title, string Detail) CommentWithSameIdButOtherParamsAlreadyExists = ("comment_with_same_id_but_other_params_already_exists", "n");
 }

@@ -1,3 +1,3 @@
 namespace ProjectManagementSystem.Queries.User.Projects;
 
-public sealed record ProjectListQuery(int Offset, int Limit) : PageQuery<ProjectListItemView>(Offset, Limit);
+public sealed record ProjectListQuery(int Offset, int Limit) : PageQuery<ProjectListItemViewModel>(Offset, Limit);

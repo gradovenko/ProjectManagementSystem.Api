@@ -1,12 +1,12 @@
 namespace ProjectManagementSystem.Infrastructure.Authentication;
 
-public sealed class JwtOptions
+public sealed class JwtAuthOptions
 {
-    public string Issuer { get; set; }
+    public string Issuer { get; set; } = null!;
 
-    public string Audience { get; set; }
+    public string Audience { get; set; } = null!;
 
-    public string SecretKey { get; set; }
+    public string SecretKey { get; set; } = null!;
 
-    public int ExpiresInMinutes { get; set; }
+    public int LifeTimeInMinutes { get; set; }
 }

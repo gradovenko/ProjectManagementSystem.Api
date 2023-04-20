@@ -1,20 +1,16 @@
 namespace ProjectManagementSystem.DatabaseMigrations.Entities;
 
-public sealed class TimeEntry
+internal sealed record TimeEntry
 {
-    public Guid TimeEntryId { get; set; }
-    public decimal Hours { get; set; }
-    public string Description { get; set; }
-    public DateTime DueDate { get; set; }
-    public DateTime CreateDate { get; set; }
-    public DateTime? UpdateDate { get; set; }
-    public Guid ProjectId { get; set; }
-    public Project Project { get; set; }
-    public Guid IssueId { get; set; }
-    public Issue Issue { get; set; }
-    public Guid UserId { get; set; }
-    public User User { get; set; }
-    public Guid ActivityId { get; set; }
-    public TimeEntryActivity Activity { get; set; }
-    public Guid ConcurrencyStamp { get; set; }
+    public Guid TimeEntryId { get; init; }
+    public decimal Hours { get; init; }
+    public string? Description { get; init; }
+    public DateTime? DueDate { get; init; }
+    public DateTime CreateDate { get; init; }
+    public Guid IssueId { get; init; }
+    public Issue Issue { get; init; } = null!;
+    public Guid AuthorId { get; init; }
+    public User Author { get; init; } = null!;
+    public bool IsDeleted { get; init; }
+    public Guid ConcurrencyToken { get; init; }
 }
