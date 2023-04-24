@@ -1,6 +1,6 @@
 # ProjectManagementSystem.Api
 
-The Project Management System API is a RESTful web interface created using ASP.NET Core, C#, DDD and CQRS. This API provides endpoints for managing projects and tasks, allowing users to create, read, update, and delete:
+The Project Management System API is a RESTful web interface created using **ASP.NET Core**, **C#**, **DDD** and **CQRS**. This API provides endpoints for managing projects and tasks, allowing users to create, read, update, and delete:
 
 - Projects
 - Issues
